@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 from django.db import models
 
-class User(models.Model):
+class ProjectUser(models.Model):
     handle = models.CharField("User handle",max_length=50)
     first_name = models.CharField("First name",max_length=50)
     family_name = models.CharField("Family name",max_length=50)
@@ -19,7 +19,9 @@ class User(models.Model):
 
 class Project(models.Model):
     name = models.CharField("Name",max_length=50)
-    users = models.ManyToManyField(User,blank=True)
+    users = models.ManyToManyField(ProjectUser,blank=True)
+    proposal_id = models.CharField("Proposal ID",max_length=50,
+                                       blank=True,null=True)
     last_modified_date = models.DateTimeField(
             blank=True, null=True)
     
@@ -38,7 +40,7 @@ class Target(models.Model):
         self.save()
         
     def __str__(self):
-        return self.target_id
+        return str(self.id)
 
 class TargetName(models.Model):
     target_id = models.ForeignKey(Target)

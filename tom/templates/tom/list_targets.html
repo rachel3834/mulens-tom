@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title_text %}Project Dashboard{% endblock %}
+{% block header_text %}Project Dashboard{% endblock %}
+
+{% block mainregion %}
+<center>
+<h3>Current Targets</h3>
+{% if targets|length == 0 %}
+    Targets list is currently empty
+{% else %}
+    <table>
+        <tr><th>Object</th><th>RA</th><th>Dec</th></tr>
+        {% for name,t in targets %}
+            <tr><td>{{name}}</td><td>{{t.ra}}</td><td>{{t.dec}}</td></tr>
+        {% endfor %}
+    </table>
+</center>
+{% endif %}
+{% endblock %}

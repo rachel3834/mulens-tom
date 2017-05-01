@@ -1,1 +1,49 @@
-<h3>Hello, world!</h3>
+{% extends 'base.html' %}
+
+{% block title_text %}Project Dashboard{% endblock %}
+{% block header_text %}Project Dashboard{% endblock %}
+
+{% block mainregion %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-4">
+            <a href="/targets/">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h4>View current targets</h4>
+                </div>
+            </div>
+            </a>
+        </div>
+        <div class="col-lg-4">
+            <a href="/observations/">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h4>View active observations</h4>
+                </div>
+            </div>
+            </a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-4">
+            <a href="/targets/">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h4>Add new targets</h4>
+                </div>
+            </div>
+            </a>
+        </div>
+        <div class="col-lg-4">
+            <a href="/observations/">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h4>Request observations</h4>
+                </div>
+            </div>
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

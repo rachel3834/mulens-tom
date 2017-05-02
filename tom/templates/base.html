@@ -30,18 +30,23 @@
 	</head>
 	
 <body>
-    <div class="row"  style="padding: 5px 25px;">
-        <h1>Spitzer Microlensing</h1>
+	<div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <h1 style="color: Teal">Spitzer Microlensing Project</h1>
+            </div>
+            <div class="col-md-3">
+                <h1> </h1>
+            </div>
+            <div class="col-md-3">
+                <a href="/"><button type="button" class="btn btn-primary">Dashboard</button></a>
+            </div>
+        </div>
+        <div class="row">
+            {% block mainregion %}
+            {% endblock %}
+	   </div>
     </div>
-
-	<div class="container-fluid">
-		
-		<div class="row">
-			{% block mainregion %}
-			{% endblock %}
-		</div>
-		
-	</div>
 </body>
 
 </html>

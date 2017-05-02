@@ -17,4 +17,19 @@ class AddTargetNameForm(forms.ModelForm):
     class Meta:
         model = TargetName
         fields = ('name',)
-    
+
+class AddObservationForm(forms.ModelForm):
+    class Meta:
+        model = PhotObs
+        fields = ('filters','exp_times','n_exp','cadence','jitter',
+                  'start_obs','stop_obs',)
+
+class SelectTargetNameForm(forms.ModelForm):
+    class Meta:
+        model = TargetName
+        fields = ('name',)
+
+class SelectTargetForm(forms.ModelForm):
+    class Meta:
+        model = Target
+        fields = ('ra','dec',)

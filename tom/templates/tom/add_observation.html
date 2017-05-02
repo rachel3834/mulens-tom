@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title_text %}Project Dashboard{% endblock %}
+{% block header_text %}Project Dashboard{% endblock %}
+
+{% block mainregion %}
+<center>
+<h3>Submit an Observation Request</h3>
+<div>
+    <form method="POST" class="post-form">{% csrf_token %}
+        {{ formset.management_form }}
+        <table>
+            <tr>
+                <td>
+                    <div class="fieldWrapper">
+                        {{nform.field.errors}}
+                        <label for="{{nform.field.id_for_label}}">Name:</label>
+                        {{nform.name}}
+                    </div>
+                </td>
+                <td>
+                    <div class="fieldWrapper">
+                        {{tform.field.errors}}
+                        <label for="{{tform.field.id_for_label}}">RA:</label>
+                        {{tform.ra}}
+                    </div>
+                </td>
+                <td>
+                    <div class="fieldWrapper">
+                        {{tform.field.errors}}
+                        <label for="{{tform.field.id_for_label}}">Dec:</label>
+                        {{tform.dec}}
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="fieldWrapper">
+                    <button type="sumbit" class="save btn btn-default">Submit</button>
+                    </div>
+                </td><td></td><td></td>
+            </tr>
+        </table>
+    </form>
+</div>
+{% if message != 'none' %}
+    <div>
+    <center>
+        <h5>{{ message }}</h5>
+    </center>
+    </div>
+{% endif %}
+
+</center>
+{% endblock %}

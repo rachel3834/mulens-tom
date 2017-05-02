@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from django.shortcuts import render
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from .models import Target, TargetName
+from .models import Target, TargetName, PhotObs
 from .forms import AddTargetForm, AddTargetNameForm
 from scripts import ingest
 
@@ -43,6 +43,65 @@ def add_target(request):
                 npost = nform.save(commit=False)
                 params = {'name': npost.name, 'ra': tpost.ra, 'dec': tpost.dec}
                 (status,message) = ingest.add_target(params)
+                
+                return render(request, 'tom/add_target.html', \
+                                    {'tform': tform, 'nform': nform,
+                                    'message': message})
+            else:
+                tform = AddTargetForm()
+                nform = AddTargetNameForm()
+                return render(request, 'tom/add_target.html', \
+                                    {'tform': tform, 'nform': nform,\
+                                    'message':'Form entry was invalid.\nReason:\n'+\
+                                    repr(tform.errors)+' '+repr(nform.errors)+\
+                                    '\nPlease try again.'})
+        else:
+            tform = AddTargetForm()
+            nform = AddTargetNameForm()
+            return render(request, 'tom/add_target.html', \
+                                    {'tform': tform, 'nform': nform,
+                                    'message': 'none'})
+
+        
+    else:
+        return HttpResponseRedirect('login')
+        
+    return render(request,'tom/add_target.html',{'targets':target_data})
+
+@login_required(login_url='/login/')
+def observations(request):
+    
+    if request.user.is_authenticated():
+        obs = PhotObs.objects.all()
+        targetnames = []
+        for o in obs:
+            qs = TargetName.objects.filter(target_id=obs)
+            name = ''
+            for q in qs:
+                name = q.name+'/'
+            targetnames.append(name[:-1])
+        obs_list = zip(targetnames,obs)
+        return render(request,'tom/list_observations.html',{'obs_list':obs_list})
+        
+    else:
+        return HttpResponseRedirect('login')
+
+@login_required(login_url='/login/')
+def add_observation(request):
+    """Function to add a new observation to the database with all associated
+    information, including the target name"""
+    
+    if request.user.is_authenticated():
+        if request.method == "POST":
+            oform = AddObservationForm(request.POST)
+            nform = AddTargetNameForm(request.POST)
+            if oform.is_valid() and nform.is_valid():
+                opost = oform.save(commit=False)
+                
+                
+                params = {'name': npost.name, 'ra': tpost.ra, 'dec': tpost.dec}
+                
+                (status,message) = ingest.record_observation(params)
                 
                 return render(request, 'tom/add_target.html', \
                                     {'tform': tform, 'nform': nform,

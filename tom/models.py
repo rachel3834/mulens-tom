@@ -88,7 +88,7 @@ class PhotObs(models.Model):
     cadence = models.FloatField("Cadence",blank=True)
     jitter = models.FloatField("Jitter",blank=True)
     modes = ( ('override','Rapid reponse'), ('queue','Queue') )
-    obs_model = models.CharField("Observation mode",max_length=30,
+    obs_mode = models.CharField("Observation mode",max_length=30,
                                  choices=modes,default="queue")
     stats = ( ('submitted', 'Submitted'), 
               ('active', 'Active'),

@@ -16,6 +16,7 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 from tom.views import home, targets, add_target, observations, request_obs
+from tom.views import record_obs
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
@@ -27,4 +28,5 @@ urlpatterns = [
     url(r'^add_target/$',add_target,name="add_target"),
     url(r'^observations/$',observations,name="observations"),
     url(r'^request_obs/$',request_obs,name="request_obs"),
+    url(r'^record_obs/$',record_obs,name="record_obs"),
 ]

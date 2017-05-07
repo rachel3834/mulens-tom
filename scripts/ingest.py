@@ -52,7 +52,7 @@ def record_observation(params):
     
     messages = []
     (t,created_target) = PhotObs.objects.get_or_create(
-                                                target_id=params['target'],
+                                                target_id=params['target'].id,
                                                 project_id=params['project'],
                                                 group_id=params['group_id'],
                                                 network=params['network'],

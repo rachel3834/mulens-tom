@@ -21,18 +21,7 @@ setup()
 
 from tom.models import Target, TargetName, Project
 
-import observation_classes
-
-def submit_obs_requests(obs_requests):
-    """Function to compose target and observing requirements into the correct
-    form and to submit the request to the LCO network
-    """
-
-    for obs in obs_requests:
-        ur = obs.build_cadence_request()
-        obs.submit_status = obs.submit_request(ur, script_config, log=log)
-
-    return obs_requests
+import lco_interface
     
 def compose_obs_requests(params,request):
     """Function to construct an ObsRequest instance with the users 
@@ -46,7 +35,7 @@ def compose_obs_requests(params,request):
     obs_list = []
     
     for i in range(0,len(obs_strategy['sites'],1):
-        obs = observation_classes.ObsRequest()
+        obs = lco_interface.ObsRequest()
         obs.name = params['name']
         obs.ra = params['ra']
         obs.dec = params['dec']

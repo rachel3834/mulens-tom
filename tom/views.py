@@ -110,7 +110,7 @@ def request_obs(request):
                 
                 obs_requests = observing_strategy.compose_obs_requests(params,request)
                 
-                obs_requests = observing_strategy.submit_obs_requests(obs_requests)
+                obs_requests = lco_interface.submit_obs_requests(obs_requests)
                 
                 (status,message) = ingest.record_observations(obs_requests)
                 

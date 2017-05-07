@@ -392,3 +392,17 @@ class ObsRequest:
                 + str(report)+ '\n'
         return output
         
+def submit_obs_requests(obs_requests):
+    """Function to compose target and observing requirements into the correct
+    form and to submit the request to the LCO network
+    Parameters:
+        obs_requests        list        List of ObsRequest objects
+    returns
+        obs_requests        list        List with submit_status paramater updated
+    """
+
+    for obs in obs_requests:
+        ur = obs.build_cadence_request()
+        obs.submit_status = obs.submit_request(ur, script_config, log=log)
+
+    return obs_requests

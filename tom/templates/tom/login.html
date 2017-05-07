@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title_text %}Project Dashboard{% endblock %}
+{% block header_text %}Project Dashboard{% endblock %}
+
+{% block mainregion %}
+<div>
+    <center>
+        <h3>Target and Observation Manager</h3>
+    </center>
+</div>
+<div id="parent">
+    <div id="child"><br><br></div>
+    <div>
+        <center>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+            <button type="submit" style="font-family:verdana;">Log in</button>
+            </form>
+        </center>
+    </div>
+</div>
+{% endblock %}

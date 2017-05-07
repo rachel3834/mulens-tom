@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
-{% block title_text %}Project Dashboard{% endblock %}
-{% block header_text %}Project Dashboard{% endblock %}
+{% block title_text %}Request Observation{% endblock %}
+{% block header_text %}Request Observation{% endblock %}
 
 {% block mainregion %}
 <center>
@@ -11,25 +11,69 @@
         {{ formset.management_form }}
         <table>
             <tr>
-                <td>
-                    <div class="fieldWrapper">
-                        {{nform.field.errors}}
-                        <label for="{{nform.field.id_for_label}}">Name:</label>
-                        {{nform.name}}
+                <td><label for="{{nform.name.id_for_label}}">Target:</label></td>
+                <td><div class="fieldWrapper">
+                        {{nform.name.errors}}
+                        <select name="target_name">
+                            {% for name in targets %}
+                                <option value="{{name}}">{{name}}</option>
+                            {% endfor %}
+                        </select>
                     </div>
                 </td>
-                <td>
-                    <div class="fieldWrapper">
-                        {{tform.field.errors}}
-                        <label for="{{tform.field.id_for_label}}">RA:</label>
-                        {{tform.ra}}
+                <td></td><td></td><td></td><td></td>
+            </tr>
+            <tr>
+                <td><label for="{{eform.inst_filter.id_for_label}}">Filter:</label></td>
+                <td><div class="fieldWrapper">
+                        {{eform.inst_filter.errors}}
+                        {{eform.inst_filter}}
                     </div>
                 </td>
-                <td>
-                    <div class="fieldWrapper">
-                        {{tform.field.errors}}
-                        <label for="{{tform.field.id_for_label}}">Dec:</label>
-                        {{tform.dec}}
+                <td><label for="{{eform.exp_time.id_for_label}}">Exposure [sec]:</label></td>
+                <td><div class="fieldWrapper">
+                        {{eform.exp_time.errors}}
+                        {{eform.exp_time}}
+                    </div>
+                </td>
+                <td><label for="{{eform.n_exp.id_for_label}}">Number of exposures:</label></td>
+                <td><div class="fieldWrapper">
+                        {{eform.n_exp.errors}}
+                        {{eform.n_exp}}
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td><label for="{{oform.start_obs.id_for_label}}">Start date:</label></td>
+                <td><div class="fieldWrapper">
+                        {{oform.start_obs.errors}}
+                        {{oform.start_obs}}
+                    </div>
+                </td>
+                <td><label for="{{oform.stop_obs.id_for_label}}">End date:</label></td>
+                <td><div class="fieldWrapper">
+                        {{oform.stop_obs.errors}}
+                        {{oform.stop_obs}}
+                    </div>
+                </td><td></td><td></td>
+            </tr>
+            <tr>
+                <td><label for="{{oform.group_type.id_for_label}}">Observation type:</label></td>
+                <td><div class="fieldWrapper">
+                        {{oform.group_type.errors}}
+                        {{oform.group_type}}
+                    </div>
+                </td>
+                <td><label for="{{oform.cadence.id_for_label}}">Cadence [hrs]:</label></td>
+                <td><div class="fieldWrapper">
+                        {{oform.cadence.errors}}
+                        {{oform.cadence}}
+                    </div>
+                </td>
+                <td><label for="{{oform.jitter.id_for_label}}">Jitter [hrs]:</label></td>
+                <td><div class="fieldWrapper">
+                        {{oform.jitter.errors}}
+                        {{oform.jitter}}
                     </div>
                 </td>
             </tr>
@@ -38,7 +82,7 @@
                     <div class="fieldWrapper">
                     <button type="sumbit" class="save btn btn-default">Submit</button>
                     </div>
-                </td><td></td><td></td>
+                </td><td></td><td></td><td></td><td></td><td></td>
             </tr>
         </table>
     </form>

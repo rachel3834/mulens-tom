@@ -61,6 +61,26 @@ class TargetList(models.Model):
     def __str__(self):
         return self.name
 
+class ExposureSet(models.Model):
+    """Class describing a set of exposures in a single filter"""
+    filters = (
+                ('ip', 'SDSS-i'),
+                ('rp', 'SDSS-r'),
+                ('zs', 'Pan-STARRS-Z'),
+                ('V', 'Bessell-V'),
+                ('R', 'Bessell-R'),
+                ('I', 'Cousins-Ic'),
+                )
+    
+    inst_filter = models.CharField("Filter",max_length=15,choices=filters,default='R')
+    exp_time = models.FloatField("Exposure time")
+    n_exp = models.IntegerField("Number of exposures")
+    defocus = models.FloatField("Defocus",blank=True)
+    binning = models.IntegerField("Binning",blank=True)
+
+    def __str__(self):
+        return str(self.inst_filter)+' '+str(self.exp_time)+' '+str(n_exp)
+        
 class PhotObs(models.Model):
     """Class describing the table of photometric observations
     Parameters have units:    
@@ -74,27 +94,28 @@ class PhotObs(models.Model):
     group_id = models.CharField("Group ID",max_length=50,blank=True)
     network = models.CharField("Network",max_length=50,blank=True)
     site = models.CharField("Site",max_length=50,blank=True)
-    telescope = models.CharField("Telescope",max_length=50)
+    telescope = models.CharField("Telescope",max_length=50,blank=True)
     aperture = models.FloatField(blank=True)
-    instrument = models.CharField("Instrument",max_length=50)
-    filters = models.CharField("Filters",max_length=50)
-    exp_times = models.FloatField("Exposure times")
-    n_exp = models.IntegerField("Number of exposures")
-    defocus = models.FloatField("Defocus",blank=True)
-    binnings = models.IntegerField("Binning",blank=True)
+    instrument = models.CharField("Instrument",max_length=50,blank=True)
+    exposures = models.ManyToManyField(ExposureSet,blank=True)
     track_id = models.CharField("Tracking ID",max_length=100,blank=True)
     start_obs = models.DateTimeField("Start observing timestamp",blank=True)
     stop_obs = models.DateTimeField("Stop observing timestamp",blank=True)
     cadence = models.FloatField("Cadence",blank=True)
     jitter = models.FloatField("Jitter",blank=True)
+    obs_types = (
+                ('single', 'Single'),
+                ('cadence', 'Cadence'),
+                )
+    group_type = models.CharField("Group Type",max_length=10,choices=obs_types,default='single',blank=True)
     modes = ( ('override','Rapid reponse'), ('queue','Queue') )
     obs_mode = models.CharField("Observation mode",max_length=30,
-                                 choices=modes,default="queue")
+                                 choices=modes,default="queue",blank=True)
     stats = ( ('submitted', 'Submitted'), 
               ('active', 'Active'),
               ('expired', 'Expired') )
     status = models.CharField("Observation status",max_length=30,
-                              choices=stats,default="submitted")
+                              choices=stats,default="submitted",blank=True)
     last_modified_date = models.DateTimeField(
             blank=True, null=True)
     

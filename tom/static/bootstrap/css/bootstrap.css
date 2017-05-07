@@ -6755,3 +6755,6 @@ button.close {
   }
 }
 /*# sourceMappingURL=bootstrap.css.map */
+#child {
+    line-height: 200px;
+}

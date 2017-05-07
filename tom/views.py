@@ -5,7 +5,8 @@ from django.shortcuts import render
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from .models import Target, TargetName, PhotObs
-from .forms import AddTargetForm, AddTargetNameForm
+from .forms import TargetForm, TargetNameForm
+from .forms import ObservationForm, ExposureSetForm
 from scripts import ingest
 
 @login_required(login_url='/login/')
@@ -36,8 +37,8 @@ def add_target(request):
     
     if request.user.is_authenticated():
         if request.method == "POST":
-            tform = AddTargetForm(request.POST)
-            nform = AddTargetNameForm(request.POST)
+            tform = TargetForm(request.POST)
+            nform = TargetNameForm(request.POST)
             if tform.is_valid() and nform.is_valid():
                 tpost = tform.save(commit=False)
                 npost = nform.save(commit=False)
@@ -48,16 +49,16 @@ def add_target(request):
                                     {'tform': tform, 'nform': nform,
                                     'message': message})
             else:
-                tform = AddTargetForm()
-                nform = AddTargetNameForm()
+                tform = TargetForm()
+                nform = TargetNameForm()
                 return render(request, 'tom/add_target.html', \
                                     {'tform': tform, 'nform': nform,\
                                     'message':'Form entry was invalid.\nReason:\n'+\
                                     repr(tform.errors)+' '+repr(nform.errors)+\
                                     '\nPlease try again.'})
         else:
-            tform = AddTargetForm()
-            nform = AddTargetNameForm()
+            tform = TargetForm()
+            nform = TargetNameForm()
             return render(request, 'tom/add_target.html', \
                                     {'tform': tform, 'nform': nform,
                                     'message': 'none'})
@@ -87,42 +88,49 @@ def observations(request):
         return HttpResponseRedirect('login')
 
 @login_required(login_url='/login/')
-def add_observation(request):
+def request_obs(request):
     """Function to add a new observation to the database with all associated
     information, including the target name"""
     
     if request.user.is_authenticated():
+        qs = TargetName.objects.all()
+        targets = []
+        for q in qs:
+            targets.append(q.name)
+        
         if request.method == "POST":
-            oform = AddObservationForm(request.POST)
-            nform = AddTargetNameForm(request.POST)
+            tform = TargetNameForm(request.POST)
+            oform = ObservationForm(request.POST)
+            eform = ExposureSetForm(request.POST)
             if oform.is_valid() and nform.is_valid():
+                tpost = tform.save(commit=False)
                 opost = oform.save(commit=False)
-                
-                
-                params = {'name': npost.name, 'ra': tpost.ra, 'dec': tpost.dec}
+                epost = eform.save(commit=False)
                 
                 (status,message) = ingest.record_observation(params)
                 
-                return render(request, 'tom/add_target.html', \
-                                    {'tform': tform, 'nform': nform,
+                return render(request, 'tom/add_observation.html', \
+                                    {'tform': tform, 'oform': oform,'eform': eform,
                                     'message': message})
             else:
-                tform = AddTargetForm()
-                nform = AddTargetNameForm()
-                return render(request, 'tom/add_target.html', \
-                                    {'tform': tform, 'nform': nform,\
+                tform = TargetNameForm()
+                oform = ObservationForm()
+                eform = ExposureSetForm()
+                return render(request, 'tom/add_observation.html', \
+                                    {'tform': tform, 'oform': oform,'eform': eform,
                                     'message':'Form entry was invalid.\nReason:\n'+\
                                     repr(tform.errors)+' '+repr(nform.errors)+\
                                     '\nPlease try again.'})
         else:
-            tform = AddTargetForm()
-            nform = AddTargetNameForm()
-            return render(request, 'tom/add_target.html', \
-                                    {'tform': tform, 'nform': nform,
+            tform = TargetNameForm()
+            oform = ObservationForm()
+            eform = ExposureSetForm()
+            return render(request, 'tom/add_observation.html', \
+                                    {'tform': tform, 'oform': oform, 'eform': eform,
+                                     'targets': targets,
                                     'message': 'none'})
 
         
     else:
         return HttpResponseRedirect('login')
         
-    return render(request,'tom/add_target.html',{'targets':target_data})

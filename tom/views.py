@@ -106,13 +106,13 @@ def request_obs(request):
                 tpost = tform.save(commit=False)
                 opost = oform.save(commit=False)
                 epost = eform.save(commit=False)
-                params = parse_obs_params(tpost,opost,epost)
+                params = parse_obs_params(tpost,opost,epost,request)
                 
-                obs_requests = observing_strategy.compose_obs_requests(params,request)
+                obs_requests = observing_strategy.compose_obs_requests(params)
                 
                 obs_requests = lco_interface.submit_obs_requests(obs_requests)
                 
-                (status,message) = ingest.record_observations(obs_requests)
+                ingest.record_obs_requests(obs_requests)
                 
                 return render(request, 'tom/request_observation.html', \
                                     {'tform': tform, 'oform': oform,'eform': eform,
@@ -139,7 +139,7 @@ def request_obs(request):
     else:
         return HttpResponseRedirect('login')
         
-def parse_obs_params(tpost,opost,epost):
+def parse_obs_params(tpost,opost,epost,request):
     """Function to parse the posted parameters into a dictionary, 
     and resolve observation parameters where necessary
     """
@@ -160,6 +160,8 @@ def parse_obs_params(tpost,opost,epost):
     params['jitter'] = opost.jitter
     params['tart_obs'] = opost.start_obs
     params['stop_obs'] = opost.stop_obs
+    
+    params['user_id'] = request.user
     
     return params
 

@@ -42,46 +42,45 @@ def add_target(params):
     else:
         return False, message
 
-def record_observation(params):
+def record_obs_requests(obs_list):
     """Function to record a observation request in the database"""
     
-    # Extract the target object from the targetname
+    for obs in obs_list:
+        
+        qs = TargetName.objects.get(name=obs.name)
+        target= qs[0]
     
-    # Implicit parameters:
-    params['network'] = 'LCO'
-    
-    messages = []
-    (t,created_target) = PhotObs.objects.get_or_create(
-                                                target_id=params['target'].id,
-                                                project_id=params['project'],
-                                                group_id=params['group_id'],
-                                                network=params['network'],
-                                                site=params['site'],
-                                                telescope=params['telescope'],
-                                                aperture=params['aperture'],
-                                                instrument=params['instrument'],
-                                                filters=params['filters'],
-                                                exp_times=params['exp_times'],
-                                                n_exp=params['n_exp'],
-                                                defocus=params['defocus'],
-                                                binnings=params['binning'],
-                                                track_id=params['track_id'],
-                                                start_obs=params['start_obs'],
-                                                stop_obs=params['stop_obs'],
-                                                cadence=params['cadence'],
-                                                jitter=params['jitter'],
-                                                mode=params['mode'],
-                                                status=params['status']
-                                                )
-    if created_target == True:
-        messages.append('Added new target location')
-    (tname, created_name) = TargetName.objects.get_or_create(target_id=t, name=params['name'])
-    if created_name == True:
-        messages.append('Added new target name')
-    
-    message = ' '.join(messages)
-    
-    if created_target == True and created_name == True:
-        return True, message
-    else:
-        return False, message
+        qs = Project.objects.get(proposal_id=obs.proposal_id)
+        project = qs[0]
+        
+        exp_sets = []
+        for i in range(0,len(obs.exposures),1):
+            new_exp = ExposureSet(inst_filter=obs.filters[i],
+                                      exp_time=obs.exptimes[i],
+                                      n_exp = obs.n_exp[i],
+                                      defocus = obs.defocus[i],
+                                      binning = obs.binning[i]
+                                      )
+            new_exp.save()
+            exp_sets.append(new_exp)
+            
+        new_obs = PhotObs(target_id=target,
+                        project_id=project,
+                        group_id=obs.group_id,
+                        network='lco',
+                        site=obs.site,
+                        telescope=obs.telescope,
+                        aperture=obs.aperture,
+                        instrument=obs.instrument,
+                        filters=obs.filters,
+                        exposures=exp_sets,
+                        track_id=obs.track_id,
+                        start_obs=obs.start_obs,
+                        stop_obs=obs.stop_obs,
+                        cadence=obs.cadence,
+                        jitter=obs.jitter,
+                        mode=obs.mode,
+                        status=obs.status_submit
+                        )
+        new_obs.save()
+        

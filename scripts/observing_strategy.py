@@ -23,14 +23,14 @@ from tom.models import Target, TargetName, Project
 
 import lco_interface
     
-def compose_obs_requests(params,request):
+def compose_obs_requests(params):
     """Function to construct an ObsRequest instance with the users 
     parameters for the observation
     
     Returns a list of ObsRequest objects
     """
 
-    obs_strategy = strategy_config()
+    obs_strategy = strategy_config(params)
     
     obs_list = []
     
@@ -64,7 +64,7 @@ def compose_obs_requests(params,request):
         
     return obs
 
-def strategy_config(request):
+def strategy_config(params):
     """Function defining the pre-determined parameters of observations for 
     the current project, including which sites, telescopes, instruments etc
     and to apply any pre-set observation parameters defined by the user for
@@ -82,7 +82,7 @@ def strategy_config(request):
     project = qs[0]
     strategy['proposal_id'] = project.proposal_id
     
-    qs = User.object.filter(user_handle__contains=request.user)
+    qs = User.object.filter(user_handle__contains=params['user_id'])
     if len(qs) == 1:
         strategy['lco_observer_id'] = qs[0].lco_observer_id
         strategy['lco_observer_pswd'] = qs[0].lco_observer_pswd

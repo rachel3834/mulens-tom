@@ -77,7 +77,7 @@ def observations(request):
         obs = PhotObs.objects.all()
         targetnames = []
         for o in obs:
-            qs = TargetName.objects.filter(target_id=obs)
+            qs = TargetName.objects.filter(target_id=o.target_id)
             name = ''
             for q in qs:
                 name = q.name+'/'

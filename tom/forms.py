@@ -29,3 +29,8 @@ class ExposureSetForm(forms.ModelForm):
     class Meta:
         model = ExposureSet
         fields = ('inst_filter', 'exp_time', 'n_exp',)
+
+class AccountForm(forms.ModelForm):
+    class Meta:
+        model = ProjectUser
+        fields = ('handle', 'affiliation', 'email', 'lco_observer_id', 'lco_observer_pswd')

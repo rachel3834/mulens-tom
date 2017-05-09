@@ -18,7 +18,7 @@ from django import setup
 from datetime import datetime, timedelta
 setup()
 
-from tom.models import Target, TargetName, ExposureSet, PhotObs
+from tom.models import Target, TargetName, ExposureSet, PhotObs, ProjectUser
 import query_functions
 
 def add_target(params):
@@ -83,3 +83,16 @@ def record_obs_requests(obs_list):
         
         for exp in exp_sets:
             new_obs.exposures.add(exp)
+
+def record_project_user(params):
+    """Function to record updated details of a Project User's account"""
+    
+    user = query_functions.get_project_user(handle=params['handle'])
+    
+    user.affiliation = params['affiliation']
+    user.email = params['email']
+    user.lco_observer_id = params['lco_observer_id']
+    user.lco_observer_pswd = params['lco_observer_pswd']
+    user.save()
+    
+    return 'Updated project user parameters'

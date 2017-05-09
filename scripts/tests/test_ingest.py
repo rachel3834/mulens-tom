@@ -34,6 +34,20 @@ def test_record_obs_requests():
     
     ingest.record_obs_requests( [obs] )
 
-
+def test_record_user_params():
+    """Function to test the ingest of new parameters for a ProjectUser"""
+    
+    params = { 'handle': 'tester', 
+              'email': 'tester@lco.global',
+              'affiliation': 'LCO',
+              'lco_observer_id': 'tester@lco',
+              'lco_observer_pswd': 'tester_login'
+              }
+    
+    message = ingest.record_project_user(params)
+    print message
+    
 if __name__ == '__main__':
-    test_record_obs_requests()
+    #test_record_obs_requests()
+    test_record_user_params()
+    

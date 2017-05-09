@@ -16,12 +16,14 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 from tom.views import home, targets, add_target, observations, request_obs
-from tom.views import record_obs
+from tom.views import record_obs, manage_account, change_password
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     url(r'^login/$', auth_views.login, {'template_name':'tom/login.html'}, name='login'),
     url(r'^logout/$', auth_views.logout, {'next_page':'/'}, name='logout'),
+    url(r'^change_password/$', change_password, name='change_password'),
+    url(r'^manage_account/$', manage_account, name='manage_account'),
     url(r'^admin/', admin.site.urls),
     url(r'^$',home,name="home"),
     url(r'^targets/$',targets,name="targets"),

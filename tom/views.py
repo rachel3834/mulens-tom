@@ -4,9 +4,12 @@ from __future__ import unicode_literals
 from django.shortcuts import render
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib import messages
 from .models import Target, TargetName, PhotObs
 from .forms import TargetForm, TargetNameForm
-from .forms import ObservationForm, ExposureSetForm
+from .forms import ObservationForm, ExposureSetForm, AccountForm
 from scripts import ingest, query_functions, log_utilities
 from scripts import observing_strategy, lco_interface
 
@@ -219,5 +222,76 @@ def record_obs(request):
                                     {'tform': tform, 'oform': oform, 'eform': eform,
                                      'targets': targets,
                                     'message': 'none'})        
+    else:
+        return HttpResponseRedirect('login')
+
+@login_required(login_url='/login/')
+def change_password(request):
+    """
+    View to enable the user change their login
+    """
+    
+    if request.user.is_authenticated():
+        if request.method == 'POST':
+            form = PasswordChangeForm(request.user, request.POST)
+            if form.is_valid():
+                user = form.save()
+                update_session_auth_hash(request, user)
+                
+                message = 'User password was successfully updated!'
+                
+                return render(request, 'tom/change_password.html', {'form': form,
+                                      'message': message})
+            else:
+                messages = 'Form validation error, please try again'
+                form = PasswordChangeForm(request.user)
+                return render(request, 'tom/change_password.html', {'form': form,
+                                      'message': message})
+        else:
+            form = PasswordChangeForm(request.user)
+            return render(request, 'tom/change_password.html', {'form': form,
+                                  'message': 'none'})
+    else:
+        return HttpResponseRedirect('login')
+
+
+@login_required(login_url='/login/')
+def manage_account(request):
+    """
+    View to enable the user to manage aspects of their user account
+    """
+    
+    def parse_user_params(upost):
+        params = {}
+        params['handle'] = upost.handle
+        params['email'] = upost.email
+        params['affiliation'] = upost.affiliation
+        params['lco_observer_id'] = upost.lco_observer_id
+        params['lco_observer_pswd'] = upost.lco_observer_pswd
+        return params
+        
+    if request.user.is_authenticated():
+        if request.method == 'POST':
+            form = AccountForm(request.POST)
+            if form.is_valid():
+                upost = form.save(commit=False)
+                
+                params = parse_user_params(upost)
+                message = ingest.record_project_user(params)
+                
+                return render(request, 'tom/manage_account.html', \
+                                {'uform': form, 
+                                'message': message})
+                                
+            else:
+                form = AccountForm()
+                return render(request, 'tom/manage_account.html', \
+                                {'uform': form, 
+                                'message': 'Validation error, please try again'})
+        else:
+            form = AccountForm()
+            return render(request, 'tom/manage_account.html', \
+                                {'uform': form, 
+                                'message': 'none'})
     else:
         return HttpResponseRedirect('login')

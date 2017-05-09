@@ -18,7 +18,7 @@ from django import setup
 from datetime import datetime, timedelta
 setup()
 
-from tom.models import Target, TargetName, Project
+from tom.models import Target, TargetName, Project, ProjectUser
 
 def get_target(target_name):
     """Function to return the Target instance for a specific target, given
@@ -38,3 +38,14 @@ def get_proposal(name=None,id_code=None):
     
     
     return project
+    
+def get_project_user(name=None, handle=None):
+    """Function to return the Project User instance, given alternative 
+    identifiers"""
+    
+    if name != None:
+        user = ProjectUser.objects.get(name=name)
+    else:
+        user = ProjectUser.objects.get(handle=handle)
+    
+    return user

@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title_text %}Manage Project User Account{% endblock %}
+{% block header_text %}Manage Project User Account{% endblock %}
+
+{% block mainregion %}
+<h3>Manage Project User Account</h3>
+<center>
+<div>
+    <form method="POST" class="post-form">{% csrf_token %}
+        {{ formset.management_form }}
+        <table>
+            <tr><td><label for="{{uform.handle.id_for_label}}">User ID:</label></td>
+                <td><div class="fieldWrapper">
+                        {{uform.handle.errors}}
+                        {{uform.handle}}
+                    </div>
+                </td></tr>
+            <tr><td><label for="{{uform.affiliation.id_for_label}}">Affiliation:</label></td>
+                <td><div class="fieldWrapper">
+                        {{uform.affiliation.errors}}
+                        {{uform.affiliation}}
+                    </div>
+                </td></tr>
+            <tr><td><label for="{{uform.email.id_for_label}}">Email:</label></td>
+                <td><div class="fieldWrapper">
+                        {{uform.email.errors}}
+                        {{uform.email}}
+                    </div>
+                </td></tr>
+            <tr><td><label for="{{uform.lco_observer_id.id_for_label}}">LCO observer ID:</label></td>
+                <td><div class="fieldWrapper">
+                        {{uform.lco_observer_id.errors}}
+                        {{uform.lco_observer_id}}
+                    </div>
+                </td></tr>
+            <tr><td><label for="{{uform.lco_observer_pswd.id_for_label}}">LCO observer password:</label></td>
+                <td><div class="fieldWrapper">
+                        {{uform.lco_observer_pswd.errors}}
+                        {{uform.lco_observer_pswd}}
+                    </div>
+                </td></tr>
+            <tr><td><button type="submit" style="font-family:verdana;">Save Changes</button></td></tr>
+        </table>
+    </form>
+</div>
+{% if message != 'none' %}
+<div>
+    <center>
+        <h5>{{ message }}</h5>
+    </center>
+</div>
+</center>
+{% endif %}
+
+{% endblock %}

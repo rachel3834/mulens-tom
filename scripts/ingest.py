@@ -18,7 +18,8 @@ from django import setup
 from datetime import datetime, timedelta
 setup()
 
-from tom.models import Target, TargetName
+from tom.models import Target, TargetName, ExposureSet, PhotObs
+import query_functions
 
 def add_target(params):
     """Function to add a new target to the database
@@ -45,42 +46,40 @@ def add_target(params):
 def record_obs_requests(obs_list):
     """Function to record a observation request in the database"""
     
+    
     for obs in obs_list:
         
-        qs = TargetName.objects.get(name=obs.name)
-        target= qs[0]
+        target = query_functions.get_target(obs.name)
     
-        qs = Project.objects.get(proposal_id=obs.proposal_id)
-        project = qs[0]
+        project = query_functions.get_proposal(id_code=obs.proposal_id)
         
         exp_sets = []
-        for i in range(0,len(obs.exposures),1):
+        for i in range(0,len(obs.exposure_times),1):
             new_exp = ExposureSet(inst_filter=obs.filters[i],
-                                      exp_time=obs.exptimes[i],
-                                      n_exp = obs.n_exp[i],
-                                      defocus = obs.defocus[i],
+                                      exp_time=obs.exposure_times[i],
+                                      n_exp = obs.exposure_counts[i],
+                                      defocus = obs.focus_offset[i],
                                       binning = obs.binning[i]
                                       )
             new_exp.save()
             exp_sets.append(new_exp)
-            
+
         new_obs = PhotObs(target_id=target,
                         project_id=project,
                         group_id=obs.group_id,
                         network='lco',
                         site=obs.site,
-                        telescope=obs.telescope,
-                        aperture=obs.aperture,
+                        telescope=obs.tel,
                         instrument=obs.instrument,
-                        filters=obs.filters,
-                        exposures=exp_sets,
                         track_id=obs.track_id,
-                        start_obs=obs.start_obs,
-                        stop_obs=obs.stop_obs,
+                        start_obs=obs.ts_submit,
+                        stop_obs=obs.ts_expire,
                         cadence=obs.cadence,
                         jitter=obs.jitter,
-                        mode=obs.mode,
-                        status=obs.status_submit
+                        group_type=obs.group_type,
+                        status=obs.submit_status
                         )
         new_obs.save()
         
+        for exp in exp_sets:
+            new_obs.exposures.add(exp)

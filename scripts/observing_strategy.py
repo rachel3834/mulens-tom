@@ -19,11 +19,11 @@ from django import setup
 from datetime import datetime, timedelta
 setup()
 
-from tom.models import Target, TargetName, Project
+from tom.models import ProjectUser, Project
 
 import lco_interface
     
-def compose_obs_requests(params):
+def compose_obs_requests(params,log=None):
     """Function to construct an ObsRequest instance with the users 
     parameters for the observation
     
@@ -31,38 +31,49 @@ def compose_obs_requests(params):
     """
 
     obs_strategy = strategy_config(params)
-    
+    if log!=None:
+        log.info('Applying observing strategy parameters:')
+        for key, value in obs_strategy.items():
+            log.info(str(key)+': '+str(value))
+   
+    if log!=None:
+        log.info('Observation requests built:')
+             
     obs_list = []
-    
-    for i in range(0,len(obs_strategy['sites'],1):
+    for i in range(0,len(obs_strategy['sites']),1):
         obs = lco_interface.ObsRequest()
         obs.name = params['name']
         obs.ra = params['ra']
         obs.dec = params['dec']
         obs.site = obs_strategy['sites'][i]
-        obs.observatory= obs_strategy['dome'][i]
-        obs.tel = obs_strategy['telescope'][i]
+        obs.observatory= obs_strategy['domes'][i]
+        obs.tel = obs_strategy['telescopes'][i]
         obs.instrument = obs_strategy['instruments'][i]
         obs.instrument_class = '1M0-SCICAM-SINISTRO'
         obs.set_aperture_class()
         obs.filters = [ params['filter'] ]
         obs.exposure_times = [ params['exp_time'] ]
         obs.exposure_counts = [ params['n_exp'] ]
-        obs.binning = 1
-        obs.defocus = strategy['defocus']
+        obs.binning = [ 1 ]
+        obs.focus_offset = [ obs_strategy['defocus'] ]
         obs.cadence = params['cadence_hrs']
         obs.jitter = params['jitter_hrs']
-        obs.priority = strategy['priority']
+        obs.priority = obs_strategy['priority']
         obs.ts_submit = params['start_obs']
         obs.ts_expire = params['stop_obs']
-        obs.proposal_id = strategy['proposal_id']
-        obs.user_id = strategy['lco_observer_id']
-        obs.pswd = strategy['lco_observer_pswd']
+        obs.proposal_id = obs_strategy['proposal_id']
+        obs.token = obs_strategy['token']
+        obs.user_id = obs_strategy['lco_observer_id']
+        obs.pswd = obs_strategy['lco_observer_pswd']
+        obs.simulate = False
         obs.get_group_id()
         
         obs_list.append(obs)
         
-    return obs
+        if log!=None:
+            log.info(obs.summary())
+            
+    return obs_list
 
 def strategy_config(params):
     """Function defining the pre-determined parameters of observations for 
@@ -72,20 +83,22 @@ def strategy_config(params):
     """
     
     obs_strategy = {}
-    strategy['sites'] = [ 'lsc', 'cpt', 'coj' ]
-    strategy['domes'] = [ 'domc', 'domc', 'domb' ]
-    strategy['instrments'] = [ 'fl04', 'fl16', 'fl19' ]  XXX
-    strategy['defocus'] = 0.0
-    strategy['priority'] = 1.0
+    obs_strategy['sites'] = [ 'lsc', 'cpt', 'coj' ]
+    obs_strategy['domes'] = [ 'domc', 'domc', 'domb' ]
+    obs_strategy['telescopes'] = [ '1m0', '1m0', '1m0' ]
+    obs_strategy['instruments'] = [ 'fl04', 'fl06', 'fl11' ]
+    obs_strategy['defocus'] = 0.0
+    obs_strategy['priority'] = 1.0
     
     qs = Project.objects.all()
     project = qs[0]
-    strategy['proposal_id'] = project.proposal_id
+    obs_strategy['proposal_id'] = project.proposal_id
+    obs_strategy['token'] = project.token
     
-    qs = User.object.filter(user_handle__contains=params['user_id'])
+    qs = ProjectUser.objects.filter(handle__contains=params['user_id'])
     if len(qs) == 1:
-        strategy['lco_observer_id'] = qs[0].lco_observer_id
-        strategy['lco_observer_pswd'] = qs[0].lco_observer_pswd
+        obs_strategy['lco_observer_id'] = qs[0].lco_observer_id
+        obs_strategy['lco_observer_pswd'] = qs[0].lco_observer_pswd
     
     return obs_strategy 
     

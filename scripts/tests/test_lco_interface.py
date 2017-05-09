@@ -18,12 +18,13 @@ from django.conf import settings
 from django.utils import timezone
 from django import setup
 from datetime import datetime, timedelta
+import pytz
 setup()
 import ingest, observing_strategy
 from tom.models import Target
 import lco_interface, observing_strategy, log_utilities
 
-def get_test_obs():
+def get_test_obs(simulate=False):
     """Function to return an example of an ObsRequest with default
     parameters for testing purposes"""
     
@@ -46,27 +47,32 @@ def get_test_obs():
     obs.jitter = 1.0
     obs.priority = 1.0
     obs.ts_submit = datetime.strptime('2017-07-15T01:00:00',"%Y-%m-%dT%H:%M:%S")
+    obs.ts_submit = obs.ts_submit.replace(tzinfo=pytz.UTC)
     obs.ts_expire = datetime.strptime('2017-07-16T01:00:00',"%Y-%m-%dT%H:%M:%S")
+    obs.ts_expire = obs.ts_expire.replace(tzinfo=pytz.UTC)
     if len(argv) == 1:
         obs.proposal_id = raw_input('Please enter the proposal ID: ')
         obs.user_id = raw_input('Please enter the LCO user ID: ')
         obs.pswd = raw_input('Please enter the LCO user password: ')
+        obs.token = raw_input('Please enter the LCO API token: ')
     else:
         obs.proposal_id = argv[1]
         obs.user_id = argv[2]
         obs.pswd = argv[3]
+        obs.token = argv[4]
+    obs.simulate = simulate
     obs.get_group_id()
 
     return obs
 
-def test_build_cadence_request():
+def test_build_cadence_request(simulate=False):
     """Function to verify that an ObsRequest can be submitted to the 
     LCO network"""
     config = { 'log_root_name': 'test_lco_interface',
               'log_dir': '.' }
     log = log_utilities.start_day_log( config, 'test_lco_interface' )
     
-    obs = get_test_obs()
+    obs = get_test_obs(simulate=simulate)
     
     ur = obs.build_cadence_request(log=log,debug=True)
     
@@ -119,23 +125,18 @@ def test_obs_submission(simulate=True):
     """Function to verify that an ObsRequest can be submitted to the 
     LCO network"""
     config = { 'log_root_name': 'test_lco_interface',
-              'log_dir': '.',
-              'simulate': simulate
+              'log_dir': '.'
             }
-    if len(argv) == 1:
-        config['token'] = raw_input('Please enter token for API access to LCO: ')
-    else:
-        config['token'] = argv[4]
         
     log = log_utilities.start_day_log( config, 'test_lco_interface' )
     
-    obs = get_test_obs()
-    obs_list = lco_interface.submit_obs_requests( [ obs ], config, log )
+    obs = get_test_obs(simulate=simulate)
+    obs_list = lco_interface.submit_obs_requests( [ obs ], log )
     
     log_utilities.end_day_log(log)
     print 'Successful test of observation submission'
     
 if __name__ == '__main__':
-    test_build_cadence_request()
+    test_build_cadence_request(simulate=False)
     test_obs_submission(simulate=False)
     

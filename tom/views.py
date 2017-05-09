@@ -7,7 +7,8 @@ from django.contrib.auth.decorators import login_required
 from .models import Target, TargetName, PhotObs
 from .forms import TargetForm, TargetNameForm
 from .forms import ObservationForm, ExposureSetForm
-from scripts import ingest, query_functions
+from scripts import ingest, query_functions, log_utilities
+from scripts import observing_strategy, lco_interface
 
 @login_required(login_url='/login/')
 def home(request):
@@ -91,41 +92,52 @@ def observations(request):
 def request_obs(request):
     """Function to specify a new observation with all associated
     information and submit it to both the LCO network and the DB"""
-    
+        
     if request.user.is_authenticated():
+        config = { 'log_root_name': 'test_views',
+              'log_dir': '/Users/rstreet/spitzer_microlensing/'
+              }
+        log = log_utilities.start_day_log(config, 'test_views')
+
         qs = TargetName.objects.all()
         targets = []
         for q in qs:
             targets.append(q.name)
         
         if request.method == "POST":
+            log.info('Received parameters from online form')
+            log.info(repr(request.POST))
             tform = TargetNameForm(request.POST)
             oform = ObservationForm(request.POST)
             eform = ExposureSetForm(request.POST)
+            log.info('TFORM: '+repr(tform.errors))
+            log.info('OFORM: '+repr(oform.errors))
+            log.info('EFORM: '+repr(eform.errors))
             if tform.is_valid() and oform.is_valid() and eform.is_valid():
+                log.info('Validated parameters from online form')
                 tpost = tform.save(commit=False)
                 opost = oform.save(commit=False)
                 epost = eform.save(commit=False)
-                params = parse_obs_params(tpost,opost,epost,request)
+                params = parse_obs_params(tpost,opost,epost,request,log=log)
                 
-                obs_requests = observing_strategy.compose_obs_requests(params)
+                obs_requests = observing_strategy.compose_obs_requests(params, log=log)
                 
-                obs_requests = lco_interface.submit_obs_requests(obs_requests)
+                obs_requests = lco_interface.submit_obs_requests(obs_requests, log=log)
                 
                 ingest.record_obs_requests(obs_requests)
                 
+                log_utilities.end_day_log(log)
+                
                 return render(request, 'tom/request_observation.html', \
                                     {'tform': tform, 'oform': oform,'eform': eform,
-                                    'message': message})
+                                    'message': 'Obervations submitted'})
             else:
                 tform = TargetNameForm()
                 oform = ObservationForm()
                 eform = ExposureSetForm()
                 return render(request, 'tom/request_observation.html', \
                                     {'tform': tform, 'oform': oform,'eform': eform,
-                                    'message':'Form entry was invalid.\nReason:\n'+\
-                                    repr(tform.errors)+' '+repr(nform.errors)+\
-                                    '\nPlease try again.'})
+                                    'message':'Form entry was invalid.  Please try again.'})
         else:
             tform = TargetNameForm()
             oform = ObservationForm()
@@ -139,7 +151,7 @@ def request_obs(request):
     else:
         return HttpResponseRedirect('login')
         
-def parse_obs_params(tpost,opost,epost,request):
+def parse_obs_params(tpost,opost,epost,request,log=None):
     """Function to parse the posted parameters into a dictionary, 
     and resolve observation parameters where necessary
     """
@@ -156,12 +168,16 @@ def parse_obs_params(tpost,opost,epost,request):
     params['n_exp'] = epost.n_exp
     
     params['group_type'] = opost.group_type
-    params['cadence'] = opost.cadence
-    params['jitter'] = opost.jitter
-    params['tart_obs'] = opost.start_obs
+    params['cadence_hrs'] = opost.cadence
+    params['jitter_hrs'] = opost.jitter
+    params['start_obs'] = opost.start_obs
     params['stop_obs'] = opost.stop_obs
     
     params['user_id'] = request.user
+    
+    if log!=None:
+        for key, value in params.items():
+            log.info(str(key)+' = '+str(value))
     
     return params
 

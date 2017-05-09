@@ -11,10 +11,9 @@
         {{ formset.management_form }}
         <table>
             <tr>
-                <td><label for="{{nform.name.id_for_label}}">Target:</label></td>
+                <td><label for="{{tform.name.id_for_label}}">Target:</label></td>
                 <td><div class="fieldWrapper">
-                        {{nform.name.errors}}
-                        <select name="target_name">
+                        <select name="name">
                             {% for name in targets %}
                                 <option value="{{name}}">{{name}}</option>
                             {% endfor %}
@@ -58,12 +57,6 @@
                 </td><td></td><td></td>
             </tr>
             <tr>
-                <td><label for="{{oform.group_type.id_for_label}}">Observation type:</label></td>
-                <td><div class="fieldWrapper">
-                        {{oform.group_type.errors}}
-                        {{oform.group_type}}
-                    </div>
-                </td>
                 <td><label for="{{oform.cadence.id_for_label}}">Cadence [hrs]:</label></td>
                 <td><div class="fieldWrapper">
                         {{oform.cadence.errors}}
@@ -75,7 +68,7 @@
                         {{oform.jitter.errors}}
                         {{oform.jitter}}
                     </div>
-                </td>
+                </td><td></td>
             </tr>
             <tr>
                 <td>

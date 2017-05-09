@@ -7,6 +7,7 @@ Created on Fri Mar 17 18:07:21 2017
 from os import environ, path
 from sys import path as systempath
 from sys import exit
+from time import sleep
 from local_conf import get_conf
 app_config = get_conf('mulens_tom')
 systempath.append(app_config)
@@ -44,7 +45,7 @@ class ObsRequest:
         self.instrument = None
         self.instrument_class = None
         self.filters = None
-        self.group_type = 'single'
+        self.group_type = 'cadence'
         self.exposure_times = []
         self.exposure_counts = []
         self.cadence = None
@@ -56,15 +57,17 @@ class ObsRequest:
         self.user_id = None
         self.pswd = None
         self.proposal_id = None
-        self.ttl = None
+        self.token = None
         self.focus_offset = []
         self.pfrm = False
         self.onem = False
         self.twom = False
+        self.simulate = False
         self.submit_response = None
         self.submit_status = None
 
     def get_group_id(self):
+        sleep(0.00001)
         dateobj = timezone.now()
         time = float(dateobj.hour) + (float(dateobj.minute)/60.0) + \
         (float(dateobj.second)/3600.0) + (float(dateobj.microsecond)/3600e6)
@@ -145,8 +148,6 @@ class ObsRequest:
               }
         reqList = []
         
-        self.ts_submit = timezone.now() + timedelta(seconds=(10*60))
-        self.ts_expire = self.ts_submit + timedelta(seconds=(self.ttl*24*60*60))
         if debug == True and log != None:
             log.info('Observations start datetime: '+self.ts_submit.strftime("%Y-%m-%d %H:%M:%S"))
             log.info('Observations stop datetime: '+self.ts_expire.strftime("%Y-%m-%d %H:%M:%S"))
@@ -196,7 +197,10 @@ class ObsRequest:
         
     def build_molecule_list(self,debug=False,log=None):
         def parse_filter(f):
-            filters = { 'SDSS-g': 'gp', 'SDSS-r': 'rp', 'SDSS-i': 'ip' }
+            filters = { 'SDSS-g': 'gp', 'SDSS-r': 'rp', 'SDSS-i': 'ip',
+                       'Bessell-B': 'B', 'Bessell-V': 'V', 'Bessell-R': 'R', 'Cousins-Ic': 'I',
+                       'Pan-STARRS-Z': 'zs'
+                       }
             if f in filters.keys():
                 return filters[f]
             else:
@@ -223,8 +227,8 @@ class ObsRequest:
             		 'ag_name'	   : '',	     
             		 'ag_mode'	   : 'Optional',
             		 'instrument_name' : self.instrument_class,
-            		 'bin_x'	   : 1,
-            		 'bin_y'	   : 1,
+            		 'bin_x'	   : self.binning[i],
+            		 'bin_y'	   : self.binning[i],
             		 'defocus'	   : defocus      
             	       }
             if debug == True and log != None:
@@ -258,7 +262,7 @@ class ObsRequest:
             
         return ur
     
-    def submit_request(self, ur, config, log=None):
+    def submit_request(self, ur, log=None):
         
         if self.submit_status == 'No_obs_submitted':
             self.submit_response = 'No_obs_submitted'
@@ -267,7 +271,7 @@ class ObsRequest:
             if log != None:
                 log.info('WARNING: ' + self.submit_status)
                 
-        elif str(config['simulate']).lower() == 'true':
+        elif str(self.simulate).lower() == 'true':
             self.submit_status = 'SIM_add_OK'
             self.submit_response = 'Simulated'
             self.req_id = '9999999999'
@@ -278,7 +282,7 @@ class ObsRequest:
         else:
             end_point = '/observe/service/request/submit'
             response = self.talk_to_lco(ur,end_point)
-            self.parse_submit_response( config, response, log=log )
+            self.parse_submit_response( response, log=log )
 
         if log != None:
             log.info(' -> Completed obs submission')
@@ -312,7 +316,7 @@ class ObsRequest:
         return submit_response
 
         
-    def parse_submit_response( self, config, submit_string, log=None, debug=False ):
+    def parse_submit_response( self, submit_string, log=None, debug=False ):
         
         if debug == True and log != None:
             log.info('Request response = ' + str(submit_string) )
@@ -333,14 +337,14 @@ class ObsRequest:
                     self.submit_response = str(key) + ' = ' + str(value)
                     self.track_id = str(value)
                     self.submit_status = 'add_OK'
-                    self.get_request_numbers(config,log=log)
+                    self.get_request_numbers(log=log)
                 except ValueError:
                     try:
                         (key,value) = entry.split('=')
                         self.submit_response = str(key) + ' = ' + str(value)
                         self.track_id = str(value)
                         self.submit_status = 'add_OK'
-                        self.get_request_numbers(config,log=log)
+                        self.get_request_numbers(log=log)
                     except:
                         self.submit_response = str(submit_string)
                         self.submit_status = 'WARNING'
@@ -351,12 +355,11 @@ class ObsRequest:
             log.info('Submit status: ' + str(self.submit_status))
             log.info('Submit response: ' + str(self.submit_response))
     
-    def get_request_numbers(self,config,log=None):
+    def get_request_numbers(self,log=None):
         
         self.req_id = ''
         if self.track_id != None:
-            token = config['token']
-            headers = {'Authorization': 'Token ' + config['token']}
+            headers = {'Authorization': 'Token ' + self.token}
             url = path.join(LCO_API_URL,'user_requests',str(self.track_id)+'/')
             response = requests.get(url, headers=headers).json()
             if 'requests' in response.keys():
@@ -364,7 +367,7 @@ class ObsRequest:
                     self.req_id = self.req_id +':'+str(r['request_number'])
                 self.req_id = self.req_id +':'
             
-    def obs_record( self, config ):
+    def obs_record( self ):
         """Method to output a record, in standard format, of the current 
         observation request"""
         
@@ -392,17 +395,23 @@ class ObsRequest:
                 + str(report)+ '\n'
         return output
         
-def submit_obs_requests(obs_requests):
+def submit_obs_requests(obs_requests, log=None):
     """Function to compose target and observing requirements into the correct
     form and to submit the request to the LCO network
     Parameters:
         obs_requests        list        List of ObsRequest objects
+        log                 log object  [Optional] Open logging object
     returns
         obs_requests        list        List with submit_status paramater updated
     """
 
     for obs in obs_requests:
         ur = obs.build_cadence_request()
-        obs.submit_status = obs.submit_request(ur, script_config, log=log)
+        if log!=None:
+            log.info('Build observation request for '+str(obs.group_id))
+            
+        obs.submit_status = obs.submit_request(ur, log=log)
+        if log!=None:
+            log.info('Submitted observation with status '+str(obs.submit_status))
 
     return obs_requests

@@ -18,12 +18,23 @@ from django import setup
 from datetime import datetime, timedelta
 setup()
 
-from tom.models import Target, TargetName
+from tom.models import Target, TargetName, Project
 
 def get_target(target_name):
     """Function to return the Target instance for a specific target, given
     its name"""
     
-    qs = TargetName.object.get(name=target_name)
-    return qs[0]
+    target_name = TargetName.objects.get(name=target_name)
     
+    return target_name.target_id
+
+def get_proposal(name=None,id_code=None):
+    """Function to return the Project instance, given its identifier"""
+    
+    if name != None:
+        project = Project.objects.get(name=name)
+    else:
+        project = Project.objects.get(proposal_id=id_code)
+    
+    
+    return project

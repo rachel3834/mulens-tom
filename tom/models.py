@@ -22,6 +22,8 @@ class Project(models.Model):
     users = models.ManyToManyField(ProjectUser,blank=True)
     proposal_id = models.CharField("Proposal ID",max_length=50,
                                        blank=True,null=True)
+    token = models.CharField("Token",max_length=200,
+                                       blank=True,null=True)
     last_modified_date = models.DateTimeField(
             blank=True, null=True)
     
@@ -64,22 +66,21 @@ class TargetList(models.Model):
 class ExposureSet(models.Model):
     """Class describing a set of exposures in a single filter"""
     filters = (
-                ('ip', 'SDSS-i'),
-                ('rp', 'SDSS-r'),
-                ('zs', 'Pan-STARRS-Z'),
-                ('V', 'Bessell-V'),
-                ('R', 'Bessell-R'),
-                ('I', 'Cousins-Ic'),
+                ('SDSS-i', 'SDSS-i'),
+                ('SDSS-r', 'SDSS-r'),
+                ('Pan-STARRS-Z', 'Pan-STARRS-Z'),
+                ('Bessell-V', 'Bessell-V'),
+                ('Bessell-R', 'Bessell-R'),
+                ('Cousins-Ic', 'Cousins-Ic'),
                 )
-    
-    inst_filter = models.CharField("Filter",max_length=15,choices=filters,default='R')
+    inst_filter = models.CharField("Filter",max_length=15,choices=filters,default='Bessell-R')
     exp_time = models.FloatField("Exposure time")
     n_exp = models.IntegerField("Number of exposures")
     defocus = models.FloatField("Defocus",blank=True)
     binning = models.IntegerField("Binning",blank=True)
 
     def __str__(self):
-        return str(self.inst_filter)+' '+str(self.exp_time)+' '+str(n_exp)
+        return str(self.pk)+' '+str(self.inst_filter)+' '+str(self.exp_time)+' '+str(self.n_exp)
         
 class PhotObs(models.Model):
     """Class describing the table of photometric observations
@@ -95,7 +96,6 @@ class PhotObs(models.Model):
     network = models.CharField("Network",max_length=50,blank=True)
     site = models.CharField("Site",max_length=50,blank=True)
     telescope = models.CharField("Telescope",max_length=50,blank=True)
-    aperture = models.FloatField(blank=True)
     instrument = models.CharField("Instrument",max_length=50,blank=True)
     exposures = models.ManyToManyField(ExposureSet,blank=True)
     track_id = models.CharField("Tracking ID",max_length=100,blank=True)
@@ -120,4 +120,4 @@ class PhotObs(models.Model):
             blank=True, null=True)
     
     def __str__(self):
-        return self.name
+        return self.group_id

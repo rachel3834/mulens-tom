@@ -5,7 +5,7 @@ ENTRYPOINT [ "/init" ]
 
 # Establish user ID of container while running
 RUN groupadd -g 20000 domainusers \
-    && useradd -u 20001 -g 20000 -c "rstreet" -d /home/rstreet -s /bin/bash rstreet
+    && useradd -u 20007 -g 20000 -c "Microlensing user" -d /home/robouser -s /bin/bash robouser
 
 # install packages
 RUN yum -y install epel-release \

@@ -3,6 +3,10 @@ FROM centos:7
 EXPOSE 80
 ENTRYPOINT [ "/init" ]
 
+# Establish user ID of container while running
+RUN groupadd -g 20000 domainusers \
+    && useradd -u 20001 -g 20000 -c "rstreet" -d /home/rstreet -s /bin/bash rstreet
+
 # install packages
 RUN yum -y install epel-release \
         && yum -y install nginx python-pip supervisor python-devel uwsgi-plugin-python \

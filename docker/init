@@ -7,7 +7,7 @@ export DJANGO_SETTINGS_MODULE="outreach.settings"
 python /var/www/spitzermicrolensing/manage.py collectstatic --noinput
 
 # perform database migrations
-python /var/www/spitzermicrolensin/manage.py migrate --noinput
+python /var/www/spitzermicrolensing/manage.py migrate --noinput
 
 # run under supervisord
 exec /usr/bin/supervisord -n -c /etc/supervisord.conf

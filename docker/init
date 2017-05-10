@@ -1,7 +1,7 @@
 #!/bin/bash
 
 export PYTHONPATH="/var/www/spitzermicrolensing"
-export DJANGO_SETTINGS_MODULE="outreach.settings"
+export DJANGO_SETTINGS_MODULE="mulens-tom.settings"
 
 # collect static files
 python /var/www/spitzermicrolensing/manage.py collectstatic --noinput

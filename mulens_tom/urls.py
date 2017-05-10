@@ -16,7 +16,7 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 from tom.views import home, targets, add_target, observations, request_obs
-from tom.views import record_obs, manage_account, change_password
+from tom.views import record_obs, manage_account, change_password, test
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
@@ -26,6 +26,7 @@ urlpatterns = [
     url(r'^manage_account/$', manage_account, name='manage_account'),
     url(r'^admin/', admin.site.urls),
     url(r'^$',home,name="home"),
+    url(r'^test/$',test,name="test"),
     url(r'^targets/$',targets,name="targets"),
     url(r'^add_target/$',add_target,name="add_target"),
     url(r'^observations/$',observations,name="observations"),

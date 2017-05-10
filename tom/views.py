@@ -13,6 +13,9 @@ from .forms import ObservationForm, ExposureSetForm, AccountForm
 from scripts import ingest, query_functions, log_utilities
 from scripts import observing_strategy, lco_interface
 
+def test(request):
+    return render(request,'tom/test_page.html',{})
+
 @login_required(login_url='/login/')
 def home(request):
     return render(request,'tom/index.html',{})

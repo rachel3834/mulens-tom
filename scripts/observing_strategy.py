@@ -84,9 +84,9 @@ def strategy_config(params):
     
     obs_strategy = {}
     obs_strategy['sites'] = [ 'lsc', 'cpt', 'coj' ]
-    obs_strategy['domes'] = [ 'domc', 'domc', 'domb' ]
+    obs_strategy['domes'] = [ 'domb', 'domc', 'domb' ]
     obs_strategy['telescopes'] = [ '1m0', '1m0', '1m0' ]
-    obs_strategy['instruments'] = [ 'fl04', 'fl06', 'fl11' ]
+    obs_strategy['instruments'] = [ 'fl03', 'fl06', 'fl11' ]
     obs_strategy['defocus'] = 0.0
     obs_strategy['priority'] = 1.0
     

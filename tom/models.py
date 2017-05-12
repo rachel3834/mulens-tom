@@ -73,7 +73,7 @@ class ExposureSet(models.Model):
                 ('Bessell-R', 'Bessell-R'),
                 ('Cousins-Ic', 'Cousins-Ic'),
                 )
-    inst_filter = models.CharField("Filter",max_length=15,choices=filters,default='Bessell-R')
+    inst_filter = models.CharField("Filter",max_length=15,choices=filters,default='SDSS-i')
     exp_time = models.FloatField("Exposure time")
     n_exp = models.IntegerField("Number of exposures")
     defocus = models.FloatField("Defocus",blank=True)

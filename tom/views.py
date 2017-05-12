@@ -100,39 +100,26 @@ def request_obs(request):
     information and submit it to both the LCO network and the DB"""
         
     if request.user.is_authenticated():
-        config = { 'log_root_name': 'test_views',
-              'log_dir': '/Users/rstreet/spitzer_microlensing/'
-              }
-        log = log_utilities.start_day_log(config, 'test_views')
-
         qs = TargetName.objects.all()
         targets = []
         for q in qs:
             targets.append(q.name)
         
         if request.method == "POST":
-            log.info('Received parameters from online form')
-            log.info(repr(request.POST))
             tform = TargetNameForm(request.POST)
             oform = ObservationForm(request.POST)
             eform = ExposureSetForm(request.POST)
-            log.info('TFORM: '+repr(tform.errors))
-            log.info('OFORM: '+repr(oform.errors))
-            log.info('EFORM: '+repr(eform.errors))
             if tform.is_valid() and oform.is_valid() and eform.is_valid():
-                log.info('Validated parameters from online form')
                 tpost = tform.save(commit=False)
                 opost = oform.save(commit=False)
                 epost = eform.save(commit=False)
-                params = parse_obs_params(tpost,opost,epost,request,log=log)
+                params = parse_obs_params(tpost,opost,epost,request)
                 
-                obs_requests = observing_strategy.compose_obs_requests(params, log=log)
+                obs_requests = observing_strategy.compose_obs_requests(params)
                 
-                obs_requests = lco_interface.submit_obs_requests(obs_requests, log=log)
+                obs_requests = lco_interface.submit_obs_requests(obs_requests)
                 
                 ingest.record_obs_requests(obs_requests)
-                
-                log_utilities.end_day_log(log)
                 
                 return render(request, 'tom/request_observation.html', \
                                     {'tform': tform, 'oform': oform,'eform': eform,

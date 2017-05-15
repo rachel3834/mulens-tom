@@ -179,20 +179,25 @@ class ObsRequest:
 
             ur = self.get_cadence_requests(ur,log=log)
             
-            if debug == True and log != None:
+            if 'requests' in ur.keys():
                 for r in ur['requests']:
                     if len(r['windows']) == 0:
-                        log.info('WARNING: scheduler returned no observing windows for this target')
+                        if debug == True and log != None:
+                            log.info('WARNING: scheduler returned no observing windows for this target')
                         self.submit_status = 'No_obs_submitted'
-                        self.submit_response = 'No_obs_submitted'
+                        message = 'WARNING: scheduler returned no observing windows for this target'
+                        if self.submit_response != None:
+                            self.submit_response = self.submit_response+' '+message
+                        else:
+                            self.submit_response = message
                         self.req_id = '9999999999'
                         self.track_id = '99999999999'
                     else:
                         log.info('Request windows: '+repr(r['windows']))
-                
+                    
         if debug == True and log != None:
             log.info(' -> Completed build of observation request ' + self.group_id)
-            
+            log.info(' -> Submit response: '+str(self.submit_response))
         return ur
         
     def build_molecule_list(self,debug=False,log=None):
@@ -254,6 +259,9 @@ class ObsRequest:
                 log.info('ERROR understanding returned cadence sequence, output is: ')
                 log.info(repr(jur))
         
+        if 'error_type' in ur.keys():
+            self.submit_response = 'ERROR: '+ur['error_msg']
+        
         if log != None:
             if 'error_type' in ur.keys():
                 log.info('ERROR building observation request: '+ur['error_msg'])
@@ -264,12 +272,14 @@ class ObsRequest:
     
     def submit_request(self, ur, log=None):
         
-        if self.submit_status == 'No_obs_submitted':
-            self.submit_response = 'No_obs_submitted'
+        if self.submit_status != None or self.submit_response != None:
+            self.submit_response = self.submit_response+': No_obs_submitted'
             self.req_id = '9999999999'
             self.track_id = '99999999999'
+            self.submit_status = 'error'
             if log != None:
-                log.info('WARNING: ' + self.submit_status)
+                log.info('Submission WARNING: ' + str(self.submit_status))
+                log.info('Submission WARNING: ' + str(self.submit_response))
                 
         elif str(self.simulate).lower() == 'true':
             self.submit_status = 'SIM_add_OK'
@@ -285,7 +295,8 @@ class ObsRequest:
             self.parse_submit_response( response, log=log )
 
         if log != None:
-            log.info(' -> Completed obs submission')
+            log.info(' -> Completed obs submission, submit response:')
+            log.info(str(self.submit_response))
         
         return self.submit_status
     
@@ -326,28 +337,28 @@ class ObsRequest:
         
         for entry in submit_string: 
             if 'Unauthorized' in entry:
-                self.submit_status = 'ERROR'
+                self.submit_status = 'error'
                 self.submit_response = entry
             elif 'time window' in submit_string:
-      		self.submit_status = 'ERROR'
+      		self.submit_status = 'error'
                 self.submit_response = entry
             else:
                 try: 
                     (key,value) = entry.split(':')
                     self.submit_response = str(key) + ' = ' + str(value)
                     self.track_id = str(value)
-                    self.submit_status = 'add_OK'
+                    self.submit_status = 'active'
                     self.get_request_numbers(log=log)
                 except ValueError:
                     try:
                         (key,value) = entry.split('=')
                         self.submit_response = str(key) + ' = ' + str(value)
                         self.track_id = str(value)
-                        self.submit_status = 'add_OK'
+                        self.submit_status = 'active'
                         self.get_request_numbers(log=log)
                     except:
                         self.submit_response = str(submit_string)
-                        self.submit_status = 'WARNING'
+                        self.submit_status = 'error'
                         self.track_id = '9999999999'
                         self.req_id = '9999999999'
        
@@ -406,7 +417,7 @@ def submit_obs_requests(obs_requests, log=None):
     """
 
     for obs in obs_requests:
-        ur = obs.build_cadence_request()
+        ur = obs.build_cadence_request(log=log)
         if log!=None:
             log.info('Build observation request for '+str(obs.group_id))
             

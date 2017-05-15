@@ -12,6 +12,7 @@ from .forms import TargetForm, TargetNameForm
 from .forms import ObservationForm, ExposureSetForm, AccountForm
 from scripts import ingest, query_functions, log_utilities
 from scripts import observing_strategy, lco_interface
+import socket
 
 def test(request):
     return render(request,'tom/test_page.html',{})
@@ -98,8 +99,18 @@ def observations(request):
 def request_obs(request):
     """Function to specify a new observation with all associated
     information and submit it to both the LCO network and the DB"""
-        
+    
+    host_name = socket.gethostname()
+    if 'einstein' in host_name:
+        config = { 'log_dir': '/var/www/spitzermicrolensing/logs/2017',
+              'log_root_name': 'request_log'}
+    else:
+        config = { 'log_dir': '/Users/rstreet/spitzermicrolensing/logs/2017',
+              'log_root_name': 'request_log'}
+              
     if request.user.is_authenticated():
+        
+        log = log_utilities.start_day_log(config,'request_obs')
         qs = TargetName.objects.all()
         targets = []
         for q in qs:
@@ -113,24 +124,27 @@ def request_obs(request):
                 tpost = tform.save(commit=False)
                 opost = oform.save(commit=False)
                 epost = eform.save(commit=False)
-                params = parse_obs_params(tpost,opost,epost,request)
+                params = parse_obs_params(tpost,opost,epost,request,log=log)
                 
-                obs_requests = observing_strategy.compose_obs_requests(params)
+                obs_requests = observing_strategy.compose_obs_requests(params,log=log)
                 
-                obs_requests = lco_interface.submit_obs_requests(obs_requests)
+                obs_requests = lco_interface.submit_obs_requests(obs_requests,log=log)
                 
                 ingest.record_obs_requests(obs_requests)
+                message = parse_obs_status(obs_requests)
+                
+                log_utilities.end_day_log( log )
                 
                 return render(request, 'tom/request_observation.html', \
                                     {'tform': tform, 'oform': oform,'eform': eform,
-                                    'message': 'Obervations submitted'})
+                                    'message': message})
             else:
                 tform = TargetNameForm()
                 oform = ObservationForm()
                 eform = ExposureSetForm()
                 return render(request, 'tom/request_observation.html', \
                                     {'tform': tform, 'oform': oform,'eform': eform,
-                                    'message':'Form entry was invalid.  Please try again.'})
+                                    'message':['Form entry was invalid.  Please try again.']})
         else:
             tform = TargetNameForm()
             oform = ObservationForm()
@@ -138,7 +152,7 @@ def request_obs(request):
             return render(request, 'tom/request_observation.html', \
                                     {'tform': tform, 'oform': oform, 'eform': eform,
                                      'targets': targets,
-                                    'message': 'none'})
+                                    'message': []})
 
         
     else:
@@ -173,7 +187,15 @@ def parse_obs_params(tpost,opost,epost,request,log=None):
             log.info(str(key)+' = '+str(value))
     
     return params
+    
+def parse_obs_status(obs_requests):
+    """Function to parse the output of the requested observations"""
 
+    message = []
+    for obs in obs_requests:
+        message.append(str(obs.group_id)+':'+str(obs.submit_response))
+    return message
+    
 @login_required(login_url='/login/')
 def record_obs(request):
     """Function to add a new observation to the database with all associated

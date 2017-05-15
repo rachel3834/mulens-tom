@@ -80,10 +80,12 @@
         </table>
     </form>
 </div>
-{% if message != 'none' %}
+{% if message|length > 0 %}
     <div>
     <center>
-        <h5>{{ message }}</h5>
+        {% for line in message %}
+            <h5>{{ line }}</h5>
+        {% endfor %}
     </center>
     </div>
 {% endif %}

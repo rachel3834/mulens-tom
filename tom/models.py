@@ -113,9 +113,12 @@ class PhotObs(models.Model):
                                  choices=modes,default="queue",blank=True)
     stats = ( ('submitted', 'Submitted'), 
               ('active', 'Active'),
-              ('expired', 'Expired') )
+              ('expired', 'Expired'),
+              ('error', 'Error' ))
     status = models.CharField("Observation status",max_length=30,
                               choices=stats,default="submitted",blank=True)
+    info = models.CharField("Information",max_length=300,
+                              default="",null=True,blank=True)
     last_modified_date = models.DateTimeField(
             blank=True, null=True)
     

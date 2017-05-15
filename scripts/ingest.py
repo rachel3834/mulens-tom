@@ -78,7 +78,7 @@ def record_obs_requests(obs_list):
                         jitter=obs.jitter,
                         group_type=obs.group_type,
                         status=obs.submit_status,
-                        info=str(obs.submit_response)
+                        information=str(obs.submit_response)
                         )
         new_obs.save()
         

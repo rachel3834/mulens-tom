@@ -101,11 +101,11 @@ def request_obs(request):
     information and submit it to both the LCO network and the DB"""
     
     host_name = socket.gethostname()
-    if 'einstein' in host_name:
-        config = { 'log_dir': '/var/www/spitzermicrolensing/logs/2017',
+    if 'rachel' in host_name:
+        config = { 'log_dir': '/Users/rstreet/spitzermicrolensing/logs/2017',
               'log_root_name': 'request_log'}
     else:
-        config = { 'log_dir': '/Users/rstreet/spitzermicrolensing/logs/2017',
+        config = { 'log_dir': '/var/www/spitzermicrolensing/logs/2017',
               'log_root_name': 'request_log'}
               
     if request.user.is_authenticated():

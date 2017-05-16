@@ -134,7 +134,7 @@ class ObsRequest:
             log.info('Target dictionary: ' + str( target ))
             
         constraints = { 
-        		  'max_airmass': 2.0,
+        		  'max_airmass': 1.5,
                     'min_lunar_distance': 10
                     }
         if debug == True and log != None:

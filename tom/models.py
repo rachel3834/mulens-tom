@@ -103,6 +103,7 @@ class PhotObs(models.Model):
     stop_obs = models.DateTimeField("Stop observing timestamp",blank=True)
     cadence = models.FloatField("Cadence",blank=True)
     jitter = models.FloatField("Jitter",blank=True)
+    airmass_limit = models.FloatField("Airmass limit",blank=True,default=1.5)
     obs_types = (
                 ('single', 'Single'),
                 ('cadence', 'Cadence'),

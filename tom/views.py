@@ -179,6 +179,7 @@ def parse_obs_params(tpost,opost,epost,request,log=None):
     params['jitter_hrs'] = opost.jitter
     params['start_obs'] = opost.start_obs
     params['stop_obs'] = opost.stop_obs
+    params['airmass_limit'] = opost.airmass_limit
     
     params['user_id'] = request.user
     

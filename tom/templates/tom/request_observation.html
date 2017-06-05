@@ -20,7 +20,7 @@
                         </select>
                     </div>
                 </td>
-                <td></td><td></td><td></td><td></td>
+                <td></td><td></td>
             </tr>
             <tr>
                 <td><label for="{{eform.inst_filter.id_for_label}}">Filter:</label></td>
@@ -35,10 +35,18 @@
                         {{eform.exp_time}}
                     </div>
                 </td>
+            </tr>
+            <tr>
                 <td><label for="{{eform.n_exp.id_for_label}}">Number of exposures:</label></td>
                 <td><div class="fieldWrapper">
                         {{eform.n_exp.errors}}
                         {{eform.n_exp}}
+                    </div>
+                </td>
+                <td><label for="{{oform.airmass_limit.id_for_label}}">Airmass limit:</label></td>
+                <td><div class="fieldWrapper">
+                        {{oform.airmass_limit.errors}}
+                        {{oform.airmass_limit}}
                     </div>
                 </td>
             </tr>
@@ -54,7 +62,7 @@
                         {{oform.stop_obs.errors}}
                         {{oform.stop_obs}}
                     </div>
-                </td><td></td><td></td>
+                </td>
             </tr>
             <tr>
                 <td><label for="{{oform.cadence.id_for_label}}">Cadence [hrs]:</label></td>
@@ -68,14 +76,14 @@
                         {{oform.jitter.errors}}
                         {{oform.jitter}}
                     </div>
-                </td><td></td>
+                </td>
             </tr>
             <tr>
                 <td>
                     <div class="fieldWrapper">
                     <button type="sumbit" class="save btn btn-default">Submit</button>
                     </div>
-                </td><td></td><td></td><td></td><td></td><td></td>
+                </td><td></td><td></td>
             </tr>
         </table>
     </form>

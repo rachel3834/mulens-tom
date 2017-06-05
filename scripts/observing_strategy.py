@@ -58,6 +58,7 @@ def compose_obs_requests(params,log=None):
         obs.focus_offset = [ obs_strategy['defocus'] ]
         obs.cadence = params['cadence_hrs']
         obs.jitter = params['jitter_hrs']
+        obs.airmass_limit = params['airmass_limit']
         obs.priority = obs_strategy['priority']
         obs.ts_submit = params['start_obs']
         obs.ts_expire = params['stop_obs']

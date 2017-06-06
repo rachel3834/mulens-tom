@@ -99,9 +99,10 @@ class ObsRequest:
     def build_cadence_request(self, log=None, debug=False):
                         
         if debug == True and log != None:
-            log.info('Building ODIN observation request')
+            log.info('Building Valhalla observation request')
         
-        self.get_group_id()
+        if self.group_id == None:
+            self.get_group_id()
         ur = {
             'group_id': self.group_id, 
             'proposal': self.proposal_id,
@@ -173,11 +174,12 @@ class ObsRequest:
             
             if 'requests' in ur.keys():
                 for r in ur['requests']:
-                    if len(r['windows']) == 0:
+                    if debug == True and log != None:
+                            log.info(repr(r))
+                    if type(r) == type(u'foo'):
+                        message = 'WARNING: '+repr(r)
                         if debug == True and log != None:
-                            log.info('WARNING: scheduler returned no observing windows for this target')
-                        self.submit_status = 'No_obs_submitted'
-                        message = 'WARNING: scheduler returned no observing windows for this target'
+                            log.info(message)
                         if self.submit_response != None:
                             self.submit_response = self.submit_response+' '+message
                         else:
@@ -185,7 +187,29 @@ class ObsRequest:
                         self.req_id = '9999999999'
                         self.track_id = '99999999999'
                     else:
-                        log.info('Request windows: '+repr(r['windows']))
+                        if 'windows' in r.keys():
+                            if len(r['windows']) == 0:
+                                if debug == True and log != None:
+                                    log.info('WARNING: scheduler returned no observing windows for this target')
+                                self.submit_status = 'No_obs_submitted'
+                                message = 'WARNING: scheduler returned no observing windows for this target'
+                                if self.submit_response != None:
+                                    self.submit_response = self.submit_response+' '+message
+                                else:
+                                    self.submit_response = message
+                                self.req_id = '9999999999'
+                                self.track_id = '99999999999'
+                            else:
+                                log.info('Request windows: '+repr(r['windows']))
+                        else:
+                            message = 'WARNING: no observing windows returned for this request'
+                            self.submit_status = 'No_obs_submitted'
+                            if self.submit_response != None:
+                                self.submit_response = self.submit_response+' '+message
+                            else:
+                                self.submit_response = message
+                            self.req_id = '9999999999'
+                            self.track_id = '99999999999'
             else:
                 if 'detail' in ur.keys():
                     self.submit_status = 'No_obs_submitted'
@@ -254,10 +278,10 @@ class ObsRequest:
             if 'error_type' in ur.keys():
                 log.info('ERROR building observation request: '+ur['error_msg'])
             else:
-                log.info('Received response from LCO cadence API')
+                log.info('Received response from LCO cadence API for request '+self.group_id)
             
         return ur
-    
+       
     def submit_request(self, ur, log=None):
         
         if self.submit_status != None or self.submit_response != None:
@@ -363,7 +387,72 @@ class ObsRequest:
                 str(self.focus_offset[i]) + ' ' + str(self.req_origin) + ' '\
                 + str(report)+ '\n'
         return output
+
+    def validate(self,log=None):
+        """Method to verify that all parameters in a list of requests are valid
+        Returns a boolean and a string message
+        """
+
+        status = True
+        message = 'OK'
         
+        if log!=None:
+            log.info('Validating obs group: '+str(self.group_id))
+        
+        if self.submit_response != None:
+            status = False
+            message = self.submit_response
+            if log!=None:
+                log.info(' -> Invalid: '+message)
+            return status, message
+        
+        if log!=None:
+            log.info('Validated obs group: '+str(self.group_id)+' with status '+message)
+        return status, message
+        
+def validate_request(ur,log=None):
+    """Function to validate the parameters of a userrequest.
+    Returns a boolean and a string message
+    """
+
+    status = True
+    message = 'OK'
+    
+    if log!=None:
+        log.info('Validating user request: '+str(ur['group_id']))
+    
+    if 'requests' not in ur.keys():
+        status= False
+        message= 'Error: no subrequests'
+        if log!=None:
+            log.info(' -> Invalid: '+message)
+            return status, message
+    
+    for r in ur['requests']:
+        if type(r) == type(u'foo'):
+            status = False
+            message = repr(r)
+            if log!=None:
+                log.info(' -> Invalid: '+message)
+                return status, message
+        else:
+            if 'windows' not in r.keys():
+                status= False
+                message= 'Error: no valid observing windows in request'
+                if log!=None:
+                    log.info(' -> Invalid: '+message)
+                    return status, message
+            else:
+                if len(r['windows']) == 0:
+                    status= False
+                    message= 'Error: no valid observing windows in request'
+                    if log!=None:
+                        log.info(' -> Invalid: '+message)
+                        return status, message
+    if log!=None:
+        log.info('Validated user request: '+str(ur['group_id'])+' with status '+message)
+    return status, message
+    
 def submit_obs_requests(obs_requests, log=None):
     """Function to compose target and observing requirements into the correct
     form and to submit the request to the LCO network
@@ -375,14 +464,27 @@ def submit_obs_requests(obs_requests, log=None):
     """
 
     for obs in obs_requests:
-        ur = obs.build_cadence_request(log=log)
-        if log!=None:
-            log.info('Build observation request for '+str(obs.group_id))
+        (status,message) = obs.validate(log=log)
+        
+        if status == True:
+            ur = obs.build_cadence_request(log=log)
+            if log!=None:
+                log.info('Build observation request for '+str(obs.group_id))
+                
+            (status, message) = validate_request(ur,log=None)
             
-        obs.submit_status = obs.submit_request(ur, log=log)
-        if log!=None:
-            log.info('Submitted observation with status '+str(obs.submit_status))
-            if 'error' in obs.submit_status:
-                log.info(ur)
-
+            if status == True:
+                obs.submit_status = obs.submit_request(ur, log=log)
+                if log!=None:
+                    log.info('Submitted observation with status '+str(obs.submit_status))
+                    if 'error' in obs.submit_status:
+                        log.info(ur)
+            else:
+                if log!=None:
+                    log.info('Invalid userrequest: '+message)
+                    if obs.submit_status != None:
+                        obs.submit_status = obs.submit_status + ' ' + message
+                    else:
+                        obs.submit_status = message
+    
     return obs_requests

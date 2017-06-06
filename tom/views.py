@@ -127,8 +127,9 @@ def request_obs(request):
                 params = parse_obs_params(tpost,opost,epost,request,log=log)
                 
                 obs_requests = observing_strategy.compose_obs_requests(params,log=log)
+                (status,message) = parse_obs_status(obs_requests)
                 
-                if 'Error' in str(obs_requests[0].submit_status):
+                if status == False:
                     message = obs_requests[0].submit_status
                     tform = TargetNameForm()
                     oform = ObservationForm()
@@ -140,7 +141,7 @@ def request_obs(request):
                     obs_requests = lco_interface.submit_obs_requests(obs_requests,log=log)
                 
                     ingest.record_obs_requests(obs_requests)
-                    message = parse_obs_status(obs_requests)
+                    (status,message) = parse_obs_status(obs_requests)
                 
                     log_utilities.end_day_log( log )
                 
@@ -200,12 +201,15 @@ def parse_obs_params(tpost,opost,epost,request,log=None):
     
 def parse_obs_status(obs_requests):
     """Function to parse the output of the requested observations"""
-
+    status = True
     message = []
     for obs in obs_requests:
         message.append(str(obs.group_id)+':'+str(obs.submit_response))
-    return message
-    
+        if 'error' in str(obs.submit_response).lower() or \
+            'warning' in str(obs.submit_response).lower():
+            status = False
+    return status, message
+
 @login_required(login_url='/login/')
 def record_obs(request):
     """Function to add a new observation to the database with all associated

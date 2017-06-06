@@ -68,6 +68,9 @@ def compose_obs_requests(params,log=None):
         obs.simulate = False
         obs.get_group_id()
         
+        if obs.token == None or len(str(obs.token)) < 10:
+            obs.submit_status = 'Error: Observer authentication token not set'
+        
         obs_list.append(obs)
         
         if log!=None:

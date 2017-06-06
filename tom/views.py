@@ -128,14 +128,23 @@ def request_obs(request):
                 
                 obs_requests = observing_strategy.compose_obs_requests(params,log=log)
                 
-                obs_requests = lco_interface.submit_obs_requests(obs_requests,log=log)
+                if 'Error' in str(obs_requests[0].submit_status):
+                    message = obs_requests[0].submit_status
+                    tform = TargetNameForm()
+                    oform = ObservationForm()
+                    eform = ExposureSetForm()
+                    return render(request, 'tom/request_observation.html', \
+                                    {'tform': tform, 'oform': oform,'eform': eform,
+                                    'message':[message]})
+                else:
+                    obs_requests = lco_interface.submit_obs_requests(obs_requests,log=log)
                 
-                ingest.record_obs_requests(obs_requests)
-                message = parse_obs_status(obs_requests)
+                    ingest.record_obs_requests(obs_requests)
+                    message = parse_obs_status(obs_requests)
                 
-                log_utilities.end_day_log( log )
+                    log_utilities.end_day_log( log )
                 
-                return render(request, 'tom/request_observation.html', \
+                    return render(request, 'tom/request_observation.html', \
                                     {'tform': tform, 'oform': oform,'eform': eform,
                                     'message': message})
             else:

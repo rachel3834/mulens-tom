@@ -54,6 +54,7 @@ class ObsRequest:
         self.ts_submit = None
         self.ts_expire = None
         self.proposal_id = None
+        self.user_id = None
         self.token = None
         self.focus_offset = []
         self.pfrm = False

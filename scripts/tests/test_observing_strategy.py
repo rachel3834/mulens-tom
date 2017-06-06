@@ -37,6 +37,7 @@ def test_compose_obs_requests():
             'n_exp': 2, 
             'cadence_hrs': 0.25,
             'jitter_hrs': 0.25,
+            'airmass_limit': 1.5,
             'start_obs': datetime.strptime("2017-05-20T00:01:00","%Y-%m-%dT%H:%M:%S"),
             'stop_obs': datetime.strptime("2017-05-22T00:01:00","%Y-%m-%dT%H:%M:%S"),
             'user_id': 'tester',
@@ -59,7 +60,7 @@ def test_compose_obs_requests():
         if obs.site not in site_list:
             site_list.append(obs.site)
         if __name__ == '__main__':
-            print obs.summary(), obs.proposal_id, obs.user_id, obs.pswd
+            print obs.summary(), obs.proposal_id, obs.user_id, obs.token
     
     assert(len(obs_list) == 3)
     assert('lsc' in site_list)

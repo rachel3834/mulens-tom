@@ -93,7 +93,7 @@ def record_project_user(params):
     user.affiliation = params['affiliation']
     user.email = params['email']
     user.lco_observer_id = params['lco_observer_id']
-    user.lco_observer_pswd = params['lco_observer_pswd']
+    user.token = params['token']
     user.save()
     
     return 'Updated project user parameters'

@@ -29,9 +29,9 @@ def get_test_obs(simulate=False):
     parameters for testing purposes"""
     
     obs = lco_interface.ObsRequest()
-    obs.name = 'test_target'
-    obs.ra = '18:34:56.7'
-    obs.dec = '-27:34:56.7'
+    obs.name = 'OB170019'
+    obs.ra = '17:52:18.74'
+    obs.dec = '-33:00:04.0'
     obs.site = 'lsc'
     obs.observatory= 'doma'
     obs.tel = '1m0'

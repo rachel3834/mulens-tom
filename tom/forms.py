@@ -30,8 +30,9 @@ class ExposureSetForm(forms.ModelForm):
     class Meta:
         model = ExposureSet
         fields = ('inst_filter', 'exp_time', 'n_exp',)
+    n_exp = forms.IntegerField(label='n_exp',min_value=0)
 
 class AccountForm(forms.ModelForm):
     class Meta:
         model = ProjectUser
-        fields = ('handle', 'affiliation', 'email', 'lco_observer_id', 'lco_observer_pswd')
+        fields = ('handle', 'affiliation', 'email', 'lco_observer_id', 'token')

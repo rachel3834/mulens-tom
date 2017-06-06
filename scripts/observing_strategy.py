@@ -63,9 +63,8 @@ def compose_obs_requests(params,log=None):
         obs.ts_submit = params['start_obs']
         obs.ts_expire = params['stop_obs']
         obs.proposal_id = obs_strategy['proposal_id']
-        obs.token = obs_strategy['token']
         obs.user_id = obs_strategy['lco_observer_id']
-        obs.pswd = obs_strategy['lco_observer_pswd']
+        obs.token = obs_strategy['token']
         obs.simulate = False
         obs.get_group_id()
         
@@ -94,12 +93,11 @@ def strategy_config(params):
     qs = Project.objects.all()
     project = qs[0]
     obs_strategy['proposal_id'] = project.proposal_id
-    obs_strategy['token'] = project.token
     
     qs = ProjectUser.objects.filter(handle__contains=params['user_id'])
     if len(qs) == 1:
         obs_strategy['lco_observer_id'] = qs[0].lco_observer_id
-        obs_strategy['lco_observer_pswd'] = qs[0].lco_observer_pswd
-    
+        obs_strategy['token'] = qs[0].token
+        
     return obs_strategy 
     

@@ -280,7 +280,7 @@ def manage_account(request):
         params['email'] = upost.email
         params['affiliation'] = upost.affiliation
         params['lco_observer_id'] = upost.lco_observer_id
-        params['lco_observer_pswd'] = upost.lco_observer_pswd
+        params['token'] = upost.token
         return params
         
     if request.user.is_authenticated():

@@ -11,6 +11,8 @@ class ProjectUser(models.Model):
     email = models.EmailField()
     lco_observer_id = models.CharField("LCO User ID",max_length=50,blank=True)
     lco_observer_pswd = models.CharField("LCO User login",max_length=50,blank=True)
+    token = models.CharField("Token",max_length=200,
+                                       blank=True,null=True)
     last_modified_date = models.DateTimeField(
             blank=True, null=True)
     
@@ -21,8 +23,6 @@ class Project(models.Model):
     name = models.CharField("Name",max_length=50)
     users = models.ManyToManyField(ProjectUser,blank=True)
     proposal_id = models.CharField("Proposal ID",max_length=50,
-                                       blank=True,null=True)
-    token = models.CharField("Token",max_length=200,
                                        blank=True,null=True)
     last_modified_date = models.DateTimeField(
             blank=True, null=True)

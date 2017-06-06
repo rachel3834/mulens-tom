@@ -30,7 +30,7 @@ def test_record_obs_requests():
     obs = test_lco_interface.get_test_obs()
     
     obs.track_id = '000012345678'
-    obs.submit_status='SIM_add_OK'
+    obs.submit_status='active'
     
     ingest.record_obs_requests( [obs] )
 
@@ -41,13 +41,12 @@ def test_record_user_params():
               'email': 'tester@lco.global',
               'affiliation': 'LCO',
               'lco_observer_id': 'tester@lco',
-              'lco_observer_pswd': 'tester_login'
               }
     
     message = ingest.record_project_user(params)
     print message
     
 if __name__ == '__main__':
-    #test_record_obs_requests()
-    test_record_user_params()
+    test_record_obs_requests()
+    #test_record_user_params()
     

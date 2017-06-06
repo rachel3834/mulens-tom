@@ -53,14 +53,10 @@ def get_test_obs(simulate=False):
     obs.ts_expire = obs.ts_expire.replace(tzinfo=pytz.UTC)
     if len(argv) == 1:
         obs.proposal_id = raw_input('Please enter the proposal ID: ')
-        obs.user_id = raw_input('Please enter the LCO user ID: ')
-        obs.pswd = raw_input('Please enter the LCO user password: ')
         obs.token = raw_input('Please enter the LCO API token: ')
     else:
         obs.proposal_id = argv[1]
-        obs.user_id = argv[2]
-        obs.pswd = argv[3]
-        obs.token = argv[4]
+        obs.token = argv[2]
     obs.simulate = simulate
     obs.get_group_id()
 
@@ -79,9 +75,7 @@ def test_build_cadence_request(simulate=False):
     
     assert(type(ur) == type({'foo':'bar'}))
     ur_keys = ['group_id','observation_type','operator','ipp_value', 'requests']
-    print ur
     for key in ur_keys:
-        print key
         assert(key in ur.keys())
     assert( len(ur['requests']) > 0 )
 

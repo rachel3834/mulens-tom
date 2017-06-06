@@ -33,7 +33,7 @@ def get_test_obs(simulate=False):
     obs.ra = '18:34:56.7'
     obs.dec = '-27:34:56.7'
     obs.site = 'lsc'
-    obs.observatory= 'domc'
+    obs.observatory= 'doma'
     obs.tel = '1m0'
     obs.instrument = 'fl04'
     obs.instrument_class = '1M0-SCICAM-SINISTRO'
@@ -45,6 +45,7 @@ def get_test_obs(simulate=False):
     obs.focus_offset = [ 0.0 ]
     obs.cadence = 1.0
     obs.jitter = 1.0
+    obs.airmass_limit = 1.8
     obs.priority = 1.0
     obs.ts_submit = datetime.strptime('2017-07-15T01:00:00',"%Y-%m-%dT%H:%M:%S")
     obs.ts_submit = obs.ts_submit.replace(tzinfo=pytz.UTC)
@@ -77,14 +78,16 @@ def test_build_cadence_request(simulate=False):
     ur = obs.build_cadence_request(log=log,debug=True)
     
     assert(type(ur) == type({'foo':'bar'}))
-    ur_keys = ['group_id','type','operator','ipp_value', 'requests']
+    ur_keys = ['group_id','observation_type','operator','ipp_value', 'requests']
+    print ur
     for key in ur_keys:
+        print key
         assert(key in ur.keys())
     assert( len(ur['requests']) > 0 )
 
 
     molecule_keys = ['exposure_time', 'exposure_count', 'defocus', 'filter', \
-                    'instrument_name', 'bin_x', 'bin_y', 'priority']
+                    'instrument_name', 'bin_x', 'bin_y']
     window_keys = ['start', 'end']
     location_keys = ['telescope_class', 'site', 'observatory']
     target_keys = ['name', 'ra', 'dec']

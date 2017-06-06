@@ -425,5 +425,7 @@ def submit_obs_requests(obs_requests, log=None):
         obs.submit_status = obs.submit_request(ur, log=log)
         if log!=None:
             log.info('Submitted observation with status '+str(obs.submit_status))
+            if 'error' in obs.submit_status:
+                log.info(ur)
 
     return obs_requests

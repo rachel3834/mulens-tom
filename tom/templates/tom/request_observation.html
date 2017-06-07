@@ -4,6 +4,7 @@
 {% block header_text %}Request Observation{% endblock %}
 
 {% block mainregion %}
+
 <center>
 <h3>Submit an Observation Request</h3>
 <div>
@@ -51,13 +52,36 @@
                 </td>
             </tr>
             <tr>
-                <td><label for="{{oform.start_obs.id_for_label}}">Start date:</label></td>
+                <td><label for="{{oform.start_obs.id_for_label}}">Start date 
+                        <button id="help-start-date"><img src="/static/tom/clipart-question_button.png" width="10" style="border: 0;"></button>
+                    :</label>
+                    <p id="correct-start-date-format"> </p>
+                    <script>
+                        document.getElementById("help-start-date").addEventListener("click", show_start_date_format)
+
+                        function show_start_date_format() {
+                          document.getElementById("correct-start-date-format").innerHTML = "Format: YYYY-MM-DDTHH:MM:SS"
+                        }
+                    </script>
+                </td>
                 <td><div class="fieldWrapper">
                         {{oform.start_obs.errors}}
                         {{oform.start_obs}}
                     </div>
                 </td>
-                <td><label for="{{oform.stop_obs.id_for_label}}">End date:</label></td>
+                <td>
+                    <label for="{{oform.start_obs.id_for_label}}">End date 
+                        <button id="help-end-date"><img src="/static/tom/clipart-question_button.png" width="10" style="border: 0;"></button>
+                    :</label>
+                    <p id="correct-end-date-format"> </p>
+                    <script>
+                        document.getElementById("help-end-date").addEventListener("click", show_end_date_format)
+
+                        function show_end_date_format() {
+                          document.getElementById("correct-end-date-format").innerHTML = "Format: YYYY-MM-DDTHH:MM:SS"
+                        }
+                    </script>
+                </td>
                 <td><div class="fieldWrapper">
                         {{oform.stop_obs.errors}}
                         {{oform.stop_obs}}
@@ -83,7 +107,7 @@
                     <div class="fieldWrapper">
                     <button type="sumbit" class="save btn btn-default">Submit</button>
                     </div>
-                </td><td></td><td></td>
+                </td><td colspan="2"><p id="correct-date-format"> </p></td>
             </tr>
         </table>
     </form>

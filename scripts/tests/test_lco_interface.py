@@ -22,34 +22,34 @@ import pytz
 setup()
 import ingest, observing_strategy
 from tom.models import Target
-import lco_interface, observing_strategy, log_utilities
+import lco_interface, observing_strategy, log_utilities, ingest
 
 def get_test_obs(simulate=False):
     """Function to return an example of an ObsRequest with default
     parameters for testing purposes"""
     
     obs = lco_interface.ObsRequest()
-    obs.name = 'OB170019'
-    obs.ra = '17:52:18.74'
-    obs.dec = '-33:00:04.0'
-    obs.site = 'lsc'
+    obs.name = 'OB170896'
+    obs.ra = '17:39:30.98'
+    obs.dec = '-27:17:51.1'
+    obs.site = 'coj'
     obs.observatory= 'doma'
     obs.tel = '1m0'
-    obs.instrument = 'fl04'
+    obs.instrument = 'fl12'
     obs.instrument_class = '1M0-SCICAM-SINISTRO'
     obs.set_aperture_class()
     obs.filters = [ 'SDSS-i' ]
-    obs.exposure_times = [ 30.0 ]
-    obs.exposure_counts = [ 1 ]
+    obs.exposure_times = [ 300.0 ]
+    obs.exposure_counts = [ 2 ]
     obs.binning = [ 1 ]
     obs.focus_offset = [ 0.0 ]
-    obs.cadence = 1.0
-    obs.jitter = 1.0
-    obs.airmass_limit = 1.8
-    obs.priority = 1.0
-    obs.ts_submit = datetime.strptime('2017-07-15T01:00:00',"%Y-%m-%dT%H:%M:%S")
+    obs.cadence = 0.5
+    obs.jitter = 0.5
+    obs.airmass_limit = 1.5
+    obs.priority = 1.05
+    obs.ts_submit = datetime.strptime('2017-06-09T10:00:00',"%Y-%m-%dT%H:%M:%S")
     obs.ts_submit = obs.ts_submit.replace(tzinfo=pytz.UTC)
-    obs.ts_expire = datetime.strptime('2017-07-16T01:00:00',"%Y-%m-%dT%H:%M:%S")
+    obs.ts_expire = datetime.strptime('2017-06-09T18:00:00',"%Y-%m-%dT%H:%M:%S")
     obs.ts_expire = obs.ts_expire.replace(tzinfo=pytz.UTC)
     if len(argv) == 1:
         obs.proposal_id = raw_input('Please enter the proposal ID: ')
@@ -132,8 +132,9 @@ def test_obs_submission(simulate=True):
     
     log_utilities.end_day_log(log)
     print 'Successful test of observation submission'
+    return [obs]
     
 if __name__ == '__main__':
-    test_build_cadence_request(simulate=False)
-    test_obs_submission(simulate=False)
-    
+    #test_build_cadence_request(simulate=False)
+    obs_requests = test_obs_submission(simulate=False)
+    ingest.record_obs_requests(obs_requests)

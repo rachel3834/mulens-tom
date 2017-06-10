@@ -23,7 +23,7 @@ import ingest, observing_strategy
 from tom.models import Target
 import lco_interface
 
-def test_compose_obs_requests():
+def test_compose_obs_requests_multisite():
     """Function to check that observing requests are properly composed from 
     the essential parameters that will be provided by the user, factoring
     in the users's observing strategy"""
@@ -41,6 +41,7 @@ def test_compose_obs_requests():
             'start_obs': datetime.strptime("2017-05-20T00:01:00","%Y-%m-%dT%H:%M:%S"),
             'stop_obs': datetime.strptime("2017-05-22T00:01:00","%Y-%m-%dT%H:%M:%S"),
             'user_id': 'tester',
+            'obs_type': 'multi-site'
     }
     obs_list = observing_strategy.compose_obs_requests(params)
     
@@ -60,6 +61,7 @@ def test_compose_obs_requests():
         if obs.site not in site_list:
             site_list.append(obs.site)
         if __name__ == '__main__':
+            print 'Multi-site observation test:'
             print obs.summary(), obs.proposal_id, obs.user_id, obs.token
     
     assert(len(obs_list) == 3)
@@ -67,6 +69,58 @@ def test_compose_obs_requests():
     assert('cpt' in site_list)
     assert('coj' in site_list)
 
+def test_compose_obs_requests_singlesite():
+    """Function to check that observing requests are properly composed from 
+    the essential parameters that will be provided by the user, factoring
+    in the users's observing strategy"""
+    
+    location = [ 'lsc', 'doma', '1m0', 'fl15' ]
+    params = {
+            'name': 'OGLE-9999-BLG-1234',
+            'ra': '12:23:34.56',
+            'dec': '-20:30:40.5',
+            'filter': 'SDSS-i',
+            'exp_time': 30.0,
+            'n_exp': 2, 
+            'cadence_hrs': 0.25,
+            'jitter_hrs': 0.25,
+            'airmass_limit': 1.5,
+            'start_obs': datetime.strptime("2017-05-20T00:01:00","%Y-%m-%dT%H:%M:%S"),
+            'stop_obs': datetime.strptime("2017-05-22T00:01:00","%Y-%m-%dT%H:%M:%S"),
+            'user_id': 'tester',
+            'obs_type': 'single-site',
+            'location': '.'.join(location),
+    }
+    obs_list = observing_strategy.compose_obs_requests(params)
+    
+    test_obs = lco_interface.ObsRequest()
+    site_list = []
+    for obs in obs_list:
+        assert(type(obs) == type(test_obs))
+        assert(obs.exposure_times[0] == params['exp_time'])
+        assert(obs.exposure_counts[0] == params['n_exp'])
+        assert(obs.cadence == params['cadence_hrs'])
+        assert(obs.jitter == params['jitter_hrs'])
+        assert(obs.ts_submit == params['start_obs'])
+        assert(obs.ts_expire == params['stop_obs'])
+        assert(obs.site == location[0])
+        assert(obs.observatory == location[1])
+        assert(obs.tel == location[2])
+        assert(obs.instrument == location[3])
+        #assert(obs.user_id != None)
+        #assert(obs.pswd != None)
+        #assert(obs.proposal_id != None)
+        if obs.site not in site_list:
+            site_list.append(obs.site)
+        if __name__ == '__main__':
+            print 'Single-site observation test:'
+            print obs.summary(), obs.proposal_id, obs.user_id, obs.token
+    
+    assert(len(obs_list) == 1)
+    assert(location[0] in site_list)
+
+
 if __name__ == '__main__':
-    test_compose_obs_requests()
+    test_compose_obs_requests_multisite()
+    test_compose_obs_requests_singlesite()
     

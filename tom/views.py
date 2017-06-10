@@ -96,18 +96,20 @@ def observations(request):
         return HttpResponseRedirect('login')
 
 @login_required(login_url='/login/')
-def request_obs(request):
+def request_obs(request,obs_type='multi-site'):
     """Function to specify a new observation with all associated
     information and submit it to both the LCO network and the DB"""
     
     host_name = socket.gethostname()
-    if 'rachel' in host_name:
+    if 'rachel' in str(host_name).lower():
         config = { 'log_dir': '/Users/rstreet/spitzermicrolensing/logs/2017',
               'log_root_name': 'request_log'}
     else:
         config = { 'log_dir': '/var/www/spitzermicrolensing/logs/2017',
               'log_root_name': 'request_log'}
-              
+    
+    locations = observing_strategy.get_site_tel_inst_combinations()
+    
     if request.user.is_authenticated():
         
         log = log_utilities.start_day_log(config,'request_obs')
@@ -124,7 +126,7 @@ def request_obs(request):
                 tpost = tform.save(commit=False)
                 opost = oform.save(commit=False)
                 epost = eform.save(commit=False)
-                params = parse_obs_params(tpost,opost,epost,request,log=log)
+                params = parse_obs_params(obs_type,tpost,opost,epost,request,log=log)
                 
                 obs_requests = observing_strategy.compose_obs_requests(params,log=log)
                 (status,message) = parse_obs_status(obs_requests)
@@ -136,7 +138,8 @@ def request_obs(request):
                     eform = ExposureSetForm()
                     return render(request, 'tom/request_observation.html', \
                                     {'tform': tform, 'oform': oform,'eform': eform,
-                                    'message':[message]})
+                                     'obs_type': obs_type,'locations':locations,
+                                     'message':[message]})
                 else:
                     obs_requests = lco_interface.submit_obs_requests(obs_requests,log=log)
                 
@@ -147,6 +150,7 @@ def request_obs(request):
                 
                     return render(request, 'tom/request_observation.html', \
                                     {'tform': tform, 'oform': oform,'eform': eform,
+                                    'obs_type': obs_type,'locations':locations,
                                     'message': message})
             else:
                 tform = TargetNameForm()
@@ -154,6 +158,7 @@ def request_obs(request):
                 eform = ExposureSetForm()
                 return render(request, 'tom/request_observation.html', \
                                     {'tform': tform, 'oform': oform,'eform': eform,
+                                    'obs_type': obs_type,'locations':locations,
                                     'message':['Form entry was invalid.  Please try again.']})
         else:
             tform = TargetNameForm()
@@ -161,19 +166,20 @@ def request_obs(request):
             eform = ExposureSetForm()
             return render(request, 'tom/request_observation.html', \
                                     {'tform': tform, 'oform': oform, 'eform': eform,
-                                     'targets': targets,
-                                    'message': []})
+                                     'targets': targets,'obs_type': obs_type,
+                                    'locations':locations,'message': []})
 
         
     else:
         return HttpResponseRedirect('login')
         
-def parse_obs_params(tpost,opost,epost,request,log=None):
+def parse_obs_params(obs_type,tpost,opost,epost,request,log=None):
     """Function to parse the posted parameters into a dictionary, 
     and resolve observation parameters where necessary
     """
 
     params = {}
+    params['obs_type'] = obs_type
     params['name'] = tpost.name
     target = query_functions.get_target(params['name'])
     params['ra'] = target.ra
@@ -192,7 +198,9 @@ def parse_obs_params(tpost,opost,epost,request,log=None):
     params['airmass_limit'] = opost.airmass_limit
     
     params['user_id'] = request.user
-    
+    if obs_type == 'single-site':
+        params['location'] = request.POST['location']
+        
     if log!=None:
         for key, value in params.items():
             log.info(str(key)+' = '+str(value))

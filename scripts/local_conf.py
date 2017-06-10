@@ -11,7 +11,7 @@ def get_conf(request):
     from os import environ
     import socket
     host_name = socket.gethostname()
-    if 'rachel' in host_name:
+    if 'rachel' in str(host_name).lower():
         path.append("/Users/rstreet/software/mulens_tom/")
         site_url = 'http://127.0.0.1:8000/'
     else:

@@ -30,6 +30,8 @@ urlpatterns = [
     url(r'^targets/$',targets,name="targets"),
     url(r'^add_target/$',add_target,name="add_target"),
     url(r'^observations/$',observations,name="observations"),
-    url(r'^request_obs/$',request_obs,name="request_obs"),
+    url(r'^request_obs/$',request_obs,{'obs_type':'multi-site'},name="request_obs"),
+    url(r'^request_obs/multisite/$',request_obs,{'obs_type':'multi-site'},name="request_multisite_obs"),
+    url(r'^request_obs/singlesite/$',request_obs,{'obs_type':'single-site'},name="request_singlesite_obs"),
     url(r'^record_obs/$',record_obs,name="record_obs"),
 ]

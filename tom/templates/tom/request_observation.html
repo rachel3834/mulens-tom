@@ -4,114 +4,251 @@
 {% block header_text %}Request Observation{% endblock %}
 
 {% block mainregion %}
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            </button>
+        </div>
+    </div>
+
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav">
+          <li><a href="{% url 'request_multisite_obs' %}">Multi-site observations</a></li>
+          <li><a href="{% url 'request_singlesite_obs' %}">Single-site observations</a></li>
+        </ul>
+      </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>
 
 <center>
-<h3>Submit an Observation Request</h3>
-<div>
-    <form method="POST" class="post-form">{% csrf_token %}
-        {{ formset.management_form }}
-        <table>
-            <tr>
-                <td><label for="{{tform.name.id_for_label}}">Target:</label></td>
-                <td><div class="fieldWrapper">
-                        <select name="name">
-                            {% for name in targets %}
-                                <option value="{{name}}">{{name}}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                </td>
-                <td></td><td></td>
-            </tr>
-            <tr>
-                <td><label for="{{eform.inst_filter.id_for_label}}">Filter:</label></td>
-                <td><div class="fieldWrapper">
-                        {{eform.inst_filter.errors}}
-                        {{eform.inst_filter}}
-                    </div>
-                </td>
-                <td><label for="{{eform.exp_time.id_for_label}}">Exposure [sec]:</label></td>
-                <td><div class="fieldWrapper">
-                        {{eform.exp_time.errors}}
-                        {{eform.exp_time}}
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <td><label for="{{eform.n_exp.id_for_label}}">Number of exposures:</label></td>
-                <td><div class="fieldWrapper">
-                        {{eform.n_exp.errors}}
-                        {{eform.n_exp}}
-                    </div>
-                </td>
-                <td><label for="{{oform.airmass_limit.id_for_label}}">Airmass limit:</label></td>
-                <td><div class="fieldWrapper">
-                        {{oform.airmass_limit.errors}}
-                        {{oform.airmass_limit}}
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <td><label for="{{oform.start_obs.id_for_label}}">Start date 
-                        <button id="help-start-date"><img src="/static/tom/clipart-question_button.png" width="10" style="border: 0;"></button>
-                    :</label>
-                    <p id="correct-start-date-format"> </p>
-                    <script>
-                        document.getElementById("help-start-date").addEventListener("click", show_start_date_format)
+{% if obs_type == None or obs_type == 'multi-site' %}
+    <h3>Submit a Multi-site Observation Request</h3>
+    <div>
+        <form method="POST" class="post-form">{% csrf_token %}
+            {{ formset.management_form }}
+            <table>
+                <tr>
+                    <td><label for="{{tform.name.id_for_label}}">Target:</label></td>
+                    <td><div class="fieldWrapper">
+                            <select name="name">
+                                {% for name in targets %}
+                                    <option value="{{name}}">{{name}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </td>
+                    <td></td><td></td>
+                </tr>
+                <tr>
+                    <td><label for="{{eform.inst_filter.id_for_label}}">Filter:</label></td>
+                    <td><div class="fieldWrapper">
+                            {{eform.inst_filter.errors}}
+                            {{eform.inst_filter}}
+                        </div>
+                    </td>
+                    <td><label for="{{eform.exp_time.id_for_label}}">Exposure [sec]:</label></td>
+                    <td><div class="fieldWrapper">
+                            {{eform.exp_time.errors}}
+                            {{eform.exp_time}}
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="{{eform.n_exp.id_for_label}}">Number of exposures:</label></td>
+                    <td><div class="fieldWrapper">
+                            {{eform.n_exp.errors}}
+                            {{eform.n_exp}}
+                        </div>
+                    </td>
+                    <td><label for="{{oform.airmass_limit.id_for_label}}">Airmass limit:</label></td>
+                    <td><div class="fieldWrapper">
+                            {{oform.airmass_limit.errors}}
+                            {{oform.airmass_limit}}
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="{{oform.start_obs.id_for_label}}">Start date 
+                            <button id="help-start-date"><img src="/static/tom/clipart-question_button.png" width="10" style="border: 0;"></button>
+                        :</label>
+                        <p id="correct-start-date-format"> </p>
+                        <script>
+                            document.getElementById("help-start-date").addEventListener("click", show_start_date_format)
 
-                        function show_start_date_format() {
-                          document.getElementById("correct-start-date-format").innerHTML = "Format: YYYY-MM-DDTHH:MM:SS"
-                        }
-                    </script>
-                </td>
-                <td><div class="fieldWrapper">
-                        {{oform.start_obs.errors}}
-                        {{oform.start_obs}}
-                    </div>
-                </td>
-                <td>
-                    <label for="{{oform.start_obs.id_for_label}}">End date 
-                        <button id="help-end-date"><img src="/static/tom/clipart-question_button.png" width="10" style="border: 0;"></button>
-                    :</label>
-                    <p id="correct-end-date-format"> </p>
-                    <script>
-                        document.getElementById("help-end-date").addEventListener("click", show_end_date_format)
+                            function show_start_date_format() {
+                              document.getElementById("correct-start-date-format").innerHTML = "Format: YYYY-MM-DDTHH:MM:SS"
+                            }
+                        </script>
+                    </td>
+                    <td><div class="fieldWrapper">
+                            {{oform.start_obs.errors}}
+                            {{oform.start_obs}}
+                        </div>
+                    </td>
+                    <td>
+                        <label for="{{oform.start_obs.id_for_label}}">End date 
+                            <button id="help-end-date"><img src="/static/tom/clipart-question_button.png" width="10" style="border: 0;"></button>
+                        :</label>
+                        <p id="correct-end-date-format"> </p>
+                        <script>
+                            document.getElementById("help-end-date").addEventListener("click", show_end_date_format)
 
-                        function show_end_date_format() {
-                          document.getElementById("correct-end-date-format").innerHTML = "Format: YYYY-MM-DDTHH:MM:SS"
-                        }
-                    </script>
-                </td>
-                <td><div class="fieldWrapper">
-                        {{oform.stop_obs.errors}}
-                        {{oform.stop_obs}}
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <td><label for="{{oform.cadence.id_for_label}}">Cadence [hrs]:</label></td>
-                <td><div class="fieldWrapper">
-                        {{oform.cadence.errors}}
-                        {{oform.cadence}}
-                    </div>
-                </td>
-                <td><label for="{{oform.jitter.id_for_label}}">Jitter [hrs]:</label></td>
-                <td><div class="fieldWrapper">
-                        {{oform.jitter.errors}}
-                        {{oform.jitter}}
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <div class="fieldWrapper">
-                    <button type="sumbit" class="save btn btn-default">Submit</button>
-                    </div>
-                </td><td colspan="2"><p id="correct-date-format"> </p></td>
-            </tr>
-        </table>
-    </form>
-</div>
+                            function show_end_date_format() {
+                              document.getElementById("correct-end-date-format").innerHTML = "Format: YYYY-MM-DDTHH:MM:SS"
+                            }
+                        </script>
+                    </td>
+                    <td><div class="fieldWrapper">
+                            {{oform.stop_obs.errors}}
+                            {{oform.stop_obs}}
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="{{oform.cadence.id_for_label}}">Cadence [hrs]:</label></td>
+                    <td><div class="fieldWrapper">
+                            {{oform.cadence.errors}}
+                            {{oform.cadence}}
+                        </div>
+                    </td>
+                    <td><label for="{{oform.jitter.id_for_label}}">Jitter [hrs]:</label></td>
+                    <td><div class="fieldWrapper">
+                            {{oform.jitter.errors}}
+                            {{oform.jitter}}
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="fieldWrapper">
+                        <button type="sumbit" class="save btn btn-default">Submit</button>
+                        </div>
+                    </td><td colspan="2"><p id="correct-date-format"> </p></td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    
+{% else %}
+   <h3>Submit a Single-site Observation Request</h3>
+    <div>
+        <form method="POST" class="post-form">{% csrf_token %}
+            {{ formset.management_form }}
+            <table>
+                <tr>
+                    <td><label for="{{tform.name.id_for_label}}">Target:</label></td>
+                    <td><div class="fieldWrapper">
+                            <select name="name">
+                                {% for name in targets %}
+                                    <option value="{{name}}">{{name}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </td>
+                    <td><label>Location:</label></td>
+                    <td><div class="fieldWrapper">
+                            <select name="location">
+                                {% for label,telcode in locations %}
+                                    <option value="{{telcode}}">{{label}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="{{eform.inst_filter.id_for_label}}">Filter:</label></td>
+                    <td><div class="fieldWrapper">
+                            {{eform.inst_filter.errors}}
+                            {{eform.inst_filter}}
+                        </div>
+                    </td>
+                    <td><label for="{{eform.exp_time.id_for_label}}">Exposure [sec]:</label></td>
+                    <td><div class="fieldWrapper">
+                            {{eform.exp_time.errors}}
+                            {{eform.exp_time}}
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="{{eform.n_exp.id_for_label}}">Number of exposures:</label></td>
+                    <td><div class="fieldWrapper">
+                            {{eform.n_exp.errors}}
+                            {{eform.n_exp}}
+                        </div>
+                    </td>
+                    <td><label for="{{oform.airmass_limit.id_for_label}}">Airmass limit:</label></td>
+                    <td><div class="fieldWrapper">
+                            {{oform.airmass_limit.errors}}
+                            {{oform.airmass_limit}}
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="{{oform.start_obs.id_for_label}}">Start date 
+                            <button id="help-start-date"><img src="/static/tom/clipart-question_button.png" width="10" style="border: 0;"></button>
+                        :</label>
+                        <p id="correct-start-date-format"> </p>
+                        <script>
+                            document.getElementById("help-start-date").addEventListener("click", show_start_date_format)
+
+                            function show_start_date_format() {
+                              document.getElementById("correct-start-date-format").innerHTML = "Format: YYYY-MM-DDTHH:MM:SS"
+                            }
+                        </script>
+                    </td>
+                    <td><div class="fieldWrapper">
+                            {{oform.start_obs.errors}}
+                            {{oform.start_obs}}
+                        </div>
+                    </td>
+                    <td>
+                        <label for="{{oform.start_obs.id_for_label}}">End date 
+                            <button id="help-end-date"><img src="/static/tom/clipart-question_button.png" width="10" style="border: 0;"></button>
+                        :</label>
+                        <p id="correct-end-date-format"> </p>
+                        <script>
+                            document.getElementById("help-end-date").addEventListener("click", show_end_date_format)
+
+                            function show_end_date_format() {
+                              document.getElementById("correct-end-date-format").innerHTML = "Format: YYYY-MM-DDTHH:MM:SS"
+                            }
+                        </script>
+                    </td>
+                    <td><div class="fieldWrapper">
+                            {{oform.stop_obs.errors}}
+                            {{oform.stop_obs}}
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="{{oform.cadence.id_for_label}}">Cadence [hrs]:</label></td>
+                    <td><div class="fieldWrapper">
+                            {{oform.cadence.errors}}
+                            {{oform.cadence}}
+                        </div>
+                    </td>
+                    <td><label for="{{oform.jitter.id_for_label}}">Jitter [hrs]:</label></td>
+                    <td><div class="fieldWrapper">
+                            {{oform.jitter.errors}}
+                            {{oform.jitter}}
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="fieldWrapper">
+                        <button type="sumbit" class="save btn btn-default">Submit</button>
+                        </div>
+                    </td><td colspan="2"><p id="correct-date-format"> </p></td>
+                </tr>
+            </table>
+        </form>
+    </div>
+{% endif %}
+    
 {% if message|length > 0 %}
     <div>
     <center>

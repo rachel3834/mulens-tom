@@ -14,6 +14,11 @@ def backup_database():
     
     log = log_utilities.start_day_log( config, config['log_root_name'] )
 
+    filetest = path.isfile(config['db_location'])
+    dirtest = path.isdir(config['backup_dir'])
+    log.info('Checking the DB file is accessible with status '+repr(filetest))
+    log.info('Checking the backup directory is accessible with status '+repr(dirtest))
+
     log.info('Executing rsync command: '+config['rsync_command'])
     child = subprocess.Popen(config['rsync_command'].split(' '),
                                   shell=False, stderr=subprocess.PIPE)

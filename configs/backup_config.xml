@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<backup_config>
+    <parameter name="db_location">
+        <value>/Users/rstreet/software/mulens_tom/db.sqlite3</value>
+    </parameter>
+    
+    <parameter name="backup_dir">
+        <value>/Users/rstreet/spitzer_microlensing/backup</value>
+    </parameter>
+    
+    <parameter name="user_id">
+        <value>rstreet</value>
+    </parameter>
+    
+    <parameter name="log_dir">
+        <value>/Users/rstreet/spitzer_microlensing/</value>
+    </parameter>
+    
+    <parameter name="log_root_name">
+        <value>backup</value>
+    </parameter>
+</backup_config>

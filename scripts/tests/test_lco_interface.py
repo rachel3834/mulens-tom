@@ -29,13 +29,13 @@ def get_test_obs(simulate=False):
     parameters for testing purposes"""
     
     obs = lco_interface.ObsRequest()
-    obs.name = 'OB170896'
-    obs.ra = '17:39:30.98'
-    obs.dec = '-27:17:51.1'
+    obs.name = 'OB171186'
+    obs.ra = '17:58:46.95'
+    obs.dec = '-27:39:03.9'
     obs.site = 'coj'
-    obs.observatory= 'doma'
+    obs.observatory= 'domb'
     obs.tel = '1m0'
-    obs.instrument = 'fl12'
+    obs.instrument = 'fl11'
     obs.instrument_class = '1M0-SCICAM-SINISTRO'
     obs.set_aperture_class()
     obs.filters = [ 'SDSS-i' ]

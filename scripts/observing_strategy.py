@@ -131,7 +131,7 @@ def strategy_config(params):
     obs_strategy['telescopes'] = [ '1m0', '1m0', '1m0' ]
     obs_strategy['instruments'] = [ 'fl03', 'fl06', 'fl11' ]
     obs_strategy['defocus'] = 0.0
-    obs_strategy['priority'] = 1.0
+    obs_strategy['priority'] = 1.05
     
     qs = Project.objects.all()
     project = qs[0]

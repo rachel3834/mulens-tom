@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib import messages
-from .models import Target, TargetName, PhotObs
+from .models import Target, TargetName, PhotObs, ProjectUser
 from .forms import TargetForm, TargetNameForm
 from .forms import ObservationForm, ExposureSetForm, AccountForm
 from scripts import ingest, query_functions, log_utilities
@@ -19,7 +19,33 @@ def test(request):
 
 @login_required(login_url='/login/')
 def home(request):
-    return render(request,'tom/index.html',{})
+
+    if request.user.is_authenticated():
+        
+        projects = ProjectUser.objects.all().filter(id=request.user.id)
+        
+        return render(request,'tom/user_dashboard.html',{'projects':projects})
+        
+    else:
+        
+        return HttpResponseRedirect('login')
+    
+    return render(request,'tom/user_dashboard.html',{})
+
+@login_required(login_url='/login/')
+def project(request):
+
+    if request.user.is_authenticated():
+                
+        return render(request,'tom/project_dashboard.html',
+                      {'project':request.project})
+        
+    else:
+        
+        return HttpResponseRedirect('login')
+    
+    return render(request,'tom/project_dashboard.html',{})
+
 
 @login_required(login_url='/login/')
 def targets(request):

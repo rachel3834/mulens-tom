@@ -27,6 +27,7 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$',home,name="home"),
     url(r'^test/$',test,name="test"),
+    url(r'^project/$',project,name="project"),
     url(r'^targets/$',targets,name="targets"),
     url(r'^add_target/$',add_target,name="add_target"),
     url(r'^observations/$',observations,name="observations"),

@@ -3,6 +3,16 @@ from __future__ import unicode_literals
 
 from django.db import models
 
+class Project(models.Model):
+    name = models.CharField("Name",max_length=50)
+    proposal_id = models.CharField("Proposal ID",max_length=50,
+                                       blank=True,null=True)
+    last_modified_date = models.DateTimeField(
+            blank=True, null=True)
+    
+    def __str__(self):
+        return self.name
+
 class ProjectUser(models.Model):
     handle = models.CharField("User handle",max_length=50)
     first_name = models.CharField("First name",max_length=50)
@@ -13,22 +23,12 @@ class ProjectUser(models.Model):
     lco_observer_pswd = models.CharField("LCO User login",max_length=50,blank=True)
     token = models.CharField("Token",max_length=200,
                                        blank=True,null=True)
+    projects = models.ManyToManyField(Project,blank=True)
     last_modified_date = models.DateTimeField(
             blank=True, null=True)
     
     def __str__(self):
         return self.first_name+' '+self.family_name
-
-class Project(models.Model):
-    name = models.CharField("Name",max_length=50)
-    users = models.ManyToManyField(ProjectUser,blank=True)
-    proposal_id = models.CharField("Proposal ID",max_length=50,
-                                       blank=True,null=True)
-    last_modified_date = models.DateTimeField(
-            blank=True, null=True)
-    
-    def __str__(self):
-        return self.name
 
      
 class Target(models.Model):

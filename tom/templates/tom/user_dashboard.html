@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title_text %}User Dashboard{% endblock %}
+{% block header_text %}User Dashboard{% endblock %}
+
+{% block mainregion %}
+<div class="container-fluid">
+    <div class="row">
+        {% for p in projects %}
+            <div class="col-lg-4">
+                <a href="{% url 'project' %}?project={{p.name | urlencode}}">">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <h4>{{p.name}}</h4>
+                    </div>
+                </div>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

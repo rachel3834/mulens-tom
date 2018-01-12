@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 
+{% block project_id %}{{project.name}}{% endblock %}
 {% block title_text %}Request Observation{% endblock %}
 {% block header_text %}Request Observation{% endblock %}
 
@@ -16,8 +17,8 @@
 
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav">
-          <li><a href="{% url 'request_multisite_obs' %}">Multi-site observations</a></li>
-          <li><a href="{% url 'request_singlesite_obs' %}">Single-site observations</a></li>
+          <li><a href="{% url 'request_multisite_obs' %}?project={{project.id | urlencode}}">Multi-site observations</a></li>
+          <li><a href="{% url 'request_singlesite_obs' %}?project={{project.id | urlencode}}">Single-site observations</a></li>
         </ul>
       </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->

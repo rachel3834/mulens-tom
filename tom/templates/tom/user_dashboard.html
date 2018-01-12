@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 
+{% block project_id %}User Dashboard{% endblock %}
 {% block title_text %}User Dashboard{% endblock %}
 {% block header_text %}User Dashboard{% endblock %}
 
@@ -8,7 +9,7 @@
     <div class="row">
         {% for p in projects %}
             <div class="col-lg-4">
-                <a href="{% url 'project' %}?project={{p.name | urlencode}}">">
+                <a href="{% url 'project' %}?project={{p.id | urlencode}}">
                 <div class="panel panel-default">
                     <div class="panel-body">
                         <h4>{{p.name}}</h4>
@@ -17,6 +18,26 @@
                 </a>
             </div>
         {% endfor %}
+    </div>
+    <div class="row">
+        <div class="col-lg-4">
+            <a href="{% url 'manage_account' %}">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h4>Manage Account</h4>
+                </div>
+            </div>
+            </a>
+        </div>
+        <div class="col-lg-4">
+            <a href="{% url 'change_password' %}">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h4>Change password</h4>
+                </div>
+            </div>
+            </a>
+        </div>
     </div>
 </div>
 {% endblock %}

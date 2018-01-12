@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block project_id %}{{project}}{% endblock %}
+{% block project_id %}{{project.name}}{% endblock %}
 {% block title_text %}Project Dashboard{% endblock %}
 {% block header_text %}Project Dashboard{% endblock %}
 
@@ -8,7 +8,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-lg-4">
-            <a href="/targets/">
+            <a href="{% url 'targets' %}?project={{project.id | urlencode}}">
             <div class="panel panel-default">
                 <div class="panel-body">
                     <h4>View current targets</h4>
@@ -17,7 +17,7 @@
             </a>
         </div>
         <div class="col-lg-4">
-            <a href="/observations/">
+            <a href="{% url 'observations' %}?project={{project.id | urlencode}}">
             <div class="panel panel-default">
                 <div class="panel-body">
                     <h4>View active observations</h4>
@@ -28,7 +28,7 @@
     </div>
     <div class="row">
         <div class="col-lg-4">
-            <a href="/add_target/">
+            <a href="{% url 'add_target' %}?project={{project.id | urlencode}}">
             <div class="panel panel-default">
                 <div class="panel-body">
                     <h4>Add new target</h4>
@@ -37,7 +37,7 @@
             </a>
         </div>
         <div class="col-lg-4">
-            <a href="/request_obs/multisite/">
+            <a href="{% url 'request_multisite_obs' %}?project={{project.id | urlencode}}">
             <div class="panel panel-default">
                 <div class="panel-body">
                     <h4>Request observations</h4>

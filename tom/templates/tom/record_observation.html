@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 
+{% block project_id %}{{project.name}}{% endblock %}
 {% block title_text %}Request Observation{% endblock %}
 {% block header_text %}Request Observation{% endblock %}
 
@@ -21,7 +22,15 @@
                         </select>
                     </div>
                 </td>
-                <td></td><td></td><td></td><td></td>
+                <td><label for="obs_type">Observation Type:</label></td>
+                <td><div class="fieldWrapper">
+                        <select name="obs_tpe">
+                            <option value="single-site">single-site</option>
+                            <option value="multi-site">multi-site</option>
+                        </select>
+                    </div>
+                </td>
+                <td></td><td></td>
             </tr>
             <tr>
                 <td><label for="{{eform.inst_filter.id_for_label}}">Filter:</label></td>

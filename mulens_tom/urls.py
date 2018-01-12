@@ -17,6 +17,7 @@ from django.conf.urls import url
 from django.contrib import admin
 from tom.views import home, targets, add_target, observations, request_obs
 from tom.views import record_obs, manage_account, change_password, test
+from tom.views import project
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [

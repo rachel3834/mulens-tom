@@ -27,20 +27,37 @@ def add_target(params):
         ra     string, sexigesimal format
         dec    string, sexigesimal format
         name   string 
+        project Object  Project model
+        targetlist Object TargetList model
     """
+    
     messages = []
+
     (t,created_target) = Target.objects.get_or_create(ra=params['ra'],dec=params['dec'])
+    
+    if params['targetlist'] != None:
+        
+        params['targetlist'].targets.add(t)
+        params['targetlist'].save()
+    
     if created_target == True:
+
         messages.append('Added new target location')
+
     (tname, created_name) = TargetName.objects.get_or_create(target_id=t, name=params['name'])
+
     if created_name == True:
+
         messages.append('Added new target name')
     
     message = ' '.join(messages)
     
     if created_target == True and created_name == True:
+
         return True, message
+
     else:
+
         return False, message
 
 def record_obs_requests(obs_list):

@@ -37,7 +37,7 @@
                     <h1 style="color: Teal">{{project}}</h1>
                 {% else %}
                     {% if user.is_authenticated %}
-                        <h1 style="color: Teal">Dashboard for {{user.username}} {{project}}</h1>
+                        <h1 style="color: Teal">TOM Dashboard for {{user.username}}</h1>
                     {% endif %}
                 {% endif %}
             </div>
@@ -45,7 +45,7 @@
                 <h1> </h1>
             </div>
             <div class="col-md-4">
-                <a href="/"><button type="button" class="btn btn-primary">User Dashboard</button></a>
+                <a href="/"><button type="button" class="btn btn-primary">TOM Dashboard</button></a>
                 {% if project %}
                     <a href="{% url 'project' %}?project={{project.id | urlencode}}"><button type="button" class="btn btn-primary">Project Dashboard</button></a>
                 {% endif %}

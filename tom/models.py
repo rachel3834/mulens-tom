@@ -3,10 +3,32 @@ from __future__ import unicode_literals
 
 from django.db import models
 
+class ObservingFacility(models.Model):
+    class Meta:
+        verbose_name_plural = "observing facilities"
+        
+    name = models.CharField("Name",max_length=50)
+    site = models.CharField("Site",max_length=10)
+    enclosure = models.CharField("Enclosure",max_length=10,blank=True,null=True)
+    telescope = models.CharField("Telescope",max_length=10)
+    instrument = models.CharField("Instrument",max_length=10)
+    
+    last_modified_date = models.DateTimeField(
+            blank=True, null=True)
+    
+    def __str__(self):
+        return self.name
+
+    def code(self):
+        return self.site+'.'+self.enclosure+'.'+self.telescope+'.'+self.instrument
+        
 class Project(models.Model):
     name = models.CharField("Name",max_length=50)
     proposal_id = models.CharField("Proposal ID",max_length=50,
                                        blank=True,null=True)
+    default_locations = models.ManyToManyField(ObservingFacility,blank=True)
+    picture = models.CharField(max_length=300,blank=True)
+    
     last_modified_date = models.DateTimeField(
             blank=True, null=True)
     

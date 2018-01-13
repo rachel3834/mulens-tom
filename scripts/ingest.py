@@ -19,7 +19,7 @@ from datetime import datetime, timedelta
 setup()
 
 from tom.models import Target, TargetName, ExposureSet, PhotObs, ProjectUser
-import query_functions
+import query_functions, utilities
 
 def add_target(params):
     """Function to add a new target to the database
@@ -35,15 +35,29 @@ def add_target(params):
 
     (t,created_target) = Target.objects.get_or_create(ra=params['ra'],dec=params['dec'])
     
-    if params['targetlist'] != None:
-        
-        params['targetlist'].targets.add(t)
-        params['targetlist'].save()
-    
     if created_target == True:
 
         messages.append('Added new target location')
-
+        
+        if params['targetlist'] != None:
+            
+            params['targetlist'].targets.add(t)
+            params['targetlist'].save()
+        
+    else:
+        
+        if params['targetlist'] != None:
+            
+            own_target = target_in_list(targetlist,params)
+            
+            if own_target:
+                
+                messages.append('This target is already in your target list')
+        
+            else:
+                
+                messages.append('WARNING: Target already in database.  May be being observed by another project')
+                
     (tname, created_name) = TargetName.objects.get_or_create(target_id=t, name=params['name'])
 
     if created_name == True:
@@ -60,6 +74,25 @@ def add_target(params):
 
         return False, message
 
+def target_in_list(targetlist,params):
+    """Function to check whether a given target is already in a targetlist"""
+    
+    tol = 1.0 / 3600.0
+    
+    target_loc = utilities.sex2decdeg(params['ra'],params['dec'])
+    
+    for t in params['targetlist'].targets.all():
+        
+        t_loc = utilities.sex2decdeg(t.ra,t.dec)
+    
+        gamma = utilities.separation_two_points(target_loc,t_loc)
+    
+        if gamma < tol:
+            
+            return True
+            
+    return False
+    
 def record_obs_requests(obs_list):
     """Function to record a observation request in the database"""
     

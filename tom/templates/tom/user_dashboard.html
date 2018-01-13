@@ -11,9 +11,12 @@
             <div class="col-lg-4">
                 <a href="{% url 'project' %}?project={{p.id | urlencode}}">
                 <div class="panel panel-default">
-                    <div class="panel-body">
-                        <h4>{{p.name}}</h4>
+                    <div class="panel-heading">
+                      <h4 class="panel-title">{{p.name}}</h4>
                     </div>
+                   <div class="panel-body">
+                      <center><img src="/static/tom/{{p.picture}}" width="300pix" height="200pix"></center>
+                   </div>
                 </div>
                 </a>
             </div>

@@ -8,7 +8,7 @@ from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib import messages
 from .models import Target, TargetName, PhotObs, ProjectUser, Project
-from .models import TargetList
+from .models import TargetList, ObservingFacility
 from .forms import TargetForm, TargetNameForm
 from .forms import ObservationForm, ExposureSetForm, AccountForm
 from scripts import ingest, query_functions, log_utilities
@@ -209,6 +209,8 @@ def request_obs(request,obs_type='multi-site'):
 
         config = { 'log_dir': '/var/www/spitzermicrolensing/logs/2017',
               'log_root_name': 'request_log'}
+
+    project = Project.objects.filter(id=request.GET.get('project'))[0]
     
     locations = observing_strategy.get_site_tel_inst_combinations()
     
@@ -222,11 +224,15 @@ def request_obs(request,obs_type='multi-site'):
         
         targets = []
 
-        for t in targetlist.targets.all():
+        if targetlist != None:
             
-            tname = TargetName.objects.filter(target_id=t.id)[0]
+            message = 'Warning: You need to add targets before attempting to observe them!'
             
-            targets.append(tname.name)
+            for t in targetlist.targets.all():
+                
+                tname = TargetName.objects.filter(target_id=t.id)[0]
+                
+                targets.append(tname.name)
         
         if request.method == "POST":
             
@@ -283,6 +289,10 @@ def request_obs(request,obs_type='multi-site'):
                 oform = ObservationForm()
                 eform = ExposureSetForm()
                 
+                if len(targets) == 0:
+                    
+                    message = 'Warning: You need to add targets before attempting to observe them!'
+                    
                 return render(request, 'tom/request_observation.html', \
                                     {'project': project, 'targets': targets,
                                     'tform': tform, 'oform': oform,'eform': eform,
@@ -295,6 +305,10 @@ def request_obs(request,obs_type='multi-site'):
             oform = ObservationForm()
             eform = ExposureSetForm()
 
+            if len(targets) == 0:
+                
+                message = 'Warning: You need to add targets before attempting to observe them!'
+                    
             return render(request, 'tom/request_observation.html', \
                                     {'project': project,
                                     'tform': tform, 'oform': oform, 'eform': eform,

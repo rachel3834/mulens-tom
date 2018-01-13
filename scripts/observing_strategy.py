@@ -20,6 +20,7 @@ from datetime import datetime, timedelta
 setup()
 
 from tom.models import ProjectUser, Project
+from tom.models import ObservingFacility
 
 import lco_interface
     
@@ -125,19 +126,22 @@ def strategy_config(params):
     their specific science purpose.
     """
     
-    obs_strategy = {}
-    obs_strategy['sites'] = [ 'lsc', 'cpt', 'coj' ]
-    obs_strategy['domes'] = [ 'doma', 'domc', 'domb' ]
-    obs_strategy['telescopes'] = [ '1m0', '1m0', '1m0' ]
-    obs_strategy['instruments'] = [ 'fl15', 'fl06', 'fl11' ]
+    obs_strategy = {'sites':[], 'domes':[], 'telescopes':[], 'instruments':[]}
+    
+    for f in params['project'].default_locations:
+        
+        obs_strategy['sites'].append(f.site)
+        obs_strategy['domes'].append(f.enclosure)
+        obs_strategy['telescopes'].append(f.telescope)
+        obs_strategy['instruments'].append(f.instrument)
+        
     obs_strategy['defocus'] = 0.0
     obs_strategy['priority'] = 1.1
     
-    qs = Project.objects.all()
-    project = qs[0]
     obs_strategy['proposal_id'] = project.proposal_id
     
     qs = ProjectUser.objects.filter(handle__contains=params['user_id'])
+    
     if len(qs) == 1:
         obs_strategy['lco_observer_id'] = qs[0].lco_observer_id
         obs_strategy['token'] = qs[0].token
@@ -147,16 +151,14 @@ def strategy_config(params):
 def get_site_tel_inst_combinations():
     """Function to return the valid combinations of site, domes, telescopes 
     and instruments for the LCO network.  While this would be best done by
-    querying the network itself, this doesn't return the instrument details."""
+    querying the network itself, this doesn't return the instrument details.
+    """
+
+    locations = []
     
-    locations = [ ('Chile Dome A, fl15', 'lsc.doma.1m0.fl15'),
-                  ('Chile Dome B, fl03', 'lsc.domb.1m0.fl03'),
-                  ('Chile Dome C, fl04', 'lsc.domc.1m0.fl04'),
-                  ('South Africa Dome A, fl16', 'cpt.doma.1m0.fl16'),
-#                 ('South Africa Dome B, fl14', 'cpt.domb.1m0.fl14'),
-                  ('South Africa Dome C, fl06', 'cpt.domc.1m0.fl06'),
-                  ('Australia Dome A, fl12', 'coj.doma.1m0.fl12'),
-                  ('Australia Dome B, fl11', 'coj.domb.1m0.fl11'),
-                 ]
+    for f in ObservingFacility.objects.all():
+        
+        locations.append( (f.name, f.code()) )
+        
     return locations
     

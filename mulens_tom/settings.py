@@ -23,9 +23,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '9156e-yt12da%wn@hth(7g8h&cl5_$%(*=tou0po2ax#7h+2f&'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+#DEBUG = True
 
-ALLOWED_HOSTS = ['einstein.lco.gtn', 'spitzer-microlensing.lco.global', '127.0.0.1']
+ALLOWED_HOSTS = ['einstein.lco.gtn', 'spitzer-microlensing.lco.global', 'microlensing-tom.lco.global','127.0.0.1']
 
 
 # Application definition
@@ -77,7 +77,7 @@ WSGI_APPLICATION = 'mulens_tom.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-  #      'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+   #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
         'NAME': os.path.join('/var/www/spitzermicrolensing/', 'sqlite.db'),
     }
 }

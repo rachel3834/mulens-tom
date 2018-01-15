@@ -221,6 +221,7 @@ def request_obs(request,obs_type='multi-site'):
         targetlist = get_project_targetlist(project)
                 
         log = log_utilities.start_day_log(config,'request_obs')
+        log.info('Composing observation request for '+str(project.name))
         
         targets = []
 
@@ -239,6 +240,8 @@ def request_obs(request,obs_type='multi-site'):
             tform = TargetNameForm(request.POST)
             oform = ObservationForm(request.POST)
             eform = ExposureSetForm(request.POST)
+            
+            verify_form_data(tform,oform,eform,log)
             
             if tform.is_valid() and oform.is_valid() and eform.is_valid():
 
@@ -270,7 +273,7 @@ def request_obs(request,obs_type='multi-site'):
                 else:
                     
                     obs_requests = lco_interface.submit_obs_requests(obs_requests,log=log)
-                
+                    
                     ingest.record_obs_requests(obs_requests)
                     
                     (status,message) = parse_obs_status(obs_requests)
@@ -363,14 +366,47 @@ def parse_obs_status(obs_requests):
     message = []
 
     for obs in obs_requests:
+        
+        status = obs.get_submit_status()
+        
+        if status:
+        
+            message.append(str(obs.group_id)+':'+str(obs.submit_response))
 
-        message.append(str(obs.group_id)+':'+str(obs.submit_response))
-
-        if 'error' in str(obs.submit_response).lower() or \
-            'warning' in str(obs.submit_response).lower():
-            status = False
+        else:
+            
+            message.append(str(obs.group_id)+':'+str(obs.submit_status))
 
     return status, message
+
+def verify_form_data(tform,oform,eform,log):
+    """Function to record the verification of the input data for an
+    observation request, and to log information on faults, if any."""
+    
+    if tform.is_valid():
+        
+        log.info('Target information form validation: '+repr(tform.is_valid()))
+    
+    else:
+        
+        log.info('Problem with target information provided: '+repr(tform.cleaned_data))
+    
+    if oform.is_valid():
+        
+        log.info('Observation information form validation: '+repr(oform.is_valid()))
+    
+    else:
+    
+        log.info('Problem with observation information provided: '+repr(oform.cleaned_data))
+    
+    if eform.is_valid():
+        
+        log.info('Exposure information form validation: '+repr(eform.is_valid()))
+    
+    else:
+            
+        log.info('Problem with exposure information provided: '+repr(eform.cleaned_data))
+
 
 @login_required(login_url='/login/')
 def record_obs(request):

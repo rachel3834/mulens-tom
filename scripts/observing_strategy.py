@@ -32,6 +32,7 @@ def compose_obs_requests(params,log=None):
     """
     
     obs_strategy = strategy_config(params)
+    
     if params['obs_type'] == 'multi-site':
         if log!=None:
             log.info('Applying multi-site observing strategy parameters:')
@@ -128,17 +129,29 @@ def strategy_config(params):
     
     obs_strategy = {'sites':[], 'domes':[], 'telescopes':[], 'instruments':[]}
     
-    for f in params['project'].default_locations:
+    try:
         
-        obs_strategy['sites'].append(f.site)
-        obs_strategy['domes'].append(f.enclosure)
-        obs_strategy['telescopes'].append(f.telescope)
-        obs_strategy['instruments'].append(f.instrument)
+        for f in params['project'].default_locations:
+            
+            obs_strategy['sites'].append(f.site)
+            obs_strategy['domes'].append(f.enclosure)
+            obs_strategy['telescopes'].append(f.telescope)
+            obs_strategy['instruments'].append(f.instrument)
+            
+    except TypeError:
+        
+        qs = ObservingFacility.objects.all()
+        
+        for f in qs:
+            obs_strategy['sites'].append(f.site)
+            obs_strategy['domes'].append(f.enclosure)
+            obs_strategy['telescopes'].append(f.telescope)
+            obs_strategy['instruments'].append(f.instrument)
         
     obs_strategy['defocus'] = 0.0
     obs_strategy['priority'] = 1.1
     
-    obs_strategy['proposal_id'] = project.proposal_id
+    obs_strategy['proposal_id'] = params['project'].proposal_id
     
     qs = ProjectUser.objects.filter(handle__contains=params['user_id'])
     

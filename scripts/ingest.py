@@ -103,6 +103,14 @@ def record_obs_requests(obs_list):
     
         project = query_functions.get_proposal(id_code=obs.proposal_id)
         
+        if obs.get_submit_status(): 
+            
+            trackid = obs.track_id
+            
+        else:
+            
+            trackid = '99999999'
+        
         exp_sets = []
         for i in range(0,len(obs.exposure_times),1):
             new_exp = ExposureSet(inst_filter=obs.filters[i],
@@ -121,7 +129,7 @@ def record_obs_requests(obs_list):
                         site=obs.site,
                         telescope=obs.tel,
                         instrument=obs.instrument,
-                        track_id=obs.track_id,
+                        track_id=trackid,
                         start_obs=obs.ts_submit,
                         stop_obs=obs.ts_expire,
                         cadence=obs.cadence,

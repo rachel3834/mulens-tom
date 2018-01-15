@@ -409,7 +409,23 @@ class ObsRequest:
         if log!=None:
             log.info('Validated obs group: '+str(self.group_id)+' with status '+message)
         return status, message
+    
+    def get_submit_status(self):
+        """Method to return a boolean indicating whether the observation
+        submission was successful or not"""
         
+        if 'error' in str(self.submit_response).lower() or \
+            'warning' in str(self.submit_response).lower() or \
+            'error' in str(self.submit_status).lower() or \
+            'warning' in str(self.submit_status).lower() or \
+            'invalid' in str(self.submit_status).lower():
+                
+            return False
+        
+        else:
+            
+            return True
+            
 def validate_request(ur,log=None):
     """Function to validate the parameters of a userrequest.
     Returns a boolean and a string message
@@ -419,38 +435,40 @@ def validate_request(ur,log=None):
     message = 'OK'
     
     if log!=None:
-        log.info('Validating user request: '+str(ur['group_id']))
+        log.info('Validating user request')
     
     if 'requests' not in ur.keys():
         status= False
         message= 'Error: no subrequests'
         if log!=None:
             log.info(' -> Invalid: '+message)
-            return status, message
+        return status, message
     
     for r in ur['requests']:
+
         if type(r) == type(u'foo'):
             status = False
             message = repr(r)
             if log!=None:
                 log.info(' -> Invalid: '+message)
-                return status, message
+            return status, message
         else:
             if 'windows' not in r.keys():
                 status= False
                 message= 'Error: no valid observing windows in request'
                 if log!=None:
                     log.info(' -> Invalid: '+message)
-                    return status, message
+                return status, message
             else:
                 if len(r['windows']) == 0:
                     status= False
                     message= 'Error: no valid observing windows in request'
                     if log!=None:
                         log.info(' -> Invalid: '+message)
-                        return status, message
+                    return status, message
     if log!=None:
         log.info('Validated user request: '+str(ur['group_id'])+' with status '+message)
+        
     return status, message
     
 def submit_obs_requests(obs_requests, log=None):
@@ -468,16 +486,16 @@ def submit_obs_requests(obs_requests, log=None):
         
         if status == True:
             ur = obs.build_cadence_request(log=log)
-            if log!=None:
-                log.info('Build observation request for '+str(obs.group_id))
                 
-            (status, message) = validate_request(ur,log=None)
+            (status, message) = validate_request(ur,log=log)
             
             if status == True:
+
                 obs.submit_status = obs.submit_request(ur, log=log)
+                
                 if log!=None:
                     log.info('Submitted observation with status '+str(obs.submit_status))
-                    if 'error' in obs.submit_status:
+                    if 'error' in str(obs.submit_status).lower():
                         log.info(ur)
             else:
                 if log!=None:

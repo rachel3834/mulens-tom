@@ -23,9 +23,11 @@ def home(request):
 
     if request.user.is_authenticated():
         
-        pu = ProjectUser.objects.all().filter(id=request.user.id)[0]
+        pu = ProjectUser.objects.all().filter(handle=request.user.username)[0]
 
-        return render(request,'tom/user_dashboard.html',{'projects':pu.projects.all()})
+        projects_list = pu.projects.all()
+        
+        return render(request,'tom/user_dashboard.html',{'projects':projects_list})
         
     else:
         
@@ -37,11 +39,21 @@ def home(request):
 def project(request):
 
     if request.user.is_authenticated():
+
+        pu = ProjectUser.objects.all().filter(handle=request.user.username)[0]
+
+        allowed_projects = pu.projects.all()
         
         project = Project.objects.filter(id=request.GET.get('project'))[0]
 
-        return render(request,'tom/project_dashboard.html',
+        if project in allowed_projects:
+            
+            return render(request,'tom/project_dashboard.html',
                       {'project':project})
+        
+        else:
+            return render(request,'tom/user_dashboard.html',
+                      {'projects':allowed_projects})
         
     else:
         

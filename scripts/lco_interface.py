@@ -439,7 +439,7 @@ def validate_request(ur,log=None):
     
     if 'requests' not in ur.keys():
         status= False
-        message= 'Error: no subrequests'
+        message= 'Error: no subrequests: '+repr(ur)
         if log!=None:
             log.info(' -> Invalid: '+message)
         return status, message

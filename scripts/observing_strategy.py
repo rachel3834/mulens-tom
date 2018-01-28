@@ -131,7 +131,7 @@ def strategy_config(params):
     
     try:
         
-        for f in params['project'].default_locations:
+        for f in params['project'].default_locations.all():
             
             obs_strategy['sites'].append(f.site)
             obs_strategy['domes'].append(f.enclosure)

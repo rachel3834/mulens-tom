@@ -17,7 +17,7 @@ from django.conf.urls import url
 from django.contrib import admin
 from tom.views import home, targets, add_target, observations, request_obs
 from tom.views import record_obs, manage_account, change_password, test
-from tom.views import project
+from tom.views import project, remove_target
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
@@ -31,6 +31,7 @@ urlpatterns = [
     url(r'^project/$',project,name="project"),
     url(r'^targets/$',targets,name="targets"),
     url(r'^add_target/$',add_target,name="add_target"),
+    url(r'^remove_target/$',remove_target,name="remove_target"),
     url(r'^observations/$',observations,name="observations"),
     url(r'^request_obs/$',request_obs,{'obs_type':'multi-site'},name="request_obs"),
     url(r'^request_obs/multisite/$',request_obs,{'obs_type':'multi-site'},name="request_multisite_obs"),

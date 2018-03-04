@@ -74,6 +74,35 @@ def add_target(params):
 
         return False, message
 
+def remove_target(params):
+    """Function to remove a target from the DB"""
+    
+    rm_target = False
+    
+    messages = []
+    
+    for t in params['targetlist'].targets.all():
+        
+        tname = TargetName.objects.filter(target_id=t.id)[0]
+        
+        if params['targetname'] == tname.name:
+            params['targetlist'].targets.remove(t)
+            params['targetlist'].save()
+            
+            rm_target = True
+            
+    if not rm_target:
+        
+        messages.append('ERROR: Cannot find target '+params['targetname']+' in project target list')
+        
+    else:
+        
+        messages.append('Removed '+params['targetname'])
+        
+    message = ' '.join(messages)
+    
+    return rm_target, message
+
 def target_in_list(targetlist,params):
     """Function to check whether a given target is already in a targetlist"""
     
@@ -158,3 +187,4 @@ def record_project_user(params):
     user.save()
     
     return 'Updated project user parameters'
+    

@@ -175,6 +175,67 @@ def add_target(request):
     
 
 @login_required(login_url='/login/')
+def remove_target(request):
+    """Function to remove a target and target name to the database"""
+    
+    if request.user.is_authenticated():
+
+        project = Project.objects.filter(id=request.GET.get('project'))[0]
+
+        targetlist = get_project_targetlist(project)
+        
+        targets = []
+
+        if targetlist != None:
+            
+            for t in targetlist.targets.all():
+                
+                tname = TargetName.objects.filter(target_id=t.id)[0]
+                
+                targets.append(tname.name)
+                
+        if request.method == "POST":
+            
+            nform = TargetNameForm(request.POST)
+            
+            if nform.is_valid():
+                
+                npost = nform.save(commit=False)
+                
+                params = {'targetname': npost.name,
+                          'project': project, 'targetlist': targetlist}
+                
+                (status,message) = ingest.remove_target(params)
+                
+                return render(request, 'tom/remove_target.html', \
+                                    {'project': project,
+                                    'targets': targets, 'nform': nform,
+                                    'message': message})
+            else:
+                
+                nform = TargetNameForm()
+                
+                return render(request, 'tom/remove_target.html', \
+                                    {'project': project,
+                                    'targets': targets, 'nform': nform,\
+                                    'message':'Form entry was invalid.\nReason:\n'+\
+                                    repr(nform.errors)+\
+                                    '\nPlease try again.'})
+                                    
+        else:
+
+            nform = TargetNameForm()
+
+            return render(request, 'tom/remove_target.html', \
+                                    {'project': project,'targets': targets,
+                                    'nform': nform,
+                                    'message': 'none'})
+
+        
+    else:
+        return HttpResponseRedirect('login')
+ 
+@login_required(login_url='/login/')
 def observations(request):
     
     if request.user.is_authenticated():

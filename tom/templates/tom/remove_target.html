@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title_text %}Remove a Target{% endblock %}
+{% block header_text %}Remove a Target{% endblock %}
+
+{% block mainregion %}
+<center>
+<h3>Remove a Target</h3>
+<div>
+    <form method="POST" class="post-form">{% csrf_token %}
+        {{ formset.management_form }}
+        <table>
+            <tr>
+                <td><label for="{{nform.name.id_for_label}}">Target:</label></td>
+                <td><div class="fieldWrapper">
+                        <select name="name">
+                            {% for name in targets %}
+                                <option value="{{name}}">{{name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </td>
+                <td>
+                    <div class="fieldWrapper">
+                    <button type="sumbit" class="save btn btn-default">Submit</button>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+{% if message != 'none' %}
+    <div>
+    <center>
+        <h5>{{ message }}</h5>
+    </center>
+    </div>
+{% endif %}
+
+</center>
+{% endblock %}

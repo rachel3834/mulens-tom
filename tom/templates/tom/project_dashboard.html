@@ -46,5 +46,18 @@
             </a>
         </div>
     </div>
+    <div class="row">
+        <div class="col-lg-4">
+            <a href="{% url 'remove_target' %}?project={{project.id | urlencode}}">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h4>Remove a target</h4>
+                </div>
+            </div>
+            </a>
+        </div>
+        <div class="col-lg-4">
+        </div>
+    </div>
 </div>
 {% endblock %}

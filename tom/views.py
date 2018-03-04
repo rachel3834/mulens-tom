@@ -10,7 +10,8 @@ from django.contrib import messages
 from .models import Target, TargetName, PhotObs, ProjectUser, Project
 from .models import TargetList, ObservingFacility
 from .forms import TargetForm, TargetNameForm
-from .forms import ObservationForm, ExposureSetForm, AccountForm
+from .forms import ExposureSetForm, AccountForm
+from .forms import ObservationForm, RapidObservationForm
 from scripts import ingest, query_functions, log_utilities
 from scripts import observing_strategy, lco_interface
 import socket
@@ -250,8 +251,12 @@ def request_obs(request,obs_type='multi-site'):
         if request.method == "POST":
             
             tform = TargetNameForm(request.POST)
-            oform = ObservationForm(request.POST)
             eform = ExposureSetForm(request.POST)
+            
+            if project.allowed_rapid:
+                oform = RapidObservationForm(request.POST)
+            else:
+                oform = ObservationForm(request.POST)
             
             verify_form_data(tform,oform,eform,log)
             
@@ -273,8 +278,12 @@ def request_obs(request,obs_type='multi-site'):
                     message = obs_requests[0].submit_status
                     
                     tform = TargetNameForm()
-                    oform = ObservationForm()
                     eform = ExposureSetForm()
+            
+                    if project.allowed_rapid:
+                        oform = RapidObservationForm()
+                    else:
+                        oform = ObservationForm()
 
                     return render(request, 'tom/request_observation.html', \
                                     {'project': project, 'targets': targets,
@@ -301,9 +310,13 @@ def request_obs(request,obs_type='multi-site'):
             else:
                 
                 tform = TargetNameForm()
-                oform = ObservationForm()
                 eform = ExposureSetForm()
-                
+            
+                if project.allowed_rapid:
+                    oform = RapidObservationForm()
+                else:
+                    oform = ObservationForm()
+                    
                 if len(targets) == 0:
                     
                     message = 'Warning: You need to add targets before attempting to observe them!'
@@ -317,8 +330,12 @@ def request_obs(request,obs_type='multi-site'):
         else:
 
             tform = TargetNameForm()
-            oform = ObservationForm()
             eform = ExposureSetForm()
+            
+            if project.allowed_rapid:
+                oform = RapidObservationForm()
+            else:
+                oform = ObservationForm()
 
             if len(targets) == 0:
                 
@@ -357,6 +374,9 @@ def parse_obs_params(obs_type,tpost,opost,epost,request,project,log=None):
     params['start_obs'] = opost.start_obs
     params['stop_obs'] = opost.stop_obs
     params['airmass_limit'] = opost.airmass_limit
+    params['ipp'] = opost.ipp
+    params['rapid_mode'] = opost.rapid_mode
+    params['simulate'] = opost.simulate
     
     params['user_id'] = request.user
     params['project'] = project
@@ -443,8 +463,12 @@ def record_obs(request):
 
             obs_type = request.POST.post('obs_type')
             tform = TargetNameForm(request.POST)
-            oform = ObservationForm(request.POST)
             eform = ExposureSetForm(request.POST)
+            
+            if project.allowed_rapid:
+                oform = RapidObservationForm(request.POST)
+            else:
+                oform = ObservationForm(request.POST)
 
             if tform.is_valid() and oform.is_valid() and eform.is_valid():
 
@@ -464,8 +488,12 @@ def record_obs(request):
             else:
                 
                 tform = TargetNameForm()
-                oform = ObservationForm()
                 eform = ExposureSetForm()
+            
+                if project.allowed_rapid:
+                    oform = RapidObservationForm()
+                else:
+                    oform = ObservationForm()
                 
                 return render(request, 'tom/record_observation.html', \
                                     {'project': project, 'targets': targets,
@@ -477,8 +505,12 @@ def record_obs(request):
         else:
             
             tform = TargetNameForm()
-            oform = ObservationForm()
             eform = ExposureSetForm()
+            
+            if project.allowed_rapid:
+                oform = RapidObservationForm()
+            else:
+                oform = ObservationForm()
             
             return render(request, 'tom/record_observation.html', \
                                     {'project': project, 'targets': targets,

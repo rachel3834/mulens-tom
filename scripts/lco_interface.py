@@ -61,6 +61,7 @@ class ObsRequest:
         self.onem = False
         self.twom = False
         self.simulate = False
+        self.rapid_mode = False
         self.submit_response = None
         self.submit_status = None
 
@@ -108,9 +109,13 @@ class ObsRequest:
             'proposal': self.proposal_id,
             'ipp_value': self.priority,
             'operator': 'SINGLE',
-            'observation_type': 'NORMAL', 
               }
         
+        if self.rapid_mode:
+            ur["observation_type"] = "TARGET_OF_OPPORTUNITY"
+        else:
+            ur["observation_type"] = 'NORMAL'
+            
         if type(self.ra) == type(1.0):
             ra_deg = self.ra
             dec_deg = self.dec
@@ -293,8 +298,8 @@ class ObsRequest:
                 log.info('Submission WARNING: ' + str(self.submit_status))
                 log.info('Submission WARNING: ' + str(self.submit_response))
                 
-        elif str(self.simulate).lower() == 'true':
-            self.submit_status = 'SIM_add_OK'
+        elif self.simulate:
+            self.submit_status = 'simulated'
             self.submit_response = 'Simulated'
             self.req_id = '9999999999'
             self.track_id = '99999999999'
@@ -489,7 +494,7 @@ def submit_obs_requests(obs_requests, log=None):
                 
             (status, message) = validate_request(ur,log=log)
             
-            if status == True:
+            if status:
 
                 obs.submit_status = obs.submit_request(ur, log=log)
                 
@@ -497,6 +502,7 @@ def submit_obs_requests(obs_requests, log=None):
                     log.info('Submitted observation with status '+str(obs.submit_status))
                     if 'error' in str(obs.submit_status).lower():
                         log.info(ur)
+            
             else:
                 if log!=None:
                     log.info('Invalid userrequest: '+message)

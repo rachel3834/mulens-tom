@@ -123,12 +123,48 @@
                     </td>
                 </tr>
                 <tr>
+                    <td><label for="{{oform.IPP.id_for_label}}">Intra-proposal Priority:</label></td>
+                    <td><div class="fieldWrapper">
+                            {{oform.ipp.errors}}
+                            {{oform.ipp}}
+                        </div>
+                    </td>
+                    {% if project.allowed_rapid is True %} 
+                        <td><label for="{{oform.jitter.id_for_label}}">Rapid response:</label></td>
+                        <td><div class="fieldWrapper">
+                                {{oform.rapid_mode.errors}}
+                                {{oform.rapid_mode}}
+                            </div>
+                        </td>
+                    {% else %}
+                        <td></td>
+                    {% endif %}
+                </tr>
+                <tr>
                     <td>
                         <div class="fieldWrapper">
                         <button type="sumbit" class="save btn btn-default">Submit</button>
                         </div>
-                    </td><td colspan="2"><p id="correct-date-format"> </p></td>
-                </tr>
+                    </td>
+                    <td></td>
+                    <td><label for="{{oform.simulate.id_for_label}}">Simulate
+                            <button id="help-simulate"><img src="/static/tom/clipart-question_button.png" width="10" style="border: 0;"></button>
+                        :</label>
+                        <p id="use-simulate"> </p>
+                        <script>
+                            document.getElementById("help-simulate").addEventListener("click", show_simulate_help)
+
+                            function show_simulate_help() {
+                              document.getElementById("use-simulate").innerHTML = "Testing mode: simulate=True <br>will not submit observation request"
+                            }
+                        </script>
+                    </td>
+                    <td><div class="fieldWrapper">
+                            {{oform.simulate.errors}}
+                            {{oform.simulate}}
+                        </div>
+                    </td>
+            </tr>
             </table>
         </form>
     </div>
@@ -239,11 +275,48 @@
                     </td>
                 </tr>
                 <tr>
+                    <td><label for="{{oform.ipp.id_for_label}}">Intra-proposal Priority:</label></td>
+                    <td><div class="fieldWrapper">
+                            {{oform.ipp.errors}}
+                            {{oform.ipp}}
+                        </div>
+                    </td>
+                    {% if project.allowed_rapid is True %} 
+                        <td><label for="{{oform.jitter.id_for_label}}">Rapid response:</label></td>
+                        <td><div class="fieldWrapper">
+                                {{oform.rapid_mode.errors}}
+                                {{oform.rapid_mode}}
+                            </div>
+                        </td>
+                    {% else %}
+                        <td></td>
+                    {% endif %}
+                </tr>
+                <tr>
                     <td>
                         <div class="fieldWrapper">
                         <button type="sumbit" class="save btn btn-default">Submit</button>
                         </div>
-                    </td><td colspan="2"><p id="correct-date-format"> </p></td>
+                    </td>
+                    <td></td>
+                    <td>
+                        <label for="{{oform.simulate.id_for_label}}">Simulate
+                            <button id="help-simulate"><img src="/static/tom/clipart-question_button.png" width="10" style="border: 0;"></button>
+                        :</label>
+                        <p id="use-simulate"> </p>
+                        <script>
+                            document.getElementById("help-simulate").addEventListener("click", show_simulate_help)
+
+                            function show_simulate_help() {
+                              document.getElementById("use-simulate").innerHTML = "Testing mode: simulate=True <br>will not submit observation request"
+                            }
+                        </script>
+                    </td>
+                    <td><div class="fieldWrapper">
+                            {{oform.simulate.errors}}
+                            {{oform.simulate}}
+                        </div>
+                    </td>
                 </tr>
             </table>
         </form>

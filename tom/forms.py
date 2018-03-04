@@ -21,11 +21,24 @@ class TargetNameForm(forms.ModelForm):
 class ObservationForm(forms.ModelForm):
     class Meta:
         model = PhotObs
-        fields = ('cadence','jitter','start_obs','stop_obs','airmass_limit')
+        fields = ('cadence','jitter','start_obs','stop_obs','airmass_limit','ipp','simulate')
     start_obs = forms.DateTimeField(label='start_obs',input_formats=["%Y-%m-%dT%H:%M:%S"])
     stop_obs = forms.DateTimeField(label='stop_obs',input_formats=["%Y-%m-%dT%H:%M:%S"])
     airmass_limit = forms.FloatField(label='airmass_limit',min_value=1.0,max_value=2.2)
+    ipp = forms.FloatField(label='ipp',min_value=0.1,max_value=2.0)
+    simulate = forms.ChoiceField([(False,False),(True,True)])
 
+class RapidObservationForm(forms.ModelForm):
+    class Meta:
+        model = PhotObs
+        fields = ('cadence','jitter','start_obs','stop_obs','airmass_limit','ipp','rapid_mode','simulate')
+    start_obs = forms.DateTimeField(label='start_obs',input_formats=["%Y-%m-%dT%H:%M:%S"])
+    stop_obs = forms.DateTimeField(label='stop_obs',input_formats=["%Y-%m-%dT%H:%M:%S"])
+    airmass_limit = forms.FloatField(label='airmass_limit',min_value=1.0,max_value=2.2)
+    ipp = forms.FloatField(label='ipp',min_value=0.1,max_value=2.0)
+    rapid_mode = forms.ChoiceField([(True,True),(False,False)])
+    simulate = forms.ChoiceField([(False,False),(True,True)])
+    
 class ExposureSetForm(forms.ModelForm):
     class Meta:
         model = ExposureSet

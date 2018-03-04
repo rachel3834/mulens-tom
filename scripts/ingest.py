@@ -134,6 +134,9 @@ def record_obs_requests(obs_list):
                         stop_obs=obs.ts_expire,
                         cadence=obs.cadence,
                         jitter=obs.jitter,
+                        ipp=obs.priority,
+                        rapid_mode=obs.rapid_mode,
+                        simulate=obs.simulate,
                         group_type=obs.group_type,
                         status=obs.submit_status,
                         information=str(obs.submit_response)

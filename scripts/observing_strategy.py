@@ -62,13 +62,14 @@ def compose_obs_requests(params,log=None):
             obs.cadence = params['cadence_hrs']
             obs.jitter = params['jitter_hrs']
             obs.airmass_limit = params['airmass_limit']
-            obs.priority = obs_strategy['priority']
+            obs.priority = params['ipp']
             obs.ts_submit = params['start_obs']
             obs.ts_expire = params['stop_obs']
+            obs.rapid_model = params['rapid_mode']
             obs.proposal_id = obs_strategy['proposal_id']
             obs.user_id = obs_strategy['lco_observer_id']
             obs.token = obs_strategy['token']
-            obs.simulate = False
+            obs.simulate = params['simulate']
             obs.get_group_id()
             
             if obs.token == None or len(str(obs.token)) < 10:
@@ -101,13 +102,14 @@ def compose_obs_requests(params,log=None):
         obs.cadence = params['cadence_hrs']
         obs.jitter = params['jitter_hrs']
         obs.airmass_limit = params['airmass_limit']
-        obs.priority = obs_strategy['priority']
+        obs.priority = params['ipp']
         obs.ts_submit = params['start_obs']
         obs.ts_expire = params['stop_obs']
+        obs.rapid_mode = params['rapid_mode']
         obs.proposal_id = obs_strategy['proposal_id']
         obs.user_id = obs_strategy['lco_observer_id']
         obs.token = obs_strategy['token']
-        obs.simulate = False
+        obs.simulate = params['simulate']
         obs.get_group_id()
         
         if obs.token == None or len(str(obs.token)) < 10:
@@ -149,7 +151,6 @@ def strategy_config(params):
             obs_strategy['instruments'].append(f.instrument)
         
     obs_strategy['defocus'] = 0.0
-    obs_strategy['priority'] = 1.1
     
     obs_strategy['proposal_id'] = params['project'].proposal_id
     

@@ -28,6 +28,7 @@ class Project(models.Model):
                                        blank=True,null=True)
     default_locations = models.ManyToManyField(ObservingFacility,blank=True)
     picture = models.CharField(max_length=300,blank=True)
+    allowed_rapid = models.NullBooleanField(default=False,null=True)
     
     last_modified_date = models.DateTimeField(
             blank=True, null=True)
@@ -126,6 +127,8 @@ class PhotObs(models.Model):
     cadence = models.FloatField("Cadence",blank=True)
     jitter = models.FloatField("Jitter",blank=True)
     airmass_limit = models.FloatField("Airmass limit",blank=True,default=1.5)
+    ipp = models.FloatField("IPP",blank=True,default=1.05)
+    rapid_mode = models.NullBooleanField(default=False,null=True)
     obs_types = (
                 ('single', 'Single'),
                 ('cadence', 'Cadence'),
@@ -134,10 +137,12 @@ class PhotObs(models.Model):
     modes = ( ('override','Rapid reponse'), ('queue','Queue') )
     obs_mode = models.CharField("Observation mode",max_length=30,
                                  choices=modes,default="queue",blank=True)
+    simulate = models.NullBooleanField(default=False,null=True)
     stats = ( ('submitted', 'Submitted'), 
               ('active', 'Active'),
               ('expired', 'Expired'),
-              ('error', 'Error' ))
+              ('error', 'Error' ),
+              ('simulated', 'Simulated'))
     status = models.CharField("Observation status",max_length=30,
                               choices=stats,default="submitted",blank=True)
     information = models.CharField("Information",max_length=300,

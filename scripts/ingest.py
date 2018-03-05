@@ -86,6 +86,7 @@ def remove_target(params):
         tname = TargetName.objects.filter(target_id=t.id)[0]
         
         if params['targetname'] == tname.name:
+            
             params['targetlist'].targets.remove(t)
             params['targetlist'].save()
             

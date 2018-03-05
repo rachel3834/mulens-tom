@@ -244,8 +244,12 @@ def observations(request):
         
         obs = PhotObs.objects.filter(project_id=project.id)
         
+        groups = []
         targetnames = []
-
+        obs_summaries = []
+        start_dates = []
+        end_dates = []
+        
         for o in obs:
 
             qs = TargetName.objects.filter(target_id=o.target_id)
@@ -257,8 +261,19 @@ def observations(request):
                 name = q.name+'/'
 
             targetnames.append(name[:-1])
-
-        obs_list = zip(targetnames,obs)
+            
+            qs = o.exposures.all()
+            exps = qs[0].summary()
+            
+            groups.append(o.group_id)
+            
+            obs_summaries.append(o.location()+' '+exps)
+            
+            start_dates.append(o.start_obs.strftime("%Y-%m-%dT%H:%M:%S"))
+            
+            end_dates.append(o.stop_obs.strftime("%Y-%m-%dT%H:%M:%S"))
+            
+        obs_list = zip(groups,targetnames,obs_summaries,start_dates,end_dates)
 
         return render(request,'tom/list_observations.html',
                       {'project': project,'obs_list':obs_list})

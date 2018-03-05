@@ -101,10 +101,13 @@ class ExposureSet(models.Model):
     n_exp = models.IntegerField("Number of exposures")
     defocus = models.FloatField("Defocus",blank=True)
     binning = models.IntegerField("Binning",blank=True)
+    
+    def summary(self):
+        return str(self.n_exp)+'x'+str(self.exp_time)+'s in '+str(self.inst_filter)
 
     def __str__(self):
         return str(self.pk)+' '+str(self.inst_filter)+' '+str(self.exp_time)+' '+str(self.n_exp)
-        
+    
 class PhotObs(models.Model):
     """Class describing the table of photometric observations
     Parameters have units:    
@@ -149,6 +152,9 @@ class PhotObs(models.Model):
                               default="",null=True,blank=True)
     last_modified_date = models.DateTimeField(
             blank=True, null=True)
-    
+
+    def location(self):
+        return str(self.site)+'.'+str(self.instrument)
+            
     def __str__(self):
         return self.group_id

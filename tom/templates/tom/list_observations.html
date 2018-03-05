@@ -11,9 +11,9 @@
     No observations have been submitted.
 {% else %}
     <table>
-        <tr><th>Request ID</th><th>Target</th></tr>
-        {% for name,obs in obs_list %}
-            <tr><td>{{obs.group_id}}</td><td>{{name}}</td></tr>
+        <tr><th>Request ID</th><th>Target</th><th>Exposure summary</th><th>Start date</th><th>End date</th></tr>
+        {% for group,name,summary,startdate,enddate in obs_list %}
+            <tr><td>{{group}}</td><td>{{name}}</td><td>{{summary}}</td><td>{{startdate}}</td><td>{{enddate}}</td></tr>
         {% endfor %}
     </table>
 </center>

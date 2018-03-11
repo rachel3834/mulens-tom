@@ -48,7 +48,7 @@ def add_target(params):
         
         if params['targetlist'] != None:
             
-            own_target = target_in_list(targetlist,params)
+            own_target = target_in_list(params['targetlist'],params)
             
             if own_target:
                 
@@ -58,6 +58,9 @@ def add_target(params):
                 
                 messages.append('WARNING: Target already in database.  May be being observed by another project')
                 
+            params['targetlist'].targets.add(t)
+            params['targetlist'].save()
+            
     (tname, created_name) = TargetName.objects.get_or_create(target_id=t, name=params['name'])
 
     if created_name == True:

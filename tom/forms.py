@@ -36,7 +36,7 @@ class RapidObservationForm(forms.ModelForm):
     stop_obs = forms.DateTimeField(label='stop_obs',input_formats=["%Y-%m-%dT%H:%M:%S"])
     airmass_limit = forms.FloatField(label='airmass_limit',min_value=1.0,max_value=2.2)
     ipp = forms.FloatField(label='ipp',min_value=0.1,max_value=2.0)
-    rapid_mode = forms.ChoiceField([(True,True),(False,False)])
+    rapid_mode = forms.ChoiceField([(False,False),(True,True)])
     simulate = forms.ChoiceField([(False,False),(True,True)])
     
 class ExposureSetForm(forms.ModelForm):

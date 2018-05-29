@@ -21,12 +21,20 @@ class ObservingFacility(models.Model):
 
     def code(self):
         return self.site+'.'+self.enclosure+'.'+self.telescope+'.'+self.instrument
-        
+
+class FacilityAperture(models.Model):
+    name = models.CharField("Name",max_length=50)
+    code = models.CharField("Code",max_length=4)
+    
+    def __str__(self):
+        return self.name
+
 class Project(models.Model):
     name = models.CharField("Name",max_length=50)
     proposal_id = models.CharField("Proposal ID",max_length=50,
                                        blank=True,null=True)
     default_locations = models.ManyToManyField(ObservingFacility,blank=True)
+    allowed_apertures = models.ManyToManyField(FacilityAperture,blank=True)
     picture = models.CharField(max_length=300,blank=True)
     allowed_rapid = models.NullBooleanField(default=False,null=True)
     

@@ -301,7 +301,9 @@ def request_obs(request,obs_type='multi-site'):
 
     project = Project.objects.filter(id=request.GET.get('project'))[0]
     
-    locations = observing_strategy.get_site_tel_inst_combinations()
+    locations = observing_strategy.get_site_tel_inst_combinations(project)
+    
+    aperture_classes = observing_strategy.get_allowed_aperture_classes(project)
     
     if request.user.is_authenticated():
         
@@ -365,6 +367,7 @@ def request_obs(request,obs_type='multi-site'):
                                     {'project': project, 'targets': targets,
                                     'tform': tform, 'oform': oform,'eform': eform,
                                      'obs_type': obs_type,'locations':locations,
+                                     'aperture_classes': aperture_classes,
                                      'message':[message]})
                                      
                 else:
@@ -381,6 +384,7 @@ def request_obs(request,obs_type='multi-site'):
                                     {'project': project, 'targets': targets,
                                     'tform': tform, 'oform': oform,'eform': eform,
                                     'obs_type': obs_type,'locations':locations,
+                                    'aperture_classes': aperture_classes,
                                     'message': message})
                                     
             else:
@@ -401,6 +405,7 @@ def request_obs(request,obs_type='multi-site'):
                                     {'project': project, 'targets': targets,
                                     'tform': tform, 'oform': oform,'eform': eform,
                                     'obs_type': obs_type,'locations':locations,
+                                    'aperture_classes': aperture_classes,
                                     'message':['Form entry was invalid.  Please try again.']})
                                     
         else:
@@ -421,7 +426,9 @@ def request_obs(request,obs_type='multi-site'):
                                     {'project': project,
                                     'tform': tform, 'oform': oform, 'eform': eform,
                                      'targets': targets,'obs_type': obs_type,
-                                    'locations':locations,'message': []})
+                                    'locations':locations,
+                                    'aperture_classes': aperture_classes,
+                                    'message': []})
 
     else:
         
@@ -459,6 +466,9 @@ def parse_obs_params(obs_type,tpost,opost,epost,request,project,log=None):
     
     if obs_type == 'single-site':
         params['location'] = request.POST['location']
+    
+    if obs_type == 'multi-site':
+        params['aperture_class'] = request.POST['aperture_class']
         
     if log!=None:
         for key, value in params.items():

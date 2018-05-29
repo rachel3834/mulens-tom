@@ -91,7 +91,8 @@ class ObsRequest:
             exp_list = exp_list + ' ' + str(self.exposure_counts[i])
             f_list = f_list + ' ' + self.filters[i]
             
-        output = str(self.name) + ' ' + str(self.ra) + ' ' + str(self.dec) + \
+        output = str(self.name) + str(self.proposal_id)+ \
+                ' ' + str(self.ra) + ' ' + str(self.dec) + \
                 ' ' + str(self.site) + ' ' + str(self.observatory) + ' ' + \
                 ' ' + str(self.instrument) + ' ' + f_list + ' ' + \
                 exp_list + ' ' + str(self.cadence) + ' ' + self.group_id

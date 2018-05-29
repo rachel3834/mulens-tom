@@ -41,7 +41,15 @@
                             </select>
                         </div>
                     </td>
-                    <td></td><td></td>
+                    <td><label>Aperture class:</label></td>
+                    <td><div class="fieldWrapper">
+                            <select name="aperture_class">
+                                {% for label,telcode in aperture_classes %}
+                                    <option value="{{telcode}}">{{label}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </td>
                 </tr>
                 <tr>
                     <td><label for="{{eform.inst_filter.id_for_label}}">Filter:</label></td>

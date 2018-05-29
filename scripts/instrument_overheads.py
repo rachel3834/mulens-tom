@@ -31,6 +31,12 @@ class Overhead:
                                 str(self.instrument_class).upper()
         
         network_overheads = { 
+                    '0m4':  {
+                            'sbig':     { 'front_padding': 90.0, 
+                                          'filter_change': 2.0,
+                                          'readout': 15.5
+                                        }
+                            },
                     '1m0':   {
                             'sinistro': { 'front_padding': 240.0, 
                                           'filter_change': 2.0,

@@ -52,7 +52,7 @@ def compose_obs_requests(params,log=None):
             obs.observatory= obs_strategy['domes'][i]
             obs.tel = obs_strategy['telescopes'][i]
             obs.instrument = obs_strategy['instruments'][i]
-            obs.instrument_class = '1M0-SCICAM-SINISTRO'
+            obs.instrument_class = set_instrument_class(obs.instrument)
             obs.set_aperture_class()
             obs.filters = [ params['filter'] ]
             obs.exposure_times = [ params['exp_time'] ]
@@ -92,7 +92,7 @@ def compose_obs_requests(params,log=None):
         obs.observatory= location[1]
         obs.tel = location[2]
         obs.instrument = location[3]
-        obs.instrument_class = '1M0-SCICAM-SINISTRO'
+        obs.instrument_class = set_instrument_class(obs.instrument)
         obs.set_aperture_class()
         obs.filters = [ params['filter'] ]
         obs.exposure_times = [ params['exp_time'] ]
@@ -121,7 +121,23 @@ def compose_obs_requests(params,log=None):
             log.info(obs.summary())
 
     return obs_list
-
+    
+def set_instrument_class(instrument):
+    """Function to set the instrument class parameter, depending on the
+    instrument name given"""
+    
+    icode = str(instrument).lower()
+    
+    if 'fl' in icode:
+        
+        instrument_class = '1M0-SCICAM-SINISTRO'
+    
+    else:
+    
+        instrument_class = '0M4-SCICAM-SBIG'
+    
+    return instrument_class
+    
 def strategy_config(params):
     """Function defining the pre-determined parameters of observations for 
     the current project, including which sites, telescopes, instruments etc
@@ -133,13 +149,26 @@ def strategy_config(params):
     
     try:
         
-        for f in params['project'].default_locations.all():
+        if 'aperture_class' in params.keys():
             
-            obs_strategy['sites'].append(f.site)
-            obs_strategy['domes'].append(f.enclosure)
-            obs_strategy['telescopes'].append(f.telescope)
-            obs_strategy['instruments'].append(f.instrument)
+            for f in params['project'].default_locations.all():
+                
+                if f.telescope == params['aperture_class']:
+                
+                    obs_strategy['sites'].append(f.site)
+                    obs_strategy['domes'].append(f.enclosure)
+                    obs_strategy['telescopes'].append(f.telescope)
+                    obs_strategy['instruments'].append(f.instrument)
+        
+        else:
             
+            for f in params['project'].default_locations.all():
+            
+                obs_strategy['sites'].append(f.site)
+                obs_strategy['domes'].append(f.enclosure)
+                obs_strategy['telescopes'].append(f.telescope)
+                obs_strategy['instruments'].append(f.instrument)
+        
     except TypeError:
         
         qs = ObservingFacility.objects.all()
@@ -162,7 +191,7 @@ def strategy_config(params):
         
     return obs_strategy 
 
-def get_site_tel_inst_combinations():
+def get_site_tel_inst_combinations(project):
     """Function to return the valid combinations of site, domes, telescopes 
     and instruments for the LCO network.  While this would be best done by
     querying the network itself, this doesn't return the instrument details.
@@ -172,7 +201,22 @@ def get_site_tel_inst_combinations():
     
     for f in ObservingFacility.objects.all():
         
-        locations.append( (f.name, f.code()) )
+        for ap in project.allowed_apertures.all():
+            
+            if f.telescope == ap.code:
+                
+                locations.append( (f.name+' ('+str(f.telescope)+')', f.code()) )
         
     return locations
+
+def get_allowed_aperture_classes(project):
+    """Function to return a list of tuples for the aperture classes
+    which this project has access to"""
     
+    aperture_classes = []
+    
+    for ap in project.allowed_apertures.all():
+        
+        aperture_classes.append( (ap.name, ap.code) )
+
+    return aperture_classes

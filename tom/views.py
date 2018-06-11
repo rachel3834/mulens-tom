@@ -242,7 +242,7 @@ def observations(request):
         
         project = Project.objects.filter(id=request.GET.get('project'))[0]
         
-        obs = PhotObs.objects.filter(project_id=project.id)
+        obs = PhotObs.objects.filter(project_id=project.id).order_by('start_obs').reverse()
         
         groups = []
         targetnames = []

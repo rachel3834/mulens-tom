@@ -265,6 +265,7 @@ class ObsRequest:
                         'defocus': defocus,
                         'ag_mode': 'OPTIONAL',
                         }
+                        
             if debug == True and log != None:
                 log.info(' -> Molecule: ' + str(molecule))
     

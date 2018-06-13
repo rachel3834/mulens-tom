@@ -24,8 +24,14 @@ def get_target(target_name):
     """Function to return the Target instance for a specific target, given
     its name"""
     
-    target_name = TargetName.objects.get(name=target_name)
-    
+    try:
+        
+        target_name = TargetName.objects.get(name=target_name)
+        
+    except:
+        
+        target_name = TargetName.objects.filter(name=target_name)[0]
+        
     return target_name.target_id
 
 def get_proposal(name=None,id_code=None):

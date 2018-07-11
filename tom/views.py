@@ -288,19 +288,19 @@ def request_obs(request,obs_type='multi-site'):
     information and submit it to both the LCO network and the DB"""
     
     host_name = socket.gethostname()
+
+    project = Project.objects.filter(id=request.GET.get('project'))[0]
     
     if 'rachel' in str(host_name).lower():
 
         config = { 'log_dir': '/Users/rstreet/spitzermicrolensing/logs/2017',
-              'log_root_name': 'request_log'}
+              'log_root_name': 'request_log_'+str(project.name).replace(' ','_')}
 
     else:
 
         config = { 'log_dir': '/var/www/spitzermicrolensing/logs/2017',
-              'log_root_name': 'request_log'}
+              'log_root_name': 'request_log_'+str(project.name).replace(' ','_')}
 
-    project = Project.objects.filter(id=request.GET.get('project'))[0]
-    
     locations = observing_strategy.get_site_tel_inst_combinations(project)
     
     aperture_classes = observing_strategy.get_allowed_aperture_classes(project)
@@ -401,6 +401,8 @@ def request_obs(request,obs_type='multi-site'):
                     
                     message = 'Warning: You need to add targets before attempting to observe them!'
                     
+                log_utilities.end_day_log( log )
+                    
                 return render(request, 'tom/request_observation.html', \
                                     {'project': project, 'targets': targets,
                                     'tform': tform, 'oform': oform,'eform': eform,
@@ -421,7 +423,9 @@ def request_obs(request,obs_type='multi-site'):
             if len(targets) == 0:
                 
                 message = 'Warning: You need to add targets before attempting to observe them!'
-                    
+            
+            log_utilities.end_day_log( log )
+            
             return render(request, 'tom/request_observation.html', \
                                     {'project': project,
                                     'tform': tform, 'oform': oform, 'eform': eform,

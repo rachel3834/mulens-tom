@@ -9,7 +9,7 @@ RUN groupadd -g 20000 domainusers \
 
 # install packages
 RUN yum -y install epel-release \
-        && yum -y install nginx python-pip supervisor python-devel uwsgi-plugin-python \
+        && yum -y install nginx python-pip supervisor python-devel uwsgi-plugin-python2 \
         && yum -y install gcc g++ gcc-gfortran \
         && yum -y update \
         && yum -y clean all

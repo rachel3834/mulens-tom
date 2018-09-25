@@ -99,6 +99,7 @@ class ExposureSet(models.Model):
     filters = (
                 ('SDSS-i', 'SDSS-i'),
                 ('SDSS-r', 'SDSS-r'),
+                ('SDSS-g', 'SDSS-g'),
                 ('Pan-STARRS-Z', 'Pan-STARRS-Z'),
                 ('Bessell-V', 'Bessell-V'),
                 ('Bessell-R', 'Bessell-R'),

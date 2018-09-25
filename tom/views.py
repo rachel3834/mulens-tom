@@ -9,8 +9,8 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib import messages
 from .models import Target, TargetName, PhotObs, ProjectUser, Project
 from .models import TargetList, ObservingFacility
-from .forms import TargetForm, TargetNameForm
-from .forms import ExposureSetForm, AccountForm
+from .forms import TargetForm, TargetNameForm, AccountForm
+from .forms import ExposureSetForm
 from .forms import ObservationForm, RapidObservationForm
 from scripts import ingest, query_functions, log_utilities
 from scripts import observing_strategy, lco_interface
@@ -329,34 +329,46 @@ def request_obs(request,obs_type='multi-site'):
         if request.method == "POST":
             
             tform = TargetNameForm(request.POST)
-            eform = ExposureSetForm(request.POST)
+            exp_forms = extract_exposure_groups(request)
             
             if project.allowed_rapid:
                 oform = RapidObservationForm(request.POST)
             else:
                 oform = ObservationForm(request.POST)
             
-            verify_form_data(tform,oform,eform,log)
+            valid = verify_form_data(tform,oform,exp_forms,log)
             
-            if tform.is_valid() and oform.is_valid() and eform.is_valid():
+            if valid:
 
                 tpost = tform.save(commit=False)
                 opost = oform.save(commit=False)
-                epost = eform.save(commit=False)
-
-                params = parse_obs_params(obs_type,tpost,opost,epost,request,
+                
+                exp_sets = []
+                for f in exp_forms:
+                    e = f.save(commit=False)
+                    exp_sets.append(e)
+                    
+                (params,status) = parse_obs_params(obs_type,tpost,opost,
+                                          exp_sets,
+                                          request,
                                           project,log=log)
                 
-                obs_requests = observing_strategy.compose_obs_requests(params,log=log)
-
-                (status,message) = parse_obs_status(obs_requests)
-                
+                if status == True:
+                    obs_requests = observing_strategy.compose_obs_requests(params,log=log)
+    
+                    (status,message) = parse_obs_status(obs_requests)
+                    
+                else:
+                    message = 'Error: No exposure groups specified'
+                    
                 if status == False:
 
                     message = obs_requests[0].submit_status
                     
                     tform = TargetNameForm()
-                    eform = ExposureSetForm()
+                    eform1 = ExposureSetForm1()
+                    eform2 = ExposureSetForm2()
+                    eform3 = ExposureSetForm3()
             
                     if project.allowed_rapid:
                         oform = RapidObservationForm()
@@ -365,7 +377,9 @@ def request_obs(request,obs_type='multi-site'):
 
                     return render(request, 'tom/request_observation.html', \
                                     {'project': project, 'targets': targets,
-                                    'tform': tform, 'oform': oform,'eform': eform,
+                                    'tform': tform, 'oform': oform,
+                                    'eform1': eform1,'eform2': eform2,
+                                    'eform3': eform3,
                                      'obs_type': obs_type,'locations':locations,
                                      'aperture_classes': aperture_classes,
                                      'message':[message]})
@@ -382,7 +396,9 @@ def request_obs(request,obs_type='multi-site'):
                 
                     return render(request, 'tom/request_observation.html', \
                                     {'project': project, 'targets': targets,
-                                    'tform': tform, 'oform': oform,'eform': eform,
+                                    'tform': tform, 'oform': oform,
+                                    'eform1': eform1,'eform2': eform2,
+                                    'eform3': eform3,
                                     'obs_type': obs_type,'locations':locations,
                                     'aperture_classes': aperture_classes,
                                     'message': message})
@@ -390,7 +406,9 @@ def request_obs(request,obs_type='multi-site'):
             else:
                 
                 tform = TargetNameForm()
-                eform = ExposureSetForm()
+                eform1 = ExposureSetForm1()
+                eform2 = ExposureSetForm2()
+                eform3 = ExposureSetForm3()
             
                 if project.allowed_rapid:
                     oform = RapidObservationForm()
@@ -405,7 +423,9 @@ def request_obs(request,obs_type='multi-site'):
                     
                 return render(request, 'tom/request_observation.html', \
                                     {'project': project, 'targets': targets,
-                                    'tform': tform, 'oform': oform,'eform': eform,
+                                    'tform': tform, 'oform': oform,
+                                    'eform1': eform1,'eform2': eform2,
+                                    'eform3': eform3,
                                     'obs_type': obs_type,'locations':locations,
                                     'aperture_classes': aperture_classes,
                                     'message':['Form entry was invalid.  Please try again.']})
@@ -413,7 +433,9 @@ def request_obs(request,obs_type='multi-site'):
         else:
 
             tform = TargetNameForm()
-            eform = ExposureSetForm()
+            eform1 = ExposureSetForm1()
+            eform2 = ExposureSetForm2()
+            eform3 = ExposureSetForm3()
             
             if project.allowed_rapid:
                 oform = RapidObservationForm()
@@ -428,7 +450,9 @@ def request_obs(request,obs_type='multi-site'):
             
             return render(request, 'tom/request_observation.html', \
                                     {'project': project,
-                                    'tform': tform, 'oform': oform, 'eform': eform,
+                                    'tform': tform, 'oform': oform, 
+                                    'eform1': eform1,'eform2': eform2,
+                                    'eform3': eform3,
                                      'targets': targets,'obs_type': obs_type,
                                     'locations':locations,
                                     'aperture_classes': aperture_classes,
@@ -437,12 +461,34 @@ def request_obs(request,obs_type='multi-site'):
     else:
         
         return HttpResponseRedirect('login')
+
+def extract_exposure_groups(request):
+    """Function to extract the data for multiple exoposure groups"""
+    
+    data = request.POST.copy()
+    
+    exp_sets = []
+    
+    for i in range(0,3,1):
         
-def parse_obs_params(obs_type,tpost,opost,epost,request,project,log=None):
+        e = ExposureSetForm()
+        
+        e.inst_filter = data.getlist('inst_filter')[i]
+        e.exp_time = data.getlist('exp_time')[i]
+        e.n_exp = data.getlist('n_exp')[i]
+        
+        exp_sets.append(e)
+    
+    return exp_sets
+    
+def parse_obs_params(obs_type,tpost,opost,exp_sets,
+                     request,project,log=None):
     """Function to parse the posted parameters into a dictionary, 
     and resolve observation parameters where necessary
     """
-
+    
+    status = True
+    
     params = {}
     params['obs_type'] = obs_type
     params['name'] = tpost.name
@@ -451,10 +497,31 @@ def parse_obs_params(obs_type,tpost,opost,epost,request,project,log=None):
     params['dec'] = target.dec
     params['target'] = target
     
-    params['filter'] = epost.inst_filter
-    params['exp_time'] = epost.exp_time
-    params['n_exp'] = epost.n_exp
+    filters = []
+    exp_times = []
+    n_exps = []
     
+    for e in exp_sets:
+        
+        f = getattr(e,'inst_filter')
+        print('None' not in str(e.inst_filter))
+        print('getattr: ',('None' not in str(f)))
+        if 'None' not in str(e.inst_filter):
+            
+            filters.append(e.inst_filter)
+            exp_times.append(e.exp_time)
+            n_exps.append(e.n_exp)
+            
+            print(filters)
+            print(e.inst_filter)
+            
+    params['filter'] = filters
+    params['exp_time'] = exp_times
+    params['n_exp'] = n_exps
+    
+    if len(params['filter']) == 0:
+        status = False
+        
     params['group_type'] = opost.group_type
     params['cadence_hrs'] = opost.cadence
     params['jitter_hrs'] = opost.jitter
@@ -478,8 +545,8 @@ def parse_obs_params(obs_type,tpost,opost,epost,request,project,log=None):
         for key, value in params.items():
             log.info(str(key)+' = '+str(value))
     
-    return params
-    
+    return params, status
+
 def parse_obs_status(obs_requests):
     """Function to parse the output of the requested observations"""
     
@@ -501,9 +568,11 @@ def parse_obs_status(obs_requests):
 
     return status, message
 
-def verify_form_data(tform,oform,eform,log):
+def verify_form_data(tform,oform,exp_sets,log):
     """Function to record the verification of the input data for an
     observation request, and to log information on faults, if any."""
+    
+    valid = True
     
     if tform.is_valid():
         
@@ -511,6 +580,7 @@ def verify_form_data(tform,oform,eform,log):
     
     else:
         
+        valid = False
         log.info('Problem with target information provided: '+repr(tform.cleaned_data))
     
     if oform.is_valid():
@@ -519,16 +589,21 @@ def verify_form_data(tform,oform,eform,log):
     
     else:
     
+        valid = False
         log.info('Problem with observation information provided: '+repr(oform.cleaned_data))
     
-    if eform.is_valid():
+    for i,e in enumerate(exp_sets):
         
-        log.info('Exposure information form validation: '+repr(eform.is_valid()))
-    
-    else:
+        if e.is_valid():
             
-        log.info('Problem with exposure information provided: '+repr(eform.cleaned_data))
-
+            log.info('Exposure information form validation (group '+str(i)+'): '+repr(e.is_valid()))
+        
+        else:
+            
+            valid = False
+            log.info('Problem with exposure information provided (group '+str(i)+')')
+    
+    return valid
 
 @login_required(login_url='/login/')
 def record_obs(request):

@@ -50,32 +50,65 @@
                             </select>
                         </div>
                     </td>
+                    <td></td>
                 </tr>
                 <tr>
-                    <td><label for="{{eform.inst_filter.id_for_label}}">Filter:</label></td>
+                    <td><label for="{{eform1.inst_filter.id_for_label}}">Exposure group 1 Filter:</label></td>
                     <td><div class="fieldWrapper">
-                            {{eform.inst_filter.errors}}
-                            {{eform.inst_filter}}
+                            {{eform1.inst_filter.errors}}
+                            {{eform1.inst_filter}}
                         </div>
                     </td>
-                    <td><label for="{{eform.exp_time.id_for_label}}">Exposure [sec]:</label></td>
+                    <td><label for="{{eform1.exp_time.id_for_label}}">Exposure [sec]:</label></td>
                     <td><div class="fieldWrapper">
-                            {{eform.exp_time.errors}}
-                            {{eform.exp_time}}
+                            {{eform1.exp_time.errors}}
+                            {{eform1.exp_time}}
+                        </div>
+                    </td>
+                    <td><label for="{{eform1.n_exp.id_for_label}}">Number of exposures:</label></td>
+                    <td><div class="fieldWrapper">
+                            {{eform1.n_exp.errors}}
+                            {{eform1.n_exp}}
                         </div>
                     </td>
                 </tr>
                 <tr>
-                    <td><label for="{{eform.n_exp.id_for_label}}">Number of exposures:</label></td>
+                    <td><label for="{{eform2.inst_filter.id_for_label}}">Exposure group 2 Filter:</label></td>
                     <td><div class="fieldWrapper">
-                            {{eform.n_exp.errors}}
-                            {{eform.n_exp}}
+                            {{eform2.inst_filter.errors}}
+                            {{eform2.inst_filter}}
                         </div>
                     </td>
-                    <td><label for="{{oform.airmass_limit.id_for_label}}">Airmass limit:</label></td>
+                    <td><label for="{{eform2.exp_time.id_for_label}}">Exposure [sec]:</label></td>
                     <td><div class="fieldWrapper">
-                            {{oform.airmass_limit.errors}}
-                            {{oform.airmass_limit}}
+                            {{eform2.exp_time.errors}}
+                            {{eform2.exp_time}}
+                        </div>
+                    </td>
+                    <td><label for="{{eform2.n_exp.id_for_label}}">Number of exposures:</label></td>
+                    <td><div class="fieldWrapper">
+                            {{eform2.n_exp.errors}}
+                            {{eform2.n_exp}}
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="{{eform3.inst_filter.id_for_label}}">Exposure group 3 Filter:</label></td>
+                    <td><div class="fieldWrapper">
+                            {{eform3.inst_filter.errors}}
+                            {{eform3.inst_filter}}
+                        </div>
+                    </td>
+                    <td><label for="{{eform3.exp_time.id_for_label}}">Exposure [sec]:</label></td>
+                    <td><div class="fieldWrapper">
+                            {{eform3.exp_time.errors}}
+                            {{eform3.exp_time}}
+                        </div>
+                    </td>
+                    <td><label for="{{eform3.n_exp.id_for_label}}">Number of exposures:</label></td>
+                    <td><div class="fieldWrapper">
+                            {{eform3.n_exp.errors}}
+                            {{eform3.n_exp}}
                         </div>
                     </td>
                 </tr>
@@ -115,6 +148,7 @@
                             {{oform.stop_obs}}
                         </div>
                     </td>
+                    <td></td>
                 </tr>
                 <tr>
                     <td><label for="{{oform.cadence.id_for_label}}">Cadence [hrs]:</label></td>
@@ -127,6 +161,12 @@
                     <td><div class="fieldWrapper">
                             {{oform.jitter.errors}}
                             {{oform.jitter}}
+                        </div>
+                    </td>
+                    <td><label for="{{oform.airmass_limit.id_for_label}}">Airmass limit:</label></td>
+                    <td><div class="fieldWrapper">
+                            {{oform.airmass_limit.errors}}
+                            {{oform.airmass_limit}}
                         </div>
                     </td>
                 </tr>
@@ -144,7 +184,9 @@
                                 {{oform.rapid_mode}}
                             </div>
                         </td>
+                        <td></td>
                     {% else %}
+                        <td></td>
                         <td></td>
                     {% endif %}
                 </tr>
@@ -172,6 +214,7 @@
                             {{oform.simulate}}
                         </div>
                     </td>
+                    <td></td>
             </tr>
             </table>
         </form>
@@ -202,32 +245,65 @@
                             </select>
                         </div>
                     </td>
+                    <td></td>
                 </tr>
                 <tr>
-                    <td><label for="{{eform.inst_filter.id_for_label}}">Filter:</label></td>
+                    <td><label for="{{eform1.inst_filter.id_for_label}}">Filter:</label></td>
                     <td><div class="fieldWrapper">
-                            {{eform.inst_filter.errors}}
-                            {{eform.inst_filter}}
+                            {{eform1.inst_filter.errors}}
+                            {{eform1.inst_filter}}
                         </div>
                     </td>
-                    <td><label for="{{eform.exp_time.id_for_label}}">Exposure [sec]:</label></td>
+                    <td><label for="{{eform1.exp_time.id_for_label}}">Exposure [sec]:</label></td>
                     <td><div class="fieldWrapper">
-                            {{eform.exp_time.errors}}
-                            {{eform.exp_time}}
+                            {{eform1.exp_time.errors}}
+                            {{eform1.exp_time}}
+                        </div>
+                    </td>
+                    <td><label for="{{eform1.n_exp.id_for_label}}">Number of exposures:</label></td>
+                    <td><div class="fieldWrapper">
+                            {{eform1.n_exp.errors}}
+                            {{eform1.n_exp}}
                         </div>
                     </td>
                 </tr>
                 <tr>
-                    <td><label for="{{eform.n_exp.id_for_label}}">Number of exposures:</label></td>
+                    <td><label for="{{eform2.inst_filter.id_for_label}}">Filter:</label></td>
                     <td><div class="fieldWrapper">
-                            {{eform.n_exp.errors}}
-                            {{eform.n_exp}}
+                            {{eform2.inst_filter.errors}}
+                            {{eform2.inst_filter}}
                         </div>
                     </td>
-                    <td><label for="{{oform.airmass_limit.id_for_label}}">Airmass limit:</label></td>
+                    <td><label for="{{eform2.exp_time.id_for_label}}">Exposure [sec]:</label></td>
                     <td><div class="fieldWrapper">
-                            {{oform.airmass_limit.errors}}
-                            {{oform.airmass_limit}}
+                            {{eform2.exp_time.errors}}
+                            {{eform2.exp_time}}
+                        </div>
+                    </td>
+                    <td><label for="{{eform2.n_exp.id_for_label}}">Number of exposures:</label></td>
+                    <td><div class="fieldWrapper">
+                            {{eform2.n_exp.errors}}
+                            {{eform2.n_exp}}
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="{{eform3.inst_filter.id_for_label}}">Filter:</label></td>
+                    <td><div class="fieldWrapper">
+                            {{eform3.inst_filter.errors}}
+                            {{eform3.inst_filter}}
+                        </div>
+                    </td>
+                    <td><label for="{{eform3.exp_time.id_for_label}}">Exposure [sec]:</label></td>
+                    <td><div class="fieldWrapper">
+                            {{eform3.exp_time.errors}}
+                            {{eform3.exp_time}}
+                        </div>
+                    </td>
+                    <td><label for="{{eform3.n_exp.id_for_label}}">Number of exposures:</label></td>
+                    <td><div class="fieldWrapper">
+                            {{eform3.n_exp.errors}}
+                            {{eform3.n_exp}}
                         </div>
                     </td>
                 </tr>
@@ -267,6 +343,7 @@
                             {{oform.stop_obs}}
                         </div>
                     </td>
+                    <td></td>
                 </tr>
                 <tr>
                     <td><label for="{{oform.cadence.id_for_label}}">Cadence [hrs]:</label></td>
@@ -279,6 +356,12 @@
                     <td><div class="fieldWrapper">
                             {{oform.jitter.errors}}
                             {{oform.jitter}}
+                        </div>
+                    </td>
+                    <td><label for="{{oform.airmass_limit.id_for_label}}">Airmass limit:</label></td>
+                    <td><div class="fieldWrapper">
+                            {{oform.airmass_limit.errors}}
+                            {{oform.airmass_limit}}
                         </div>
                     </td>
                 </tr>
@@ -296,7 +379,9 @@
                                 {{oform.rapid_mode}}
                             </div>
                         </td>
+                        <td></td>
                     {% else %}
+                        <td></td>
                         <td></td>
                     {% endif %}
                 </tr>
@@ -325,6 +410,7 @@
                             {{oform.simulate}}
                         </div>
                     </td>
+                    <td></td>
                 </tr>
             </table>
         </form>

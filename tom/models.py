@@ -103,6 +103,7 @@ class ExposureSet(models.Model):
                 ('Bessell-V', 'Bessell-V'),
                 ('Bessell-R', 'Bessell-R'),
                 ('Cousins-Ic', 'Cousins-Ic'),
+                ('None', 'None'),
                 )
     inst_filter = models.CharField("Filter",max_length=15,choices=filters,default='SDSS-i')
     exp_time = models.FloatField("Exposure time")

@@ -127,7 +127,7 @@ def target_in_list(targetlist,params):
     return False
     
 def record_obs_requests(obs_list):
-    """Function to record a observation request in the database"""
+    """Function to record a list of observations request in the database"""
     
     
     for obs in obs_list:

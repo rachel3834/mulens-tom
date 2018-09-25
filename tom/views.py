@@ -366,9 +366,9 @@ def request_obs(request,obs_type='multi-site'):
                     message = obs_requests[0].submit_status
                     
                     tform = TargetNameForm()
-                    eform1 = ExposureSetForm1()
-                    eform2 = ExposureSetForm2()
-                    eform3 = ExposureSetForm3()
+                    eform1 = ExposureSetForm()
+                    eform2 = ExposureSetForm()
+                    eform3 = ExposureSetForm()
             
                     if project.allowed_rapid:
                         oform = RapidObservationForm()
@@ -397,8 +397,8 @@ def request_obs(request,obs_type='multi-site'):
                     return render(request, 'tom/request_observation.html', \
                                     {'project': project, 'targets': targets,
                                     'tform': tform, 'oform': oform,
-                                    'eform1': eform1,'eform2': eform2,
-                                    'eform3': eform3,
+                                    'eform1': exp_forms[0],'eform2': exp_forms[1],
+                                    'eform3': exp_forms[2],
                                     'obs_type': obs_type,'locations':locations,
                                     'aperture_classes': aperture_classes,
                                     'message': message})
@@ -406,9 +406,9 @@ def request_obs(request,obs_type='multi-site'):
             else:
                 
                 tform = TargetNameForm()
-                eform1 = ExposureSetForm1()
-                eform2 = ExposureSetForm2()
-                eform3 = ExposureSetForm3()
+                eform1 = ExposureSetForm()
+                eform2 = ExposureSetForm()
+                eform3 = ExposureSetForm()
             
                 if project.allowed_rapid:
                     oform = RapidObservationForm()
@@ -433,9 +433,9 @@ def request_obs(request,obs_type='multi-site'):
         else:
 
             tform = TargetNameForm()
-            eform1 = ExposureSetForm1()
-            eform2 = ExposureSetForm2()
-            eform3 = ExposureSetForm3()
+            eform1 = ExposureSetForm()
+            eform2 = ExposureSetForm()
+            eform3 = ExposureSetForm()
             
             if project.allowed_rapid:
                 oform = RapidObservationForm()
@@ -471,11 +471,11 @@ def extract_exposure_groups(request):
     
     for i in range(0,3,1):
         
-        e = ExposureSetForm()
-        
-        e.inst_filter = data.getlist('inst_filter')[i]
-        e.exp_time = data.getlist('exp_time')[i]
-        e.n_exp = data.getlist('n_exp')[i]
+        pars = {'inst_filter': data.getlist('inst_filter')[i],
+             'exp_time': float(data.getlist('exp_time')[i]),
+             'n_exp': int(data.getlist('n_exp')[i])}
+             
+        e = ExposureSetForm(pars)
         
         exp_sets.append(e)
     
@@ -504,16 +504,12 @@ def parse_obs_params(obs_type,tpost,opost,exp_sets,
     for e in exp_sets:
         
         f = getattr(e,'inst_filter')
-        print('None' not in str(e.inst_filter))
-        print('getattr: ',('None' not in str(f)))
+        
         if 'None' not in str(e.inst_filter):
             
             filters.append(e.inst_filter)
             exp_times.append(e.exp_time)
             n_exps.append(e.n_exp)
-            
-            print(filters)
-            print(e.inst_filter)
             
     params['filter'] = filters
     params['exp_time'] = exp_times
@@ -604,87 +600,6 @@ def verify_form_data(tform,oform,exp_sets,log):
             log.info('Problem with exposure information provided (group '+str(i)+')')
     
     return valid
-
-@login_required(login_url='/login/')
-def record_obs(request):
-    """Function to add a new observation to the database with all associated
-    information, including the target name"""
-    
-    if request.user.is_authenticated():
-        
-        project = Project.objects.filter(id=request.GET.get('project'))[0]
-
-        targetlist = get_project_targetlist(project)
-
-        targets = []
-
-        for t in targetlist.targets.all():
-            
-            tname = TargetName.objects.filter(target_id=t.id)[0]
-            
-            targets.append(tname.name)
-       
-        if request.method == "POST":
-
-            obs_type = request.POST.post('obs_type')
-            tform = TargetNameForm(request.POST)
-            eform = ExposureSetForm(request.POST)
-            
-            if project.allowed_rapid:
-                oform = RapidObservationForm(request.POST)
-            else:
-                oform = ObservationForm(request.POST)
-
-            if tform.is_valid() and oform.is_valid() and eform.is_valid():
-
-                tpost = tform.save(commit=False)
-                opost = oform.save(commit=False)
-                epost = eform.save(commit=False)
-
-                params = parse_obs_params(obs_type,tpost,opost,epost,request,project)
-                                          
-                (status,message) = ingest.record_observation(params)
-                
-                return render(request, 'tom/record_observation.html', \
-                                    {'project': project, 'targets': targets,
-                                    'tform': tform, 'oform': oform,'eform': eform,
-                                    'message': message})
-
-            else:
-                
-                tform = TargetNameForm()
-                eform = ExposureSetForm()
-            
-                if project.allowed_rapid:
-                    oform = RapidObservationForm()
-                else:
-                    oform = ObservationForm()
-                
-                return render(request, 'tom/record_observation.html', \
-                                    {'project': project, 'targets': targets,
-                                    'tform': tform, 'oform': oform,'eform': eform,
-                                    'message':'Form entry was invalid.\nReason:\n'+\
-                                    repr(tform.errors)+' '+repr(nform.errors)+\
-                                    '\nPlease try again.'})
-                                    
-        else:
-            
-            tform = TargetNameForm()
-            eform = ExposureSetForm()
-            
-            if project.allowed_rapid:
-                oform = RapidObservationForm()
-            else:
-                oform = ObservationForm()
-            
-            return render(request, 'tom/record_observation.html', \
-                                    {'project': project, 'targets': targets,
-                                    'tform': tform, 'oform': oform, 'eform': eform,
-                                    'message': 'none'})   
-                                    
-    else:
-
-        return HttpResponseRedirect('login')
 
 @login_required(login_url='/login/')
 def change_password(request):

@@ -343,7 +343,7 @@ def request_obs(request,obs_type='multi-site'):
                 oform = ObservationForm(request.POST)
             
             valid = verify_form_data(tform,oform,exp_forms,log)
-            
+             
             if valid:
 
                 tpost = tform.save(commit=False)

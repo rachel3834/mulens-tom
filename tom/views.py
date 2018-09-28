@@ -8,7 +8,7 @@ from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib import messages
 from .models import Target, TargetName, PhotObs, ProjectUser, Project
-from .models import TargetList, ObservingFacility
+from .models import TargetList, ObservingFacility, ExposureSet
 from .forms import TargetForm, TargetNameForm, AccountForm
 from .forms import ExposureSetForm
 from .forms import ObservationForm, RapidObservationForm
@@ -290,7 +290,7 @@ def request_obs(request,obs_type='multi-site'):
     host_name = socket.gethostname()
 
     project = Project.objects.filter(id=request.GET.get('project'))[0]
-    
+
     if 'rachel' in str(host_name).lower():
 
         config = { 'log_dir': '/Users/rstreet/spitzermicrolensing/logs/2017',
@@ -315,7 +315,7 @@ def request_obs(request,obs_type='multi-site'):
         log.info('Composing observation request for '+str(project.name))
         
         targets = []
-
+        
         if targetlist != None:
             
             message = 'Warning: You need to add targets before attempting to observe them!'
@@ -326,6 +326,12 @@ def request_obs(request,obs_type='multi-site'):
                 
                 targets.append(tname.name)
         
+        targets.reverse()
+        
+        exp_defaults = { 'inst_filter': 'None', 
+                         'exp_time': 0,
+                         'n_exp': 0 }
+                     
         if request.method == "POST":
             
             tform = TargetNameForm(request.POST)
@@ -367,8 +373,9 @@ def request_obs(request,obs_type='multi-site'):
                     
                     tform = TargetNameForm()
                     eform1 = ExposureSetForm()
-                    eform2 = ExposureSetForm()
-                    eform3 = ExposureSetForm()
+                    eform2 = ExposureSetForm(initial=exp_defaults)
+                    eform2.fields['init_filter'].initial = filter_idFORNONE
+                    eform3 = ExposureSetForm(initial=exp_defaults)
             
                     if project.allowed_rapid:
                         oform = RapidObservationForm()
@@ -407,8 +414,8 @@ def request_obs(request,obs_type='multi-site'):
                 
                 tform = TargetNameForm()
                 eform1 = ExposureSetForm()
-                eform2 = ExposureSetForm()
-                eform3 = ExposureSetForm()
+                eform2 = ExposureSetForm(initial=exp_defaults)
+                eform3 = ExposureSetForm(initial=exp_defaults)
             
                 if project.allowed_rapid:
                     oform = RapidObservationForm()
@@ -434,8 +441,8 @@ def request_obs(request,obs_type='multi-site'):
 
             tform = TargetNameForm()
             eform1 = ExposureSetForm()
-            eform2 = ExposureSetForm()
-            eform3 = ExposureSetForm()
+            eform2 = ExposureSetForm(initial=exp_defaults)
+            eform3 = ExposureSetForm(initial=exp_defaults)
             
             if project.allowed_rapid:
                 oform = RapidObservationForm()

@@ -128,10 +128,18 @@ def set_instrument_class(instrument):
     
     icode = str(instrument).lower()
     
-    if 'fl' in icode:
+    if 'fl' in icode or 'fa' in icode:
         
         instrument_class = '1M0-SCICAM-SINISTRO'
     
+    elif 'fs' in icode:
+        
+        instrument_class = '2M0-SCICAM-SPECTRAL'
+    
+    elif 'kb' in icode:
+        
+        instrument_class = '0M4-SCICAM-SBIG'
+        
     else:
     
         instrument_class = '0M4-SCICAM-SBIG'

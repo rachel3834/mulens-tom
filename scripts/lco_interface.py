@@ -492,7 +492,7 @@ def submit_obs_requests(obs_requests, log=None):
         (status,message) = obs.validate(log=log)
         
         if status == True:
-            ur = obs.build_cadence_request(log=log)
+            ur = obs.build_cadence_request(log=log,debug=True)
                 
             (status, message) = validate_request(ur,log=log)
             

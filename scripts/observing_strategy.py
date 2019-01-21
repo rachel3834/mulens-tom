@@ -57,7 +57,8 @@ def compose_obs_requests(params,log=None):
             obs.filters = params['filter']
             obs.exposure_times = params['exp_time']
             obs.exposure_counts = params['n_exp']
-            obs.binning = [ 1 ]*len(params['filter'])
+            b = set_binning_mode(obs.instrument_class)
+            obs.binning = [ b ]*len(params['filter'])
             obs.focus_offset = [ obs_strategy['defocus'] ]*len(params['filter'])
             obs.cadence = params['cadence_hrs']
             obs.jitter = params['jitter_hrs']
@@ -97,7 +98,8 @@ def compose_obs_requests(params,log=None):
         obs.filters = params['filter']
         obs.exposure_times = params['exp_time']
         obs.exposure_counts = params['n_exp']
-        obs.binning = [ 1 ]*len(params['filter'])
+        b = set_binning_mode(obs.instrument_class)
+        obs.binning = [ b ]*len(params['filter'])
         obs.focus_offset = [ obs_strategy['defocus'] ]*len(params['filter'])
         obs.cadence = params['cadence_hrs']
         obs.jitter = params['jitter_hrs']
@@ -145,6 +147,24 @@ def set_instrument_class(instrument):
         instrument_class = '0M4-SCICAM-SBIG'
     
     return instrument_class
+
+def set_binning_mode(instrument_class):
+    """Function to set the default binning mode depending on the instrument
+    class"""
+    
+    if instrument_class in ['1M0-SCICAM-SINISTRO', '0M4-SCICAM-SBIG']:
+
+        binning = 1
+        
+    elif instrument_class == '2M0-SCICAM-SPECTRAL':
+        
+        binning = 2
+        
+    else:
+        
+        binning = 1
+        
+    return binning
     
 def strategy_config(params):
     """Function defining the pre-determined parameters of observations for 

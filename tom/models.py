@@ -140,6 +140,7 @@ class PhotObs(models.Model):
     cadence = models.FloatField("Cadence",blank=True)
     jitter = models.FloatField("Jitter",blank=True)
     airmass_limit = models.FloatField("Airmass limit",blank=True,default=1.5)
+    lunar_distance_limit = models.FloatField("Lunar distance limit",blank=True,default=10.0)
     ipp = models.FloatField("IPP",blank=True,default=1.05)
     rapid_mode = models.NullBooleanField(default=False,null=True)
     obs_types = (

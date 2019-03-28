@@ -531,6 +531,7 @@ def parse_obs_params(obs_type,tpost,opost,exp_sets,
     params['start_obs'] = opost.start_obs
     params['stop_obs'] = opost.stop_obs
     params['airmass_limit'] = opost.airmass_limit
+    params['lunar_distance_limit'] = opost.lunar_distance_limit
     params['ipp'] = opost.ipp
     params['rapid_mode'] = opost.rapid_mode
     params['simulate'] = opost.simulate

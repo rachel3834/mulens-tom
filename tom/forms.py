@@ -50,4 +50,5 @@ class ExposureSetForm(forms.ModelForm):
 class AccountForm(forms.ModelForm):
     class Meta:
         model = ProjectUser
-        fields = ('handle', 'affiliation', 'email', 'lco_observer_id', 'token')
+        fields = ('handle', 'affiliation', 'email', 'email_notifications',
+                  'lco_observer_id', 'token')

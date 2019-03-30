@@ -50,6 +50,7 @@ class ProjectUser(models.Model):
     family_name = models.CharField("Family name",max_length=50)
     affiliation = models.CharField("Affiliation",max_length=100)
     email = models.EmailField()
+    email_notifications = models.BooleanField(default=False,blank=True)
     lco_observer_id = models.CharField("LCO User ID",max_length=50,blank=True)
     lco_observer_pswd = models.CharField("LCO User login",max_length=50,blank=True)
     token = models.CharField("Token",max_length=200,

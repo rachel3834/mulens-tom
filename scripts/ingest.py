@@ -18,8 +18,10 @@ from django import setup
 from datetime import datetime, timedelta
 setup()
 
-from tom.models import Target, TargetName, ExposureSet, PhotObs, ProjectUser
+from tom.models import Target, TargetName, ExposureSet, PhotObs
+from tom.models import Project, ProjectUser
 import query_functions, utilities
+import data_exchange
 
 def add_target(params):
     """Function to add a new target to the database
@@ -33,7 +35,8 @@ def add_target(params):
     
     messages = []
 
-    (t,created_target) = Target.objects.get_or_create(ra=params['ra'],dec=params['dec'])
+    (t,created_target) = Target.objects.get_or_create(ra=params['ra'],
+                                                      dec=params['dec'])
     
     if created_target == True:
 
@@ -56,17 +59,29 @@ def add_target(params):
         
             else:
                 
+                in_rome = data_exchange.query_coords_rome(t.ra, t.dec)
+                
                 messages.append('WARNING: Target already in database.  May be being observed by another project')
                 
             params['targetlist'].targets.add(t)
             params['targetlist'].save()
-            
+    
     (tname, created_name) = TargetName.objects.get_or_create(target_id=t, name=params['name'])
-
+        
     if created_name == True:
 
         messages.append('Added new target name')
     
+    in_rome = data_exchange.query_coords_rome(t.ra, t.dec)
+    
+    if in_rome:
+        
+        messages.append('WARNING: This target lies within the ROME/REA survey footprint')
+        
+        rome_project = Project.objects.filter(name='ROMEREA')[0]
+        
+        data_exchange.notify_project_users(params['project'],rome_project,tname)
+        
     message = ' '.join(messages)
     
     if created_target == True and created_name == True:
@@ -186,6 +201,7 @@ def record_project_user(params):
     
     user.affiliation = params['affiliation']
     user.email = params['email']
+    user.email_notifications = params['notifications']
     user.lco_observer_id = params['lco_observer_id']
     user.token = params['token']
     user.save()

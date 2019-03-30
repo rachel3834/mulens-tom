@@ -7,6 +7,11 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib import messages
+from django.core.mail import send_mail
+from rest_framework.decorators import api_view,authentication_classes,permission_classes
+from rest_framework.authentication import TokenAuthentication, BasicAuthentication
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 from .models import Target, TargetName, PhotObs, ProjectUser, Project
 from .models import TargetList, ObservingFacility, ExposureSet
 from .forms import TargetForm, TargetNameForm, AccountForm
@@ -663,6 +668,7 @@ def manage_account(request):
         params = {}
         params['handle'] = upost.handle
         params['email'] = upost.email
+        params['notifications'] = upost.email_notifications
         params['affiliation'] = upost.affiliation
         params['lco_observer_id'] = upost.lco_observer_id
         params['token'] = upost.token
@@ -670,6 +676,8 @@ def manage_account(request):
         return params
         
     if request.user.is_authenticated():
+        
+        user = ProjectUser.objects.get(handle=request.user)
         
         if request.method == 'POST':
 
@@ -687,8 +695,8 @@ def manage_account(request):
                                 'message': message})
                                 
             else:
-
-                form = AccountForm()
+                
+                form = AccountForm(instance=user)
 
                 return render(request, 'tom/manage_account.html', \
                                 {'uform': form, 
@@ -696,12 +704,33 @@ def manage_account(request):
 
         else:
 
-            form = AccountForm()
+            form = AccountForm(instance=user)
 
             return render(request, 'tom/manage_account.html', \
                                 {'uform': form, 
                                 'message': 'none'})
 
+    else:
+
+        return HttpResponseRedirect('login')
+
+@api_view(['GET'])
+@permission_classes((IsAuthenticated,))
+def send_test_email(request):
+    """Function to send a test email"""
+    
+    if request.user.is_authenticated():
+    
+        send_mail(
+        'Microlensing-TOM test message',
+        'This is a test message from the Microlensing-TOM system',
+        settings.EMAIL_HOST_USER,
+        ['rstreet@lco.global'],
+        fail_silently=False,
+        )
+        
+        return render(request, 'tom/test_page.html')
+        
     else:
 
         return HttpResponseRedirect('login')

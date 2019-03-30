@@ -28,6 +28,12 @@
                         {{uform.email}}
                     </div>
                 </td></tr>
+            <tr><td><label for="{{uform.email_notifications.id_for_label}}">Allow email notifications?:</label></td>
+                <td><div class="fieldWrapper">
+                        {{uform.email_notifications.errors}}
+                        {{uform.email_notifications}}
+                    </div>
+                </td></tr>
             <tr><td><label for="{{uform.lco_observer_id.id_for_label}}">LCO observer ID:</label></td>
                 <td><div class="fieldWrapper">
                         {{uform.lco_observer_id.errors}}

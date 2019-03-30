@@ -16,7 +16,7 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 from tom.views import home, targets, add_target, observations, request_obs
-from tom.views import manage_account, change_password, test
+from tom.views import manage_account, change_password, test, send_test_email
 from tom.views import project, remove_target
 from django.contrib.auth import views as auth_views
 
@@ -36,4 +36,5 @@ urlpatterns = [
     url(r'^request_obs/$',request_obs,{'obs_type':'multi-site'},name="request_obs"),
     url(r'^request_obs/multisite/$',request_obs,{'obs_type':'multi-site'},name="request_multisite_obs"),
     url(r'^request_obs/singlesite/$',request_obs,{'obs_type':'single-site'},name="request_singlesite_obs"),
+    url(r'^send_test_email/$',send_test_email,name="test_email"),
 ]

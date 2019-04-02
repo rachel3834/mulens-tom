@@ -21,7 +21,7 @@ setup()
 from tom.models import Target, TargetName, ExposureSet, PhotObs
 from tom.models import Project, ProjectUser
 import query_functions, utilities
-#import data_exchange
+import data_exchange
 
 def add_target(params):
     """Function to add a new target to the database
@@ -70,15 +70,15 @@ def add_target(params):
 
         messages.append('Added new target name')
     
-#    in_rome = data_exchange.query_coords_rome(t.ra, t.dec)
+    in_rome = data_exchange.query_coords_rome(t.ra, t.dec)
     
-#    if in_rome:
+    if in_rome:
         
-#        messages.append('WARNING: This target lies within the ROME/REA survey footprint')
+        messages.append('WARNING: This target lies within the ROME/REA survey footprint')
+       
+        rome_project = Project.objects.filter(name='ROMEREA')[0]
         
-#        rome_project = Project.objects.filter(name='ROMEREA')[0]
-        
-#        data_exchange.notify_project_users(params['project'],rome_project,tname)
+        data_exchange.notify_project_users(params['project'],rome_project,tname)
         
     message = ' '.join(messages)
     

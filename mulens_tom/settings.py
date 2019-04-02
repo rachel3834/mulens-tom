@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '9156e-yt12da%wn@hth(7g8h&cl5_$%(*=tou0po2ax#7h+2f&'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['einstein.lco.gtn', 'spitzer-microlensing.lco.global', 'microlensing-tom.lco.global','127.0.0.1']
 
@@ -116,21 +116,21 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # Email config
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+#EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 # Host for sending e-mail.
-EMAIL_HOST = 'smtp.gmail.com'
+#EMAIL_HOST = 'smtp.gmail.com'
 
 # Port for sending e-mail.
-EMAIL_PORT = 587
+#EMAIL_PORT = 587
 
 # Optional SMTP authentication information for EMAIL_HOST.
 #EMAIL_HOST_USER = os.environ['EMAIL_HOST_USER']
 #EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
-EMAIL_HOST_USER = 'not_in_use@yet.com'
-EMAIL_HOST_PASSWORD = 'None'
-EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+#EMAIL_HOST_USER = 'not_in_use@yet.com'
+#EMAIL_HOST_PASSWORD = 'None'
+#EMAIL_USE_TLS = True
+#DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/

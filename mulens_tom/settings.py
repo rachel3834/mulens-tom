@@ -125,10 +125,10 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 
 # Optional SMTP authentication information for EMAIL_HOST.
-#EMAIL_HOST_USER = os.environ['EMAIL_HOST_USER']
-#EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
-EMAIL_HOST_USER = 'not_in_use@yet.com'
-EMAIL_HOST_PASSWORD = 'None'
+EMAIL_HOST_USER = os.environ['EMAIL_HOST_USER']
+EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
+#EMAIL_HOST_USER = 'not_in_use@yet.com'
+#EMAIL_HOST_PASSWORD = 'None'
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 

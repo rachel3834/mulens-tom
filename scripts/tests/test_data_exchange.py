@@ -31,6 +31,24 @@ def test_notify_project_users():
     
     data_exchange.notify_project_users(project1,project2,tname)
     
+def test_query_coords_rome():
+    
+    ra_str = '17:53:25.47'
+    dec_str = '-29:46:22.7349'
+    
+    result = data_exchange.query_coords_rome(ra_str, dec_str)
+    
+    assert type(result) == type(True)
+    assert result == True
+    
+    ra_str = '10:30:00.0'
+    dec_str = '64:30:00.0'
+    
+    result = data_exchange.query_coords_rome(ra_str, dec_str)
+    
+    assert result == False
     
 if __name__ == '__main__':
-    test_notify_project_users()
+    
+    #test_notify_project_users()
+    test_query_coords_rome()

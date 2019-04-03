@@ -45,6 +45,11 @@ def query_coords_rome(ra_str, dec_str, debug=False):
         if len(line) > 0:
             result = line.replace('\n','')
     
+    if 'TRUE' in result:
+        result = True
+    else:
+        result = False
+        
     return result
 
 def notify_project_users(project1,project2,target_name):

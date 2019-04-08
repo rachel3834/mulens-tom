@@ -14,7 +14,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from .models import Target, TargetName, PhotObs, ProjectUser, Project
 from .models import TargetList, ObservingFacility, ExposureSet
-from .forms import TargetForm, TargetNameForm, AccountForm
+from .forms import TargetForm, TargetNameForm, AccountForm, TargetIDForm
 from .forms import ExposureSetForm
 from .forms import ObservationForm, RapidObservationForm
 from scripts import ingest, query_functions, log_utilities
@@ -195,10 +195,17 @@ def remove_target(request):
             
             for t in targetlist.targets.all():
                 
-                tname = TargetName.objects.filter(target_id=t.id)[0]
+                tname_list = TargetName.objects.filter(target_id=t)
                 
-                targets.append(tname.name)
-                
+                tname = tname_list[0].name
+
+                for n in tname_list[1:]:
+                    tname = tname + '/' + n.name
+
+                targets.append(tname)
+
+        targets.reverse()
+    
         if request.method == "POST":
             
             nform = TargetNameForm(request.POST)
@@ -319,19 +326,26 @@ def request_obs(request,obs_type='multi-site'):
         log = log_utilities.start_day_log(config,'request_obs')
         log.info('Composing observation request for '+str(project.name))
         
-        targets = []
+        target_names = []
+        target_ids = []
         
         if targetlist != None:
             
             message = 'Warning: You need to add targets before attempting to observe them!'
             
             for t in targetlist.targets.all():
-                
-                tname = TargetName.objects.filter(target_id=t.id)[0]
-                
-                targets.append(tname.name)
+                tname_list = TargetName.objects.filter(target_id=t)
+                tname = tname_list[0].name
+                for n in tname_list[1:]:
+                    tname = tname + '/' + n.name
+
+                target_names.append(tname)
+                target_ids.append(t.pk)
         
-        targets.reverse()
+        target_names.reverse()
+        target_ids.reverse()
+        
+        targets = zip(target_names,target_ids)
         
         exp_defaults = { 'inst_filter': 'None', 
                          'exp_time': 0,
@@ -339,7 +353,7 @@ def request_obs(request,obs_type='multi-site'):
                      
         if request.method == "POST":
             
-            tform = TargetNameForm(request.POST)
+            tform = TargetIDForm(request.POST)
             exp_forms = extract_exposure_groups(request)
             
             if project.allowed_rapid:
@@ -348,18 +362,18 @@ def request_obs(request,obs_type='multi-site'):
                 oform = ObservationForm(request.POST)
             
             valid = verify_form_data(tform,oform,exp_forms,log)
-             
+            
             if valid:
 
-                tpost = tform.save(commit=False)
+                target_id = tform.cleaned_data['id']
                 opost = oform.save(commit=False)
                 
                 exp_sets = []
                 for f in exp_forms:
                     e = f.save(commit=False)
                     exp_sets.append(e)
-                    
-                (params,status) = parse_obs_params(obs_type,tpost,opost,
+                
+                (params,status) = parse_obs_params(obs_type,target_id,opost,
                                           exp_sets,
                                           request,
                                           project,log=log)
@@ -376,7 +390,7 @@ def request_obs(request,obs_type='multi-site'):
 
                     message = obs_requests[0].submit_status
                     
-                    tform = TargetNameForm()
+                    tform = TargetIDForm()
                     eform1 = ExposureSetForm()
                     eform2 = ExposureSetForm(initial=exp_defaults)
                     eform2.fields['init_filter'].initial = filter_idFORNONE
@@ -400,7 +414,7 @@ def request_obs(request,obs_type='multi-site'):
                     
                     obs_requests = lco_interface.submit_obs_requests(obs_requests,log=log)
                     
-                    ingest.record_obs_requests(obs_requests)
+                    ingest.record_obs_requests(obs_requests,project)
                     
                     (status,message) = parse_obs_status(obs_requests)
                 
@@ -417,7 +431,7 @@ def request_obs(request,obs_type='multi-site'):
                                     
             else:
                 
-                tform = TargetNameForm()
+                tform = TargetIDForm()
                 eform1 = ExposureSetForm()
                 eform2 = ExposureSetForm(initial=exp_defaults)
                 eform3 = ExposureSetForm(initial=exp_defaults)
@@ -444,10 +458,12 @@ def request_obs(request,obs_type='multi-site'):
                                     
         else:
 
-            tform = TargetNameForm()
+            tform = TargetIDForm()
             eform1 = ExposureSetForm()
             eform2 = ExposureSetForm(initial=exp_defaults)
             eform3 = ExposureSetForm(initial=exp_defaults)
+            
+            print(tform.fields)
             
             if project.allowed_rapid:
                 oform = RapidObservationForm()
@@ -493,7 +509,7 @@ def extract_exposure_groups(request):
     
     return exp_sets
     
-def parse_obs_params(obs_type,tpost,opost,exp_sets,
+def parse_obs_params(obs_type,target_id,opost,exp_sets,
                      request,project,log=None):
     """Function to parse the posted parameters into a dictionary, 
     and resolve observation parameters where necessary
@@ -503,11 +519,11 @@ def parse_obs_params(obs_type,tpost,opost,exp_sets,
     
     params = {}
     params['obs_type'] = obs_type
-    params['name'] = tpost.name
-    target = query_functions.get_target(params['name'])
+    params['target'] = target_id
+    target = query_functions.get_target_by_id(target_id)
+    params['name'] = query_functions.get_targetname_by_id(params['target'])
     params['ra'] = target.ra
     params['dec'] = target.dec
-    params['target'] = target
     
     filters = []
     exp_times = []
@@ -586,6 +602,7 @@ def verify_form_data(tform,oform,exp_sets,log):
     if tform.is_valid():
         
         log.info('Target information form validation: '+repr(tform.is_valid()))
+        log.info('Target information provided: '+repr(tform.cleaned_data['id']))
     
     else:
         

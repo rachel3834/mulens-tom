@@ -99,9 +99,14 @@ def remove_target(params):
     
     for t in params['targetlist'].targets.all():
         
-        tname = TargetName.objects.filter(target_id=t.id)[0]
-        
-        if params['targetname'] == tname.name:
+        tname_list = TargetName.objects.filter(target_id=t.id)
+                
+        tname = tname_list[0].name
+
+        for n in tname_list[1:]:
+            tname = tname + '/' + n.name
+
+        if params['targetname'] == tname:
             
             params['targetlist'].targets.remove(t)
             params['targetlist'].save()
@@ -139,15 +144,13 @@ def target_in_list(targetlist,params):
             
     return False
     
-def record_obs_requests(obs_list):
+def record_obs_requests(obs_list,project):
     """Function to record a list of observations request in the database"""
     
     
     for obs in obs_list:
         
-        target = query_functions.get_target(obs.name)
-    
-        project = query_functions.get_proposal(id_code=obs.proposal_id)
+        target_name = query_functions.get_target(obs.name)
         
         if obs.get_submit_status(): 
             
@@ -168,7 +171,7 @@ def record_obs_requests(obs_list):
             new_exp.save()
             exp_sets.append(new_exp)
 
-        new_obs = PhotObs(target_id=target,
+        new_obs = PhotObs(target_id=target_name.target_id,
                         project_id=project,
                         group_id=obs.group_id,
                         network='lco',

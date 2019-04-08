@@ -18,6 +18,12 @@ class TargetNameForm(forms.ModelForm):
         model = TargetName
         fields = ('name',)
 
+class TargetIDForm(forms.ModelForm):
+    class Meta:
+        model = Target
+        fields = ('id',)
+    id = forms.IntegerField(label='id',min_value=1)
+    
 class ObservationForm(forms.ModelForm):
     class Meta:
         model = PhotObs

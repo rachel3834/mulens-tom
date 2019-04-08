@@ -19,7 +19,7 @@ class Overhead:
         self.filter_change = 2.0
         self.readout = 30.0
         
-        if 'fl' in self.instrument_name: 
+        if 'fl' in self.instrument_name or 'fa' in self.instrument_name: 
             self.instrument_class = 'sinistro'
         elif 'kb' in self.instrument_name:
             self.instrument_class = 'sbig'

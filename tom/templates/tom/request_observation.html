@@ -32,11 +32,11 @@
             {{ formset.management_form }}
             <table>
                 <tr>
-                    <td><label for="{{tform.name.id_for_label}}">Target:</label></td>
+                    <td><label for="{{tform.id.id_for_label}}">Target:</label></td>
                     <td><div class="fieldWrapper">
-                            <select name="name">
-                                {% for name in targets %}
-                                    <option value="{{name}}">{{name}}</option>
+                            <select name="id">
+                                {% for name,target in targets %}
+                                    <option value="{{target}}">{{name}}</option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -237,11 +237,11 @@
             {{ formset.management_form }}
             <table>
                 <tr>
-                    <td><label for="{{tform.name.id_for_label}}">Target:</label></td>
+                    <td><label for="{{tform.id.id_for_label}}">Target:</label></td>
                     <td><div class="fieldWrapper">
-                            <select name="name">
-                                {% for name in targets %}
-                                    <option value="{{name}}">{{name}}</option>
+                            <select name="id">
+                                {% for name, target in targets %}
+                                    <option value="{{target}}">{{name}}</option>
                                 {% endfor %}
                             </select>
                         </div>

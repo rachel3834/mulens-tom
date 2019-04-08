@@ -24,24 +24,72 @@ def get_target(target_name):
     """Function to return the Target instance for a specific target, given
     its name"""
     
-    try:
+    target = None
+    
+    # If the name is a concentenation of several names separated with /, 
+    # first try to identify one of the separate IDs:
+    if '/' in target_name:
         
-        target_name = TargetName.objects.get(name=target_name)
+        name_list = target_name.split('/')
         
-    except:
+    else:
         
-        target_name = TargetName.objects.filter(name=target_name)[0]
+        name_list = [ target_name ]
+    
+    i = 0
+    while target == None and i < len(name_list):
         
-    return target_name.target_id
+        qs = TargetName.objects.filter(name=name_list[i])
+    
+        if len(qs) > 0:
+            
+            target = qs[0]
+        
+        i += 1
+        
+    # If there is still no match found, try the concatenated name:
+    if target == None:
+        
+        qs = TargetName.objects.filter(name=name)
+    
+        if len(qs) > 0:
+            
+            target = qs[0]
+    
+    return target
 
+def get_target_by_id(target_id):
+    """Function to return the Target instance for a specific target, given
+    its name"""
+    
+    target = Target.objects.filter(id=target_id)[0]
+    
+    return target
+
+def get_targetname_by_id(target_id):
+    """Function to return the concatenated target name, given an ID"""
+    
+    qs = TargetName.objects.filter(target_id=target_id)
+    
+    if len(qs) > 0:    
+        target_name = qs[0].name
+        
+        for name in qs[1:]:
+            target_name += '/'+name.name
+        
+    else:
+        target_name = 'None'
+    
+    return target_name
+    
 def get_proposal(name=None,id_code=None):
     """Function to return the Project instance, given its identifier"""
     
     if name != None:
-        project = Project.objects.get(name=name)
+        project = Project.objects.filter(name=name)
     else:
-        project = Project.objects.get(proposal_id=id_code)
-    
+        project = Project.objects.filter(proposal_id=id_code)
+    print(project)
     
     return project
     

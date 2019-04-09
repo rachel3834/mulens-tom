@@ -463,8 +463,6 @@ def request_obs(request,obs_type='multi-site'):
             eform2 = ExposureSetForm(initial=exp_defaults)
             eform3 = ExposureSetForm(initial=exp_defaults)
             
-            print(tform.fields)
-            
             if project.allowed_rapid:
                 oform = RapidObservationForm()
             else:

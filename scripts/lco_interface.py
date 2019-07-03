@@ -510,7 +510,7 @@ def validate_request(ur,log=None):
                         log.info(' -> Invalid: '+message)
                     return status, message
     if log!=None:
-        log.info('Validated user request: '+str(ur['group_id'])+' with status '+message)
+        log.info('Validated user request: '+str(ur['name'])+' with status '+message)
         
     return status, message
     

@@ -104,30 +104,30 @@ class ObsRequest:
     def build_cadence_request(self, log=None, debug=False):
                         
         if debug == True and log != None:
-            log.info('Building Valhalla observation request')
+            log.info('Building Valhalla-AEON observation request')
         
         if self.group_id == None:
             self.get_group_id()
-        ur = {
-            'group_id': self.group_id, 
-            'proposal': self.proposal_id,
-            'ipp_value': self.priority,
-            'operator': 'SINGLE',
-              }
-        
+            
+        request_group = {'name': self.group_id,
+                         'proposal': self.proposal_id,
+                         'ipp_value': float(self.priority),
+                         'operator': 'SINGLE'}
+                         
         if self.rapid_mode:
-            ur["observation_type"] = "TARGET_OF_OPPORTUNITY"
+            request_group["observation_type"] = "TARGET_OF_OPPORTUNITY"
         else:
-            ur["observation_type"] = 'NORMAL'
+            request_group["observation_type"] = 'NORMAL'
             
         if type(self.ra) == type(1.0):
             ra_deg = self.ra
             dec_deg = self.dec
         else:
             (ra_deg, dec_deg) = utilities.sex2decdeg(self.ra, self.dec)
+            
         target =   {
                     'name': str(self.name),
-                    'type': 'SIDEREAL',
+                    'type': 'ICRS',
                     'ra': ra_deg,
                     'dec': dec_deg,
                     'proper_motion_ra': 0, 
@@ -135,6 +135,7 @@ class ObsRequest:
                     'parallax': 0, 
                     'epoch': 2000,	  
                     }
+                
         if debug == True and log != None:
             log.info('Target dictionary: ' + str( target ))
        
@@ -143,6 +144,7 @@ class ObsRequest:
                     'site':             str(self.site),
                     'observatory':      str(self.observatory)
                     }
+                    
         if debug == True and log != None:
             log.info('Location dictionary: ' + str( location ))
                     
@@ -150,90 +152,119 @@ class ObsRequest:
         		  'max_airmass': float(self.airmass_limit),
                     'min_lunar_distance': float(self.lunar_distance_limit)
                     }
+                    
         if debug == True and log != None:
             log.info('Constraints dictionary: ' + str( constraints ))
             
         if debug == True and log != None:
-            log.info('Observations start datetime: '+self.ts_submit.strftime("%Y-%m-%d %H:%M:%S"))
-            log.info('Observations stop datetime: '+self.ts_expire.strftime("%Y-%m-%d %H:%M:%S"))
+            log.info('Observations start datetime: '+self.ts_submit.strftime("%Y-%m-%dT%H:%M:%S"))
+            log.info('Observations stop datetime: '+self.ts_expire.strftime("%Y-%m-%dT%H:%M:%S"))
             log.info('Period [hrs]: '+str(self.cadence))
             log.info('Jitter [hrs]: '+str(self.jitter))
             
-        cadence = {'start': self.ts_submit.strftime("%Y-%m-%d %H:%M:%S"), 
-                        'end': self.ts_expire.strftime("%Y-%m-%d %H:%M:%S"), 
-                        'period': float(self.cadence), 
-                        'jitter': float(self.jitter) }
-        ur['requests'] = []
+        cadence = {'start': self.ts_submit.strftime("%Y-%m-%dT%H:%M:%S"), 
+                   'end': self.ts_expire.strftime("%Y-%m-%dT%H:%M:%S"), 
+                    'period': float(self.cadence), 
+                    'jitter': float(self.jitter) }
         
-        molecule_list = self.build_molecule_list(debug=debug,log=log)
+        inst_config_list = self.build_image_config_list(target, constraints)
         
-        if len(molecule_list) > 0:
-            req = { 
-                    'target': target,
-                    'molecules': molecule_list,
-                    'cadence': cadence,
-                    'location': location,
-                    'constraints': constraints
-                   }
-            ur['requests'].append(req)
-            if debug == True and log != None:
-                log.info('Request dictionary: ' + str(req))
-
-            ur = self.get_cadence_requests(ur,log=log)
-            
-            if 'requests' in ur.keys():
-                for r in ur['requests']:
+        request_group['requests'] = [{'configurations': inst_config_list,
+                                       'cadence': cadence,
+                                       'location': location}]
+        
+        ur = self.get_cadence_requests(request_group,log=log)
+        
+        if 'requests' in ur.keys():
+            for r in ur['requests']:
+                if debug == True and log != None:
+                        log.info(repr(r))
+                if type(r) == type(u'foo'):
+                    message = 'WARNING: '+repr(r)
                     if debug == True and log != None:
-                            log.info(repr(r))
-                    if type(r) == type(u'foo'):
-                        message = 'WARNING: '+repr(r)
-                        if debug == True and log != None:
-                            log.info(message)
-                        if self.submit_response != None:
-                            self.submit_response = self.submit_response+' '+message
-                        else:
-                            self.submit_response = message
-                        self.req_id = '9999999999'
-                        self.track_id = '99999999999'
+                        log.info(message)
+                    if self.submit_response != None:
+                        self.submit_response = self.submit_response+' '+message
                     else:
-                        if 'windows' in r.keys():
-                            if len(r['windows']) == 0:
-                                if debug == True and log != None:
-                                    log.info('WARNING: scheduler returned no observing windows for this target')
-                                self.submit_status = 'No_obs_submitted'
-                                message = 'WARNING: scheduler returned no observing windows for this target'
-                                if self.submit_response != None:
-                                    self.submit_response = self.submit_response+' '+message
-                                else:
-                                    self.submit_response = message
-                                self.req_id = '9999999999'
-                                self.track_id = '99999999999'
-                            else:
-                                log.info('Request windows: '+repr(r['windows']))
-                        else:
-                            message = 'WARNING: no observing windows returned for this request'
+                        self.submit_response = message
+                    self.req_id = '9999999999'
+                    self.track_id = '99999999999'
+                else:
+                    if 'windows' in r.keys():
+                        if len(r['windows']) == 0:
+                            if debug == True and log != None:
+                                log.info('WARNING: scheduler returned no observing windows for this target')
                             self.submit_status = 'No_obs_submitted'
+                            message = 'WARNING: scheduler returned no observing windows for this target'
                             if self.submit_response != None:
                                 self.submit_response = self.submit_response+' '+message
                             else:
                                 self.submit_response = message
                             self.req_id = '9999999999'
                             self.track_id = '99999999999'
-            else:
-                if 'detail' in ur.keys():
-                    self.submit_status = 'No_obs_submitted'
-                    if self.submit_response != None:
-                        self.submit_response = self.submit_response+' '+ur['detail']
+                        else:
+                            log.info('Request windows: '+repr(r['windows']))
                     else:
-                        self.submit_response = 'WARNING: ' + ur['detail']
-                    if debug == True and log != None:
-                            log.info('WARNING: problem obtaining observing windows for this target: '+ur['detail'])
-                    
+                        message = 'WARNING: no observing windows returned for this request'
+                        self.submit_status = 'No_obs_submitted'
+                        if self.submit_response != None:
+                            self.submit_response = self.submit_response+' '+message
+                        else:
+                            self.submit_response = message
+                        self.req_id = '9999999999'
+                        self.track_id = '99999999999'
+        else:
+            if 'detail' in ur.keys():
+                self.submit_status = 'No_obs_submitted'
+                if self.submit_response != None:
+                    self.submit_response = self.submit_response+' '+ur['detail']
+                else:
+                    self.submit_response = 'WARNING: ' + ur['detail']
+                if debug == True and log != None:
+                        log.info('WARNING: problem obtaining observing windows for this target: '+ur['detail'])
+                
         if debug == True and log != None:
             log.info(' -> Completed build of observation request ' + self.group_id)
             log.info(' -> Submit response: '+str(self.submit_response))
+            
         return ur
+
+    def build_image_config_list(self, target, constraints):
+        """Function to compose the instrument configuration dictionary"""
         
+        def parse_filter(f):
+            filters = { 'SDSS-g': 'gp', 'SDSS-r': 'rp', 'SDSS-i': 'ip',
+                       'Bessell-B': 'B', 'Bessell-V': 'V', 'Bessell-R': 'R', 'Cousins-Ic': 'I',
+                       'Pan-STARRS-Z': 'zs'
+                       }
+            if f in filters.keys():
+                return filters[f]
+            else:
+                raise ValueError('Unrecognized filter ('+f+') requested')
+                
+        config_list = []
+        
+        for i in range(0,len(self.exposure_times),1):
+            
+            config = {'type': 'EXPOSE',
+                      'instrument_type': self.instrument_class,
+                      'target': target,
+                      'constraints': constraints,
+                      'acquisition_config': {},
+                      'guiding_config': {},
+                      'instrument_configs': [ {
+                                            'exposure_time': float(self.exposure_times[i]),
+                                            'exposure_count': int(self.exposure_counts[i]),
+                                            'optical_elements': {
+                                                'filter': parse_filter(self.filters[i])},
+                                                } ]
+                      }
+            
+            config_list.append(config)
+            
+        return config_list
+    
+    
     def build_molecule_list(self,debug=False,log=None):
         def parse_filter(f):
             filters = { 'SDSS-g': 'gp', 'SDSS-r': 'rp', 'SDSS-i': 'ip',
@@ -278,7 +309,8 @@ class ObsRequest:
                 
     def get_cadence_requests(self,ur,log=None):
         
-        end_point = "userrequests/cadence"
+        #end_point = "userrequests/cadence"
+        end_point = "requestgroups/cadence"
         ur = self.talk_to_lco(ur,end_point,'POST')
         
         if 'error_type' in ur.keys():
@@ -312,7 +344,8 @@ class ObsRequest:
                 log.info(' -> IN SIMULATION MODE: ' + self.submit_status)
         
         else:
-            end_point = 'userrequests'
+            #end_point = 'userrequests'
+            end_point = 'requestgroups'
             response = self.talk_to_lco(ur,end_point,'POST')
             self.parse_submit_response( response, log=log )
 

@@ -176,7 +176,13 @@ class ObsRequest:
         ur = self.get_cadence_requests(request_group,log=log)
         
         if 'requests' in ur.keys():
+            request_list = []
+            
             for r in ur['requests']:
+                
+                r['location'] = location
+                request_list.append(r)
+
                 if debug == True and log != None:
                         log.info(repr(r))
                 if type(r) == type(u'foo'):
@@ -189,6 +195,7 @@ class ObsRequest:
                         self.submit_response = message
                     self.req_id = '9999999999'
                     self.track_id = '99999999999'
+                
                 else:
                     if 'windows' in r.keys():
                         if len(r['windows']) == 0:
@@ -213,6 +220,7 @@ class ObsRequest:
                             self.submit_response = message
                         self.req_id = '9999999999'
                         self.track_id = '99999999999'
+            ur['requests'] = request_list
         else:
             if 'detail' in ur.keys():
                 self.submit_status = 'No_obs_submitted'
@@ -226,7 +234,7 @@ class ObsRequest:
         if debug == True and log != None:
             log.info(' -> Completed build of observation request ' + self.group_id)
             log.info(' -> Submit response: '+str(self.submit_response))
-            
+        
         return ur
 
     def build_image_config_list(self, target, constraints):

@@ -1,0 +1,430 @@
+2017-05-08T21:40:57 
+------------------------------------------------------
+
+2017-05-08T21:40:57 ERROR understanding returned cadence sequence, output is: 
+2017-05-08T21:40:57 'Unauthorized'
+2017-05-08T21:40:57 Received observable cadence sequence from LCO API
+2017-05-08T21:43:54 
+------------------------------------------------------
+
+2017-05-08T21:44:18 ERROR understanding returned cadence sequence, output is: 
+2017-05-08T21:44:18 'Unauthorized'
+2017-05-08T21:44:18 Received observable cadence sequence from LCO API
+2017-05-08T21:44:33 
+------------------------------------------------------
+
+2017-05-08T21:44:46 Received observable cadence sequence from LCO API
+2017-05-08T21:48:36 
+------------------------------------------------------
+
+2017-05-08T21:48:37 Received observable cadence sequence from LCO API
+2017-05-08T21:50:45 
+------------------------------------------------------
+
+2017-05-08T21:50:47 Received observable cadence sequence from LCO API
+2017-05-08T21:51:35 
+------------------------------------------------------
+
+2017-05-08T21:51:36 Received observable cadence sequence from LCO API
+2017-05-08T21:54:53 
+------------------------------------------------------
+
+2017-05-08T21:54:54 Received observable cadence sequence from LCO API
+2017-05-08T22:00:57 
+------------------------------------------------------
+
+2017-05-08T22:00:58 Received observable cadence sequence from LCO API
+2017-05-08T22:01:23 
+------------------------------------------------------
+
+2017-05-08T22:01:24 Received observable cadence sequence from LCO API
+2017-05-08T22:01:50 
+------------------------------------------------------
+
+2017-05-08T22:02:01 Received observable cadence sequence from LCO API
+2017-05-08T22:04:14 
+------------------------------------------------------
+
+2017-05-08T22:04:15 Received observable cadence sequence from LCO API
+2017-05-08T22:05:56 
+------------------------------------------------------
+
+2017-05-08T22:05:57 Received observable cadence sequence from LCO API
+2017-05-08T22:06:20 
+------------------------------------------------------
+
+2017-05-08T22:06:21 Received observable cadence sequence from LCO API
+2017-05-08T22:07:07 
+------------------------------------------------------
+
+2017-05-08T22:07:08 Received observable cadence sequence from LCO API
+2017-05-08T22:07:45 
+------------------------------------------------------
+
+2017-05-08T22:07:45 Received observable cadence sequence from LCO API
+2017-05-08T22:08:16 
+------------------------------------------------------
+
+2017-05-08T22:08:16 Received observable cadence sequence from LCO API
+2017-05-08T22:08:16 Processing complete
+
+2017-05-08T22:08:30 
+------------------------------------------------------
+
+2017-05-08T22:08:31 Received observable cadence sequence from LCO API
+2017-05-08T22:08:31 Processing complete
+
+2017-05-08T22:09:05 
+------------------------------------------------------
+
+2017-05-08T22:09:05 Building ODIN observation request
+2017-05-08T22:09:05 Proposal dictionary: {'proposal_id': 'NOAO2017AB-003', 'user_id': 'rstreet@lco.global'}
+2017-05-08T22:09:05 Location dictionary: {'observatory': 'domc', 'site': 'lsc', 'telescope_class': '1m0'}
+2017-05-08T22:09:05 Target dictionary: {'name': 'test_target', 'ra': 278.73625, 'epoch': 2000, 'proper_motion_dec': 0, 'parallax': 0, 'dec': -27.582416666666667, 'proper_motion_ra': 0}
+2017-05-08T22:09:05 Constraints dictionary: {'max_airmass': 2.0, 'min_lunar_distance': 10}
+2017-05-08T22:09:05 Observations start datetime: 2017-07-15 01:00:00
+2017-05-08T22:09:05 Observations stop datetime: 2017-07-16 01:00:00
+2017-05-08T22:09:05 Instrument overheads sinistro: front-padding=240.0s, filter-change=2.0s, readout=38.0s
+2017-05-08T22:09:05  -> Molecule: {'exposure_time': 30.0, 'exposure_count': 1, 'instrument_name': '1M0-SCICAM-SINISTRO', 'ag_mode': 'Optional', 'ag_name': '', 'defocus': 0.0, 'type': 'EXPOSE', 'filter': 'ip', 'bin_y': 1, 'bin_x': 1}
+2017-05-08T22:09:05 Request dictionary: {'fail_count': 0, 'observation_note': '', 'molecules': [{'exposure_time': 30.0, 'exposure_count': 1, 'instrument_name': '1M0-SCICAM-SINISTRO', 'ag_mode': 'Optional', 'ag_name': '', 'defocus': 0.0, 'type': 'EXPOSE', 'filter': 'ip', 'bin_y': 1, 'bin_x': 1}], 'location': {'observatory': 'domc', 'site': 'lsc', 'telescope_class': '1m0'}, 'windows': [], 'constraints': {'max_airmass': 2.0, 'min_lunar_distance': 10}, 'type': 'request', 'observation_type': 'NORMAL', 'target': {'name': 'test_target', 'ra': 278.73625, 'epoch': 2000, 'proper_motion_dec': 0, 'parallax': 0, 'dec': -27.582416666666667, 'proper_motion_ra': 0}}
+2017-05-08T22:09:06 Received observable cadence sequence from LCO API
+2017-05-08T22:09:06 Request windows: [{u'start': u'2017-07-15T01:00:00', u'end': u'2017-07-15T01:32:56'}]
+2017-05-08T22:09:06 Request windows: [{u'start': u'2017-07-15T01:30:00', u'end': u'2017-07-15T02:32:56'}]
+2017-05-08T22:09:06 Request windows: [{u'start': u'2017-07-15T02:30:00', u'end': u'2017-07-15T03:32:56'}]
+2017-05-08T22:09:06 Request windows: [{u'start': u'2017-07-15T03:30:00', u'end': u'2017-07-15T04:32:56'}]
+2017-05-08T22:09:06 Request windows: [{u'start': u'2017-07-15T04:30:00', u'end': u'2017-07-15T05:32:56'}]
+2017-05-08T22:09:06 Request windows: [{u'start': u'2017-07-15T05:30:00', u'end': u'2017-07-15T06:32:56'}]
+2017-05-08T22:09:06 Request windows: [{u'start': u'2017-07-15T06:30:00', u'end': u'2017-07-15T07:32:56'}]
+2017-05-08T22:09:06 Request windows: [{u'start': u'2017-07-15T07:30:00', u'end': u'2017-07-15T08:32:56'}]
+2017-05-08T22:09:06 Request windows: [{u'start': u'2017-07-15T22:30:00', u'end': u'2017-07-15T23:32:56'}]
+2017-05-08T22:09:06 Request windows: [{u'start': u'2017-07-15T23:30:00', u'end': u'2017-07-16T00:32:56'}]
+2017-05-08T22:09:06  -> Completed build of observation request test_target_20170508T22.15139998
+2017-05-08T22:09:06 Processing complete
+
+2017-05-08T22:22:08 
+------------------------------------------------------
+
+2017-05-08T22:22:08 Building ODIN observation request
+2017-05-08T22:22:08 Proposal dictionary: {'proposal_id': 'NOAO2017AB-003', 'user_id': 'rstreet@lco.global'}
+2017-05-08T22:22:08 Location dictionary: {'observatory': 'domc', 'site': 'lsc', 'telescope_class': '1m0'}
+2017-05-08T22:22:08 Target dictionary: {'name': 'test_target', 'ra': 278.73625, 'epoch': 2000, 'proper_motion_dec': 0, 'parallax': 0, 'dec': -27.582416666666667, 'proper_motion_ra': 0}
+2017-05-08T22:22:08 Constraints dictionary: {'max_airmass': 2.0, 'min_lunar_distance': 10}
+2017-05-08T22:22:08 Observations start datetime: 2017-07-15 01:00:00
+2017-05-08T22:22:08 Observations stop datetime: 2017-07-16 01:00:00
+2017-05-08T22:22:08 Instrument overheads sinistro: front-padding=240.0s, filter-change=2.0s, readout=38.0s
+2017-05-08T22:22:08  -> Molecule: {'exposure_time': 30.0, 'exposure_count': 1, 'instrument_name': '1M0-SCICAM-SINISTRO', 'ag_mode': 'Optional', 'ag_name': '', 'defocus': 0.0, 'type': 'EXPOSE', 'filter': 'ip', 'bin_y': 1, 'bin_x': 1}
+2017-05-08T22:22:08 Request dictionary: {'fail_count': 0, 'observation_note': '', 'molecules': [{'exposure_time': 30.0, 'exposure_count': 1, 'instrument_name': '1M0-SCICAM-SINISTRO', 'ag_mode': 'Optional', 'ag_name': '', 'defocus': 0.0, 'type': 'EXPOSE', 'filter': 'ip', 'bin_y': 1, 'bin_x': 1}], 'location': {'observatory': 'domc', 'site': 'lsc', 'telescope_class': '1m0'}, 'windows': [], 'constraints': {'max_airmass': 2.0, 'min_lunar_distance': 10}, 'type': 'request', 'observation_type': 'NORMAL', 'target': {'name': 'test_target', 'ra': 278.73625, 'epoch': 2000, 'proper_motion_dec': 0, 'parallax': 0, 'dec': -27.582416666666667, 'proper_motion_ra': 0}}
+2017-05-08T22:22:10 Received observable cadence sequence from LCO API
+2017-05-08T22:22:10 Request windows: [{u'start': u'2017-07-15T01:00:00', u'end': u'2017-07-15T01:32:56'}]
+2017-05-08T22:22:10 Request windows: [{u'start': u'2017-07-15T01:30:00', u'end': u'2017-07-15T02:32:56'}]
+2017-05-08T22:22:10 Request windows: [{u'start': u'2017-07-15T02:30:00', u'end': u'2017-07-15T03:32:56'}]
+2017-05-08T22:22:10 Request windows: [{u'start': u'2017-07-15T03:30:00', u'end': u'2017-07-15T04:32:56'}]
+2017-05-08T22:22:10 Request windows: [{u'start': u'2017-07-15T04:30:00', u'end': u'2017-07-15T05:32:56'}]
+2017-05-08T22:22:10 Request windows: [{u'start': u'2017-07-15T05:30:00', u'end': u'2017-07-15T06:32:56'}]
+2017-05-08T22:22:10 Request windows: [{u'start': u'2017-07-15T06:30:00', u'end': u'2017-07-15T07:32:56'}]
+2017-05-08T22:22:10 Request windows: [{u'start': u'2017-07-15T07:30:00', u'end': u'2017-07-15T08:32:56'}]
+2017-05-08T22:22:10 Request windows: [{u'start': u'2017-07-15T22:30:00', u'end': u'2017-07-15T23:32:56'}]
+2017-05-08T22:22:10 Request windows: [{u'start': u'2017-07-15T23:30:00', u'end': u'2017-07-16T00:32:56'}]
+2017-05-08T22:22:10  -> Completed build of observation request test_target_20170508T22.36914771
+2017-05-08T22:22:10 Processing complete
+
+2017-05-08T22:22:10 
+------------------------------------------------------
+
+2017-05-08T22:22:26 
+------------------------------------------------------
+
+2017-05-08T22:22:26 Building ODIN observation request
+2017-05-08T22:22:26 Proposal dictionary: {'proposal_id': 'NOAO2017AB-003', 'user_id': 'rstreet@lco.global'}
+2017-05-08T22:22:26 Location dictionary: {'observatory': 'domc', 'site': 'lsc', 'telescope_class': '1m0'}
+2017-05-08T22:22:26 Target dictionary: {'name': 'test_target', 'ra': 278.73625, 'epoch': 2000, 'proper_motion_dec': 0, 'parallax': 0, 'dec': -27.582416666666667, 'proper_motion_ra': 0}
+2017-05-08T22:22:26 Constraints dictionary: {'max_airmass': 2.0, 'min_lunar_distance': 10}
+2017-05-08T22:22:26 Observations start datetime: 2017-07-15 01:00:00
+2017-05-08T22:22:26 Observations stop datetime: 2017-07-16 01:00:00
+2017-05-08T22:22:26 Instrument overheads sinistro: front-padding=240.0s, filter-change=2.0s, readout=38.0s
+2017-05-08T22:22:26  -> Molecule: {'exposure_time': 30.0, 'exposure_count': 1, 'instrument_name': '1M0-SCICAM-SINISTRO', 'ag_mode': 'Optional', 'ag_name': '', 'defocus': 0.0, 'type': 'EXPOSE', 'filter': 'ip', 'bin_y': 1, 'bin_x': 1}
+2017-05-08T22:22:26 Request dictionary: {'fail_count': 0, 'observation_note': '', 'molecules': [{'exposure_time': 30.0, 'exposure_count': 1, 'instrument_name': '1M0-SCICAM-SINISTRO', 'ag_mode': 'Optional', 'ag_name': '', 'defocus': 0.0, 'type': 'EXPOSE', 'filter': 'ip', 'bin_y': 1, 'bin_x': 1}], 'location': {'observatory': 'domc', 'site': 'lsc', 'telescope_class': '1m0'}, 'windows': [], 'constraints': {'max_airmass': 2.0, 'min_lunar_distance': 10}, 'type': 'request', 'observation_type': 'NORMAL', 'target': {'name': 'test_target', 'ra': 278.73625, 'epoch': 2000, 'proper_motion_dec': 0, 'parallax': 0, 'dec': -27.582416666666667, 'proper_motion_ra': 0}}
+2017-05-08T22:22:27 Received observable cadence sequence from LCO API
+2017-05-08T22:22:27 Request windows: [{u'start': u'2017-07-15T01:00:00', u'end': u'2017-07-15T01:32:56'}]
+2017-05-08T22:22:27 Request windows: [{u'start': u'2017-07-15T01:30:00', u'end': u'2017-07-15T02:32:56'}]
+2017-05-08T22:22:27 Request windows: [{u'start': u'2017-07-15T02:30:00', u'end': u'2017-07-15T03:32:56'}]
+2017-05-08T22:22:27 Request windows: [{u'start': u'2017-07-15T03:30:00', u'end': u'2017-07-15T04:32:56'}]
+2017-05-08T22:22:27 Request windows: [{u'start': u'2017-07-15T04:30:00', u'end': u'2017-07-15T05:32:56'}]
+2017-05-08T22:22:27 Request windows: [{u'start': u'2017-07-15T05:30:00', u'end': u'2017-07-15T06:32:56'}]
+2017-05-08T22:22:27 Request windows: [{u'start': u'2017-07-15T06:30:00', u'end': u'2017-07-15T07:32:56'}]
+2017-05-08T22:22:27 Request windows: [{u'start': u'2017-07-15T07:30:00', u'end': u'2017-07-15T08:32:56'}]
+2017-05-08T22:22:27 Request windows: [{u'start': u'2017-07-15T22:30:00', u'end': u'2017-07-15T23:32:56'}]
+2017-05-08T22:22:27 Request windows: [{u'start': u'2017-07-15T23:30:00', u'end': u'2017-07-16T00:32:56'}]
+2017-05-08T22:22:27  -> Completed build of observation request test_target_20170508T22.37398049
+2017-05-08T22:22:27 Processing complete
+
+2017-05-08T22:22:27 
+------------------------------------------------------
+
+2017-05-08T22:22:38 
+------------------------------------------------------
+
+2017-05-08T22:22:38 Building ODIN observation request
+2017-05-08T22:22:38 Proposal dictionary: {'proposal_id': 'NOAO2017AB-003', 'user_id': 'rstreet@lco.global'}
+2017-05-08T22:22:38 Location dictionary: {'observatory': 'domc', 'site': 'lsc', 'telescope_class': '1m0'}
+2017-05-08T22:22:38 Target dictionary: {'name': 'test_target', 'ra': 278.73625, 'epoch': 2000, 'proper_motion_dec': 0, 'parallax': 0, 'dec': -27.582416666666667, 'proper_motion_ra': 0}
+2017-05-08T22:22:38 Constraints dictionary: {'max_airmass': 2.0, 'min_lunar_distance': 10}
+2017-05-08T22:22:38 Observations start datetime: 2017-07-15 01:00:00
+2017-05-08T22:22:38 Observations stop datetime: 2017-07-16 01:00:00
+2017-05-08T22:22:38 Instrument overheads sinistro: front-padding=240.0s, filter-change=2.0s, readout=38.0s
+2017-05-08T22:22:38  -> Molecule: {'exposure_time': 30.0, 'exposure_count': 1, 'instrument_name': '1M0-SCICAM-SINISTRO', 'ag_mode': 'Optional', 'ag_name': '', 'defocus': 0.0, 'type': 'EXPOSE', 'filter': 'ip', 'bin_y': 1, 'bin_x': 1}
+2017-05-08T22:22:38 Request dictionary: {'fail_count': 0, 'observation_note': '', 'molecules': [{'exposure_time': 30.0, 'exposure_count': 1, 'instrument_name': '1M0-SCICAM-SINISTRO', 'ag_mode': 'Optional', 'ag_name': '', 'defocus': 0.0, 'type': 'EXPOSE', 'filter': 'ip', 'bin_y': 1, 'bin_x': 1}], 'location': {'observatory': 'domc', 'site': 'lsc', 'telescope_class': '1m0'}, 'windows': [], 'constraints': {'max_airmass': 2.0, 'min_lunar_distance': 10}, 'type': 'request', 'observation_type': 'NORMAL', 'target': {'name': 'test_target', 'ra': 278.73625, 'epoch': 2000, 'proper_motion_dec': 0, 'parallax': 0, 'dec': -27.582416666666667, 'proper_motion_ra': 0}}
+2017-05-08T22:22:39 Received observable cadence sequence from LCO API
+2017-05-08T22:22:39 Request windows: [{u'start': u'2017-07-15T01:00:00', u'end': u'2017-07-15T01:32:56'}]
+2017-05-08T22:22:39 Request windows: [{u'start': u'2017-07-15T01:30:00', u'end': u'2017-07-15T02:32:56'}]
+2017-05-08T22:22:39 Request windows: [{u'start': u'2017-07-15T02:30:00', u'end': u'2017-07-15T03:32:56'}]
+2017-05-08T22:22:39 Request windows: [{u'start': u'2017-07-15T03:30:00', u'end': u'2017-07-15T04:32:56'}]
+2017-05-08T22:22:39 Request windows: [{u'start': u'2017-07-15T04:30:00', u'end': u'2017-07-15T05:32:56'}]
+2017-05-08T22:22:39 Request windows: [{u'start': u'2017-07-15T05:30:00', u'end': u'2017-07-15T06:32:56'}]
+2017-05-08T22:22:39 Request windows: [{u'start': u'2017-07-15T06:30:00', u'end': u'2017-07-15T07:32:56'}]
+2017-05-08T22:22:39 Request windows: [{u'start': u'2017-07-15T07:30:00', u'end': u'2017-07-15T08:32:56'}]
+2017-05-08T22:22:39 Request windows: [{u'start': u'2017-07-15T22:30:00', u'end': u'2017-07-15T23:32:56'}]
+2017-05-08T22:22:39 Request windows: [{u'start': u'2017-07-15T23:30:00', u'end': u'2017-07-16T00:32:56'}]
+2017-05-08T22:22:39  -> Completed build of observation request test_target_20170508T22.37749189
+2017-05-08T22:22:39 Processing complete
+
+2017-05-08T22:22:39 
+------------------------------------------------------
+
+2017-05-08T22:22:41 Build observation request for test_target_20170508T22.37776959
+2017-05-08T22:23:10 
+------------------------------------------------------
+
+2017-05-08T22:23:10 Building ODIN observation request
+2017-05-08T22:23:10 Proposal dictionary: {'proposal_id': 'NOAO2017AB-003', 'user_id': 'rstreet@lco.global'}
+2017-05-08T22:23:10 Location dictionary: {'observatory': 'domc', 'site': 'lsc', 'telescope_class': '1m0'}
+2017-05-08T22:23:10 Target dictionary: {'name': 'test_target', 'ra': 278.73625, 'epoch': 2000, 'proper_motion_dec': 0, 'parallax': 0, 'dec': -27.582416666666667, 'proper_motion_ra': 0}
+2017-05-08T22:23:10 Constraints dictionary: {'max_airmass': 2.0, 'min_lunar_distance': 10}
+2017-05-08T22:23:10 Observations start datetime: 2017-07-15 01:00:00
+2017-05-08T22:23:10 Observations stop datetime: 2017-07-16 01:00:00
+2017-05-08T22:23:10 Instrument overheads sinistro: front-padding=240.0s, filter-change=2.0s, readout=38.0s
+2017-05-08T22:23:10  -> Molecule: {'exposure_time': 30.0, 'exposure_count': 1, 'instrument_name': '1M0-SCICAM-SINISTRO', 'ag_mode': 'Optional', 'ag_name': '', 'defocus': 0.0, 'type': 'EXPOSE', 'filter': 'ip', 'bin_y': 1, 'bin_x': 1}
+2017-05-08T22:23:10 Request dictionary: {'fail_count': 0, 'observation_note': '', 'molecules': [{'exposure_time': 30.0, 'exposure_count': 1, 'instrument_name': '1M0-SCICAM-SINISTRO', 'ag_mode': 'Optional', 'ag_name': '', 'defocus': 0.0, 'type': 'EXPOSE', 'filter': 'ip', 'bin_y': 1, 'bin_x': 1}], 'location': {'observatory': 'domc', 'site': 'lsc', 'telescope_class': '1m0'}, 'windows': [], 'constraints': {'max_airmass': 2.0, 'min_lunar_distance': 10}, 'type': 'request', 'observation_type': 'NORMAL', 'target': {'name': 'test_target', 'ra': 278.73625, 'epoch': 2000, 'proper_motion_dec': 0, 'parallax': 0, 'dec': -27.582416666666667, 'proper_motion_ra': 0}}
+2017-05-08T22:23:11 Received observable cadence sequence from LCO API
+2017-05-08T22:23:11 Request windows: [{u'start': u'2017-07-15T01:00:00', u'end': u'2017-07-15T01:32:56'}]
+2017-05-08T22:23:11 Request windows: [{u'start': u'2017-07-15T01:30:00', u'end': u'2017-07-15T02:32:56'}]
+2017-05-08T22:23:11 Request windows: [{u'start': u'2017-07-15T02:30:00', u'end': u'2017-07-15T03:32:56'}]
+2017-05-08T22:23:11 Request windows: [{u'start': u'2017-07-15T03:30:00', u'end': u'2017-07-15T04:32:56'}]
+2017-05-08T22:23:11 Request windows: [{u'start': u'2017-07-15T04:30:00', u'end': u'2017-07-15T05:32:56'}]
+2017-05-08T22:23:11 Request windows: [{u'start': u'2017-07-15T05:30:00', u'end': u'2017-07-15T06:32:56'}]
+2017-05-08T22:23:11 Request windows: [{u'start': u'2017-07-15T06:30:00', u'end': u'2017-07-15T07:32:56'}]
+2017-05-08T22:23:11 Request windows: [{u'start': u'2017-07-15T07:30:00', u'end': u'2017-07-15T08:32:56'}]
+2017-05-08T22:23:11 Request windows: [{u'start': u'2017-07-15T22:30:00', u'end': u'2017-07-15T23:32:56'}]
+2017-05-08T22:23:11 Request windows: [{u'start': u'2017-07-15T23:30:00', u'end': u'2017-07-16T00:32:56'}]
+2017-05-08T22:23:11  -> Completed build of observation request test_target_20170508T22.38635092
+2017-05-08T22:23:11 Processing complete
+
+2017-05-08T22:23:11 
+------------------------------------------------------
+
+2017-05-08T22:23:11 Build observation request for test_target_20170508T22.3864747
+2017-05-08T22:23:11  -> IN SIMULATION MODE: SIM_add_OK
+2017-05-08T22:23:11  -> Completed obs submission
+2017-05-08T22:23:20 
+------------------------------------------------------
+
+2017-05-08T22:23:20 Building ODIN observation request
+2017-05-08T22:23:20 Proposal dictionary: {'proposal_id': 'NOAO2017AB-003', 'user_id': 'rstreet@lco.global'}
+2017-05-08T22:23:20 Location dictionary: {'observatory': 'domc', 'site': 'lsc', 'telescope_class': '1m0'}
+2017-05-08T22:23:20 Target dictionary: {'name': 'test_target', 'ra': 278.73625, 'epoch': 2000, 'proper_motion_dec': 0, 'parallax': 0, 'dec': -27.582416666666667, 'proper_motion_ra': 0}
+2017-05-08T22:23:20 Constraints dictionary: {'max_airmass': 2.0, 'min_lunar_distance': 10}
+2017-05-08T22:23:20 Observations start datetime: 2017-07-15 01:00:00
+2017-05-08T22:23:20 Observations stop datetime: 2017-07-16 01:00:00
+2017-05-08T22:23:20 Instrument overheads sinistro: front-padding=240.0s, filter-change=2.0s, readout=38.0s
+2017-05-08T22:23:20  -> Molecule: {'exposure_time': 30.0, 'exposure_count': 1, 'instrument_name': '1M0-SCICAM-SINISTRO', 'ag_mode': 'Optional', 'ag_name': '', 'defocus': 0.0, 'type': 'EXPOSE', 'filter': 'ip', 'bin_y': 1, 'bin_x': 1}
+2017-05-08T22:23:20 Request dictionary: {'fail_count': 0, 'observation_note': '', 'molecules': [{'exposure_time': 30.0, 'exposure_count': 1, 'instrument_name': '1M0-SCICAM-SINISTRO', 'ag_mode': 'Optional', 'ag_name': '', 'defocus': 0.0, 'type': 'EXPOSE', 'filter': 'ip', 'bin_y': 1, 'bin_x': 1}], 'location': {'observatory': 'domc', 'site': 'lsc', 'telescope_class': '1m0'}, 'windows': [], 'constraints': {'max_airmass': 2.0, 'min_lunar_distance': 10}, 'type': 'request', 'observation_type': 'NORMAL', 'target': {'name': 'test_target', 'ra': 278.73625, 'epoch': 2000, 'proper_motion_dec': 0, 'parallax': 0, 'dec': -27.582416666666667, 'proper_motion_ra': 0}}
+2017-05-08T22:23:21 Received observable cadence sequence from LCO API
+2017-05-08T22:23:21 Request windows: [{u'start': u'2017-07-15T01:00:00', u'end': u'2017-07-15T01:32:56'}]
+2017-05-08T22:23:21 Request windows: [{u'start': u'2017-07-15T01:30:00', u'end': u'2017-07-15T02:32:56'}]
+2017-05-08T22:23:21 Request windows: [{u'start': u'2017-07-15T02:30:00', u'end': u'2017-07-15T03:32:56'}]
+2017-05-08T22:23:21 Request windows: [{u'start': u'2017-07-15T03:30:00', u'end': u'2017-07-15T04:32:56'}]
+2017-05-08T22:23:21 Request windows: [{u'start': u'2017-07-15T04:30:00', u'end': u'2017-07-15T05:32:56'}]
+2017-05-08T22:23:21 Request windows: [{u'start': u'2017-07-15T05:30:00', u'end': u'2017-07-15T06:32:56'}]
+2017-05-08T22:23:21 Request windows: [{u'start': u'2017-07-15T06:30:00', u'end': u'2017-07-15T07:32:56'}]
+2017-05-08T22:23:21 Request windows: [{u'start': u'2017-07-15T07:30:00', u'end': u'2017-07-15T08:32:56'}]
+2017-05-08T22:23:21 Request windows: [{u'start': u'2017-07-15T22:30:00', u'end': u'2017-07-15T23:32:56'}]
+2017-05-08T22:23:21 Request windows: [{u'start': u'2017-07-15T23:30:00', u'end': u'2017-07-16T00:32:56'}]
+2017-05-08T22:23:21  -> Completed build of observation request test_target_20170508T22.38914921
+2017-05-08T22:23:21 Processing complete
+
+2017-05-08T22:23:21 
+------------------------------------------------------
+
+2017-05-08T22:23:21 Build observation request for test_target_20170508T22.38926704
+2017-05-08T22:23:21  -> IN SIMULATION MODE: SIM_add_OK
+2017-05-08T22:23:21  -> Completed obs submission
+2017-05-08T22:23:21 Submitted observation with status SIM_add_OK
+2017-05-08T22:23:21 Processing complete
+
+2017-05-08T22:24:13 
+------------------------------------------------------
+
+2017-05-08T22:24:13 Building ODIN observation request
+2017-05-08T22:24:13 Proposal dictionary: {'proposal_id': 'NOAO2017AB-003', 'user_id': 'rstreet@lco.global'}
+2017-05-08T22:24:13 Location dictionary: {'observatory': 'domc', 'site': 'lsc', 'telescope_class': '1m0'}
+2017-05-08T22:24:13 Target dictionary: {'name': 'test_target', 'ra': 278.73625, 'epoch': 2000, 'proper_motion_dec': 0, 'parallax': 0, 'dec': -27.582416666666667, 'proper_motion_ra': 0}
+2017-05-08T22:24:13 Constraints dictionary: {'max_airmass': 2.0, 'min_lunar_distance': 10}
+2017-05-08T22:24:13 Observations start datetime: 2017-07-15 01:00:00
+2017-05-08T22:24:13 Observations stop datetime: 2017-07-16 01:00:00
+2017-05-08T22:24:13 Instrument overheads sinistro: front-padding=240.0s, filter-change=2.0s, readout=38.0s
+2017-05-08T22:24:13  -> Molecule: {'exposure_time': 30.0, 'exposure_count': 1, 'instrument_name': '1M0-SCICAM-SINISTRO', 'ag_mode': 'Optional', 'ag_name': '', 'defocus': 0.0, 'type': 'EXPOSE', 'filter': 'ip', 'bin_y': 1, 'bin_x': 1}
+2017-05-08T22:24:13 Request dictionary: {'fail_count': 0, 'observation_note': '', 'molecules': [{'exposure_time': 30.0, 'exposure_count': 1, 'instrument_name': '1M0-SCICAM-SINISTRO', 'ag_mode': 'Optional', 'ag_name': '', 'defocus': 0.0, 'type': 'EXPOSE', 'filter': 'ip', 'bin_y': 1, 'bin_x': 1}], 'location': {'observatory': 'domc', 'site': 'lsc', 'telescope_class': '1m0'}, 'windows': [], 'constraints': {'max_airmass': 2.0, 'min_lunar_distance': 10}, 'type': 'request', 'observation_type': 'NORMAL', 'target': {'name': 'test_target', 'ra': 278.73625, 'epoch': 2000, 'proper_motion_dec': 0, 'parallax': 0, 'dec': -27.582416666666667, 'proper_motion_ra': 0}}
+2017-05-08T22:24:13 Received observable cadence sequence from LCO API
+2017-05-08T22:24:13 Request windows: [{u'start': u'2017-07-15T01:00:00', u'end': u'2017-07-15T01:32:56'}]
+2017-05-08T22:24:13 Request windows: [{u'start': u'2017-07-15T01:30:00', u'end': u'2017-07-15T02:32:56'}]
+2017-05-08T22:24:13 Request windows: [{u'start': u'2017-07-15T02:30:00', u'end': u'2017-07-15T03:32:56'}]
+2017-05-08T22:24:13 Request windows: [{u'start': u'2017-07-15T03:30:00', u'end': u'2017-07-15T04:32:56'}]
+2017-05-08T22:24:13 Request windows: [{u'start': u'2017-07-15T04:30:00', u'end': u'2017-07-15T05:32:56'}]
+2017-05-08T22:24:13 Request windows: [{u'start': u'2017-07-15T05:30:00', u'end': u'2017-07-15T06:32:56'}]
+2017-05-08T22:24:13 Request windows: [{u'start': u'2017-07-15T06:30:00', u'end': u'2017-07-15T07:32:56'}]
+2017-05-08T22:24:13 Request windows: [{u'start': u'2017-07-15T07:30:00', u'end': u'2017-07-15T08:32:56'}]
+2017-05-08T22:24:13 Request windows: [{u'start': u'2017-07-15T22:30:00', u'end': u'2017-07-15T23:32:56'}]
+2017-05-08T22:24:13 Request windows: [{u'start': u'2017-07-15T23:30:00', u'end': u'2017-07-16T00:32:56'}]
+2017-05-08T22:24:13  -> Completed build of observation request test_target_20170508T22.40363253
+2017-05-08T22:24:13 Processing complete
+
+2017-05-08T22:24:13 
+------------------------------------------------------
+
+2017-05-08T22:24:14 Build observation request for test_target_20170508T22.40373964
+2017-05-08T22:24:14  -> IN SIMULATION MODE: SIM_add_OK
+2017-05-08T22:24:14  -> Completed obs submission
+2017-05-08T22:24:14 Submitted observation with status SIM_add_OK
+2017-05-08T22:24:14 Processing complete
+
+2017-05-08T22:24:52 
+------------------------------------------------------
+
+2017-05-08T22:24:52 Building ODIN observation request
+2017-05-08T22:24:52 Proposal dictionary: {'proposal_id': 'NOAO2017AB-003', 'user_id': 'rstreet@lco.global'}
+2017-05-08T22:24:52 Location dictionary: {'observatory': 'domc', 'site': 'lsc', 'telescope_class': '1m0'}
+2017-05-08T22:24:52 Target dictionary: {'name': 'test_target', 'ra': 278.73625, 'epoch': 2000, 'proper_motion_dec': 0, 'parallax': 0, 'dec': -27.582416666666667, 'proper_motion_ra': 0}
+2017-05-08T22:24:52 Constraints dictionary: {'max_airmass': 2.0, 'min_lunar_distance': 10}
+2017-05-08T22:24:52 Observations start datetime: 2017-07-15 01:00:00
+2017-05-08T22:24:52 Observations stop datetime: 2017-07-16 01:00:00
+2017-05-08T22:24:52 Instrument overheads sinistro: front-padding=240.0s, filter-change=2.0s, readout=38.0s
+2017-05-08T22:24:52  -> Molecule: {'exposure_time': 30.0, 'exposure_count': 1, 'instrument_name': '1M0-SCICAM-SINISTRO', 'ag_mode': 'Optional', 'ag_name': '', 'defocus': 0.0, 'type': 'EXPOSE', 'filter': 'ip', 'bin_y': 1, 'bin_x': 1}
+2017-05-08T22:24:52 Request dictionary: {'fail_count': 0, 'observation_note': '', 'molecules': [{'exposure_time': 30.0, 'exposure_count': 1, 'instrument_name': '1M0-SCICAM-SINISTRO', 'ag_mode': 'Optional', 'ag_name': '', 'defocus': 0.0, 'type': 'EXPOSE', 'filter': 'ip', 'bin_y': 1, 'bin_x': 1}], 'location': {'observatory': 'domc', 'site': 'lsc', 'telescope_class': '1m0'}, 'windows': [], 'constraints': {'max_airmass': 2.0, 'min_lunar_distance': 10}, 'type': 'request', 'observation_type': 'NORMAL', 'target': {'name': 'test_target', 'ra': 278.73625, 'epoch': 2000, 'proper_motion_dec': 0, 'parallax': 0, 'dec': -27.582416666666667, 'proper_motion_ra': 0}}
+2017-05-08T22:24:53 Received observable cadence sequence from LCO API
+2017-05-08T22:24:53 Request windows: [{u'start': u'2017-07-15T01:00:00', u'end': u'2017-07-15T01:32:56'}]
+2017-05-08T22:24:53 Request windows: [{u'start': u'2017-07-15T01:30:00', u'end': u'2017-07-15T02:32:56'}]
+2017-05-08T22:24:53 Request windows: [{u'start': u'2017-07-15T02:30:00', u'end': u'2017-07-15T03:32:56'}]
+2017-05-08T22:24:53 Request windows: [{u'start': u'2017-07-15T03:30:00', u'end': u'2017-07-15T04:32:56'}]
+2017-05-08T22:24:53 Request windows: [{u'start': u'2017-07-15T04:30:00', u'end': u'2017-07-15T05:32:56'}]
+2017-05-08T22:24:53 Request windows: [{u'start': u'2017-07-15T05:30:00', u'end': u'2017-07-15T06:32:56'}]
+2017-05-08T22:24:53 Request windows: [{u'start': u'2017-07-15T06:30:00', u'end': u'2017-07-15T07:32:56'}]
+2017-05-08T22:24:53 Request windows: [{u'start': u'2017-07-15T07:30:00', u'end': u'2017-07-15T08:32:56'}]
+2017-05-08T22:24:53 Request windows: [{u'start': u'2017-07-15T22:30:00', u'end': u'2017-07-15T23:32:56'}]
+2017-05-08T22:24:53 Request windows: [{u'start': u'2017-07-15T23:30:00', u'end': u'2017-07-16T00:32:56'}]
+2017-05-08T22:24:53  -> Completed build of observation request test_target_20170508T22.41469134
+2017-05-08T22:24:53 Processing complete
+
+2017-05-08T22:24:53 
+------------------------------------------------------
+
+2017-05-08T22:24:53 Build observation request for test_target_20170508T22.41480537
+2017-05-08T22:24:56  -> Completed obs submission
+2017-05-08T22:24:56 Submitted observation with status add_OK
+2017-05-08T22:24:56 Processing complete
+
+2017-05-08T22:52:52 
+------------------------------------------------------
+
+2017-05-08T22:52:52 Building ODIN observation request
+2017-05-08T22:52:52 Proposal dictionary: {'proposal_id': 'NOAO2017AB-003', 'user_id': 'rstreet@lco.global'}
+2017-05-08T22:52:52 Location dictionary: {'observatory': 'domc', 'site': 'lsc', 'telescope_class': '1m0'}
+2017-05-08T22:52:52 Target dictionary: {'name': 'test_target', 'ra': 278.73625, 'epoch': 2000, 'proper_motion_dec': 0, 'parallax': 0, 'dec': -27.582416666666667, 'proper_motion_ra': 0}
+2017-05-08T22:52:52 Constraints dictionary: {'max_airmass': 2.0, 'min_lunar_distance': 10}
+2017-05-08T22:52:52 Observations start datetime: 2017-07-15 01:00:00
+2017-05-08T22:52:52 Observations stop datetime: 2017-07-16 01:00:00
+2017-05-08T22:52:52 Instrument overheads sinistro: front-padding=240.0s, filter-change=2.0s, readout=38.0s
+2017-05-08T22:52:52  -> Molecule: {'exposure_time': 30.0, 'exposure_count': 1, 'instrument_name': '1M0-SCICAM-SINISTRO', 'ag_mode': 'Optional', 'ag_name': '', 'defocus': 0.0, 'type': 'EXPOSE', 'filter': 'ip', 'bin_y': 1, 'bin_x': 1}
+2017-05-08T22:52:52 Request dictionary: {'fail_count': 0, 'observation_note': '', 'molecules': [{'exposure_time': 30.0, 'exposure_count': 1, 'instrument_name': '1M0-SCICAM-SINISTRO', 'ag_mode': 'Optional', 'ag_name': '', 'defocus': 0.0, 'type': 'EXPOSE', 'filter': 'ip', 'bin_y': 1, 'bin_x': 1}], 'location': {'observatory': 'domc', 'site': 'lsc', 'telescope_class': '1m0'}, 'windows': [], 'constraints': {'max_airmass': 2.0, 'min_lunar_distance': 10}, 'type': 'request', 'observation_type': 'NORMAL', 'target': {'name': 'test_target', 'ra': 278.73625, 'epoch': 2000, 'proper_motion_dec': 0, 'parallax': 0, 'dec': -27.582416666666667, 'proper_motion_ra': 0}}
+2017-05-08T22:52:53 Received observable cadence sequence from LCO API
+2017-05-08T22:52:53 Request windows: [{u'start': u'2017-07-15T01:00:00', u'end': u'2017-07-15T01:32:56'}]
+2017-05-08T22:52:53 Request windows: [{u'start': u'2017-07-15T01:30:00', u'end': u'2017-07-15T02:32:56'}]
+2017-05-08T22:52:53 Request windows: [{u'start': u'2017-07-15T02:30:00', u'end': u'2017-07-15T03:32:56'}]
+2017-05-08T22:52:53 Request windows: [{u'start': u'2017-07-15T03:30:00', u'end': u'2017-07-15T04:32:56'}]
+2017-05-08T22:52:53 Request windows: [{u'start': u'2017-07-15T04:30:00', u'end': u'2017-07-15T05:32:56'}]
+2017-05-08T22:52:53 Request windows: [{u'start': u'2017-07-15T05:30:00', u'end': u'2017-07-15T06:32:56'}]
+2017-05-08T22:52:53 Request windows: [{u'start': u'2017-07-15T06:30:00', u'end': u'2017-07-15T07:32:56'}]
+2017-05-08T22:52:53 Request windows: [{u'start': u'2017-07-15T07:30:00', u'end': u'2017-07-15T08:32:56'}]
+2017-05-08T22:52:53 Request windows: [{u'start': u'2017-07-15T22:30:00', u'end': u'2017-07-15T23:32:56'}]
+2017-05-08T22:52:53 Request windows: [{u'start': u'2017-07-15T23:30:00', u'end': u'2017-07-16T00:32:56'}]
+2017-05-08T22:52:53  -> Completed build of observation request test_target_20170508T22.88132278
+2017-05-08T22:52:53 Processing complete
+
+2017-05-08T22:52:53 
+------------------------------------------------------
+
+2017-05-08T22:53:22 
+------------------------------------------------------
+
+2017-05-08T22:53:22 Building ODIN observation request
+2017-05-08T22:53:22 Proposal dictionary: {'proposal_id': 'NOAO2017AB-003', 'user_id': 'rstreet@lco.global'}
+2017-05-08T22:53:22 Location dictionary: {'observatory': 'domc', 'site': 'lsc', 'telescope_class': '1m0'}
+2017-05-08T22:53:22 Target dictionary: {'name': 'test_target', 'ra': 278.73625, 'epoch': 2000, 'proper_motion_dec': 0, 'parallax': 0, 'dec': -27.582416666666667, 'proper_motion_ra': 0}
+2017-05-08T22:53:22 Constraints dictionary: {'max_airmass': 2.0, 'min_lunar_distance': 10}
+2017-05-08T22:53:22 Observations start datetime: 2017-07-15 01:00:00
+2017-05-08T22:53:22 Observations stop datetime: 2017-07-16 01:00:00
+2017-05-08T22:53:22 Instrument overheads sinistro: front-padding=240.0s, filter-change=2.0s, readout=38.0s
+2017-05-08T22:53:22  -> Molecule: {'exposure_time': 30.0, 'exposure_count': 1, 'instrument_name': '1M0-SCICAM-SINISTRO', 'ag_mode': 'Optional', 'ag_name': '', 'defocus': 0.0, 'type': 'EXPOSE', 'filter': 'ip', 'bin_y': 1, 'bin_x': 1}
+2017-05-08T22:53:22 Request dictionary: {'fail_count': 0, 'observation_note': '', 'molecules': [{'exposure_time': 30.0, 'exposure_count': 1, 'instrument_name': '1M0-SCICAM-SINISTRO', 'ag_mode': 'Optional', 'ag_name': '', 'defocus': 0.0, 'type': 'EXPOSE', 'filter': 'ip', 'bin_y': 1, 'bin_x': 1}], 'location': {'observatory': 'domc', 'site': 'lsc', 'telescope_class': '1m0'}, 'windows': [], 'constraints': {'max_airmass': 2.0, 'min_lunar_distance': 10}, 'type': 'request', 'observation_type': 'NORMAL', 'target': {'name': 'test_target', 'ra': 278.73625, 'epoch': 2000, 'proper_motion_dec': 0, 'parallax': 0, 'dec': -27.582416666666667, 'proper_motion_ra': 0}}
+2017-05-08T22:53:23 Received observable cadence sequence from LCO API
+2017-05-08T22:53:23 Request windows: [{u'start': u'2017-07-15T01:00:00', u'end': u'2017-07-15T01:32:56'}]
+2017-05-08T22:53:23 Request windows: [{u'start': u'2017-07-15T01:30:00', u'end': u'2017-07-15T02:32:56'}]
+2017-05-08T22:53:23 Request windows: [{u'start': u'2017-07-15T02:30:00', u'end': u'2017-07-15T03:32:56'}]
+2017-05-08T22:53:23 Request windows: [{u'start': u'2017-07-15T03:30:00', u'end': u'2017-07-15T04:32:56'}]
+2017-05-08T22:53:23 Request windows: [{u'start': u'2017-07-15T04:30:00', u'end': u'2017-07-15T05:32:56'}]
+2017-05-08T22:53:23 Request windows: [{u'start': u'2017-07-15T05:30:00', u'end': u'2017-07-15T06:32:56'}]
+2017-05-08T22:53:23 Request windows: [{u'start': u'2017-07-15T06:30:00', u'end': u'2017-07-15T07:32:56'}]
+2017-05-08T22:53:23 Request windows: [{u'start': u'2017-07-15T07:30:00', u'end': u'2017-07-15T08:32:56'}]
+2017-05-08T22:53:23 Request windows: [{u'start': u'2017-07-15T22:30:00', u'end': u'2017-07-15T23:32:56'}]
+2017-05-08T22:53:23 Request windows: [{u'start': u'2017-07-15T23:30:00', u'end': u'2017-07-16T00:32:56'}]
+2017-05-08T22:53:23  -> Completed build of observation request test_target_20170508T22.8897027
+2017-05-08T22:53:23 Processing complete
+
+2017-05-08T22:53:23 
+------------------------------------------------------
+
+2017-05-08T22:53:25 Build observation request for test_target_20170508T22.88999464
+2017-05-08T22:55:34 
+------------------------------------------------------
+
+2017-05-08T22:55:34 Building ODIN observation request
+2017-05-08T22:55:34 Proposal dictionary: {'proposal_id': 'NOAO2017AB-003', 'user_id': 'rstreet@lco.global'}
+2017-05-08T22:55:34 Location dictionary: {'observatory': 'domc', 'site': 'lsc', 'telescope_class': '1m0'}
+2017-05-08T22:55:34 Target dictionary: {'name': 'test_target', 'ra': 278.73625, 'epoch': 2000, 'proper_motion_dec': 0, 'parallax': 0, 'dec': -27.582416666666667, 'proper_motion_ra': 0}
+2017-05-08T22:55:34 Constraints dictionary: {'max_airmass': 2.0, 'min_lunar_distance': 10}
+2017-05-08T22:55:34 Observations start datetime: 2017-07-15 01:00:00
+2017-05-08T22:55:34 Observations stop datetime: 2017-07-16 01:00:00
+2017-05-08T22:55:34 Instrument overheads sinistro: front-padding=240.0s, filter-change=2.0s, readout=38.0s
+2017-05-08T22:55:34  -> Molecule: {'exposure_time': 30.0, 'exposure_count': 1, 'instrument_name': '1M0-SCICAM-SINISTRO', 'ag_mode': 'Optional', 'ag_name': '', 'defocus': 0.0, 'type': 'EXPOSE', 'filter': 'ip', 'bin_y': 1, 'bin_x': 1}
+2017-05-08T22:55:34 Request dictionary: {'fail_count': 0, 'observation_note': '', 'molecules': [{'exposure_time': 30.0, 'exposure_count': 1, 'instrument_name': '1M0-SCICAM-SINISTRO', 'ag_mode': 'Optional', 'ag_name': '', 'defocus': 0.0, 'type': 'EXPOSE', 'filter': 'ip', 'bin_y': 1, 'bin_x': 1}], 'location': {'observatory': 'domc', 'site': 'lsc', 'telescope_class': '1m0'}, 'windows': [], 'constraints': {'max_airmass': 2.0, 'min_lunar_distance': 10}, 'type': 'request', 'observation_type': 'NORMAL', 'target': {'name': 'test_target', 'ra': 278.73625, 'epoch': 2000, 'proper_motion_dec': 0, 'parallax': 0, 'dec': -27.582416666666667, 'proper_motion_ra': 0}}
+2017-05-08T22:55:35 Received observable cadence sequence from LCO API
+2017-05-08T22:55:35 Request windows: [{u'start': u'2017-07-15T01:00:00', u'end': u'2017-07-15T01:32:56'}]
+2017-05-08T22:55:35 Request windows: [{u'start': u'2017-07-15T01:30:00', u'end': u'2017-07-15T02:32:56'}]
+2017-05-08T22:55:35 Request windows: [{u'start': u'2017-07-15T02:30:00', u'end': u'2017-07-15T03:32:56'}]
+2017-05-08T22:55:35 Request windows: [{u'start': u'2017-07-15T03:30:00', u'end': u'2017-07-15T04:32:56'}]
+2017-05-08T22:55:35 Request windows: [{u'start': u'2017-07-15T04:30:00', u'end': u'2017-07-15T05:32:56'}]
+2017-05-08T22:55:35 Request windows: [{u'start': u'2017-07-15T05:30:00', u'end': u'2017-07-15T06:32:56'}]
+2017-05-08T22:55:35 Request windows: [{u'start': u'2017-07-15T06:30:00', u'end': u'2017-07-15T07:32:56'}]
+2017-05-08T22:55:35 Request windows: [{u'start': u'2017-07-15T07:30:00', u'end': u'2017-07-15T08:32:56'}]
+2017-05-08T22:55:35 Request windows: [{u'start': u'2017-07-15T22:30:00', u'end': u'2017-07-15T23:32:56'}]
+2017-05-08T22:55:35 Request windows: [{u'start': u'2017-07-15T23:30:00', u'end': u'2017-07-16T00:32:56'}]
+2017-05-08T22:55:35  -> Completed build of observation request test_target_20170508T22.92630963
+2017-05-08T22:55:35 Processing complete
+
+2017-05-08T22:55:35 
+------------------------------------------------------
+
+2017-05-08T22:55:36 Build observation request for test_target_20170508T22.92663151
+2017-05-08T22:55:39  -> Completed obs submission
+2017-05-08T22:55:39 Submitted observation with status add_OK
+2017-05-08T22:55:39 Processing complete
+

@@ -1,0 +1,26 @@
+2017-06-08T23:30:44 
+------------------------------------------------------
+
+2017-06-08T23:31:04 Validating obs group: OB170896_20170608T23.51784657
+2017-06-08T23:31:04 Validated obs group: OB170896_20170608T23.51784657 with status OK
+2017-06-08T23:31:04 Received response from LCO cadence API for request OB170896_20170608T23.51784657
+2017-06-08T23:31:04 Request windows: [{u'start': u'2017-06-09T10:45:00Z', u'end': u'2017-06-09T11:15:00Z'}]
+2017-06-08T23:31:04 Request windows: [{u'start': u'2017-06-09T11:15:00Z', u'end': u'2017-06-09T11:45:00Z'}]
+2017-06-08T23:31:04 Request windows: [{u'start': u'2017-06-09T11:45:00Z', u'end': u'2017-06-09T12:15:00Z'}]
+2017-06-08T23:31:04 Request windows: [{u'start': u'2017-06-09T12:15:00Z', u'end': u'2017-06-09T12:45:00Z'}]
+2017-06-08T23:31:04 Request windows: [{u'start': u'2017-06-09T12:45:00Z', u'end': u'2017-06-09T13:15:00Z'}]
+2017-06-08T23:31:04 Request windows: [{u'start': u'2017-06-09T13:15:00Z', u'end': u'2017-06-09T13:45:00Z'}]
+2017-06-08T23:31:04 Request windows: [{u'start': u'2017-06-09T13:45:00Z', u'end': u'2017-06-09T14:15:00Z'}]
+2017-06-08T23:31:04 Request windows: [{u'start': u'2017-06-09T14:15:00Z', u'end': u'2017-06-09T14:45:00Z'}]
+2017-06-08T23:31:04 Request windows: [{u'start': u'2017-06-09T14:45:00Z', u'end': u'2017-06-09T15:15:00Z'}]
+2017-06-08T23:31:04 Request windows: [{u'start': u'2017-06-09T15:15:00Z', u'end': u'2017-06-09T15:45:00Z'}]
+2017-06-08T23:31:04 Request windows: [{u'start': u'2017-06-09T15:45:00Z', u'end': u'2017-06-09T16:15:00Z'}]
+2017-06-08T23:31:04 Request windows: [{u'start': u'2017-06-09T16:15:00Z', u'end': u'2017-06-09T16:45:00Z'}]
+2017-06-08T23:31:04 Request windows: [{u'start': u'2017-06-09T16:45:00Z', u'end': u'2017-06-09T17:15:00Z'}]
+2017-06-08T23:31:04 Request windows: [{u'start': u'2017-06-09T17:15:00Z', u'end': u'2017-06-09T17:45:00Z'}]
+2017-06-08T23:31:04 Build observation request for OB170896_20170608T23.51784657
+2017-06-08T23:31:05  -> Completed obs submission, submit response:
+2017-06-08T23:31:05 id = 445646
+2017-06-08T23:31:05 Submitted observation with status active
+2017-06-08T23:31:05 Processing complete
+

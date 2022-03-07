@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['einstein.lco.gtn', 'spitzer-microlensing.lco.global', 'microlensing-tom.lco.global','127.0.0.1']
 
@@ -91,8 +91,8 @@ WSGI_APPLICATION = 'mulens_tom.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        #'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        'NAME': os.path.join('/var/www/spitzermicrolensing/', 'sqlite.db'),
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        #'NAME': os.path.join('/var/www/spitzermicrolensing/', 'sqlite.db'),
     }
 }
 
@@ -151,3 +151,6 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 LOGIN_REDIRECT_URL = 'home'
+
+# Necessary migration post Django 3.2
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'

@@ -8,8 +8,8 @@ from os import environ, path
 from sys import path as systempath
 from sys import exit
 from time import sleep
-from local_conf import get_conf
-app_config = get_conf('mulens_tom')
+from . import local_conf
+app_config = local_conf.get_conf('mulens_tom')
 systempath.append(app_config)
 environ.setdefault('DJANGO_SETTINGS_MODULE', 'mulens_tom.settings')
 from django.core import management
@@ -19,17 +19,14 @@ from django import setup
 from datetime import datetime, timedelta
 setup()
 
-import urllib
-import utilities
+from . import utilities
 import requests
-import instrument_overheads
+from . import instrument_overheads
 import json
-import httplib
 from sys import exit
-from exceptions import ValueError
 
 class ObsRequest:
-    
+
     def __init__(self):
         self.name = None
         self.group_id = None
@@ -84,101 +81,101 @@ class ObsRequest:
             self.onem = True
         elif '2m0' in self.tel:
             self.twom = True
-    
+
     def summary(self):
         exp_list = ''
         f_list = ''
         for i in range(0,len(self.exposure_counts),1):
             exp_list = exp_list + ' ' + str(self.exposure_counts[i])
             f_list = f_list + ' ' + self.filters[i]
-            
+
         output = str(self.name) + ' ' + str(self.proposal_id)+ \
                 ' ' + str(self.ra) + ' ' + str(self.dec) + \
                 ' ' + str(self.site) + ' ' + str(self.observatory) + ' ' + \
                 ' ' + str(self.instrument) + ' ' + f_list + ' ' + \
                 exp_list + ' ' + str(self.cadence) + ' ' + self.group_id + ' ' + \
                 str(self.airmass_limit) + ' ' + str(self.lunar_distance_limit)
-                
+
         return output
 
     def build_cadence_request(self, log=None, debug=False):
-                        
+
         if debug == True and log != None:
             log.info('Building Valhalla-AEON observation request')
-        
+
         if self.group_id == None:
             self.get_group_id()
-            
+
         request_group = {'name': self.group_id,
                          'proposal': self.proposal_id,
                          'ipp_value': float(self.priority),
                          'operator': 'SINGLE'}
-                         
+
         if self.rapid_mode:
             request_group["observation_type"] = "TARGET_OF_OPPORTUNITY"
         else:
             request_group["observation_type"] = 'NORMAL'
-            
+
         if type(self.ra) == type(1.0):
             ra_deg = self.ra
             dec_deg = self.dec
         else:
             (ra_deg, dec_deg) = utilities.sex2decdeg(self.ra, self.dec)
-            
+
         target =   {
                     'name': str(self.name),
                     'type': 'ICRS',
                     'ra': ra_deg,
                     'dec': dec_deg,
-                    'proper_motion_ra': 0, 
+                    'proper_motion_ra': 0,
                     'proper_motion_dec': 0,
-                    'parallax': 0, 
-                    'epoch': 2000,	  
+                    'parallax': 0,
+                    'epoch': 2000,
                     }
-                
+
         if debug == True and log != None:
             log.info('Target dictionary: ' + str( target ))
-       
+
         location = {
                     'telescope_class' : str(self.tel).replace('a',''),
                     'site':             str(self.site),
                     'enclosure':      str(self.observatory)
                     }
-                    
+
         if debug == True and log != None:
             log.info('Location dictionary: ' + str( location ))
-                    
-        constraints = { 
+
+        constraints = {
         		  'max_airmass': float(self.airmass_limit),
                     'min_lunar_distance': float(self.lunar_distance_limit)
                     }
-                    
+
         if debug == True and log != None:
             log.info('Constraints dictionary: ' + str( constraints ))
-            
+
         if debug == True and log != None:
             log.info('Observations start datetime: '+self.ts_submit.strftime("%Y-%m-%dT%H:%M:%S"))
             log.info('Observations stop datetime: '+self.ts_expire.strftime("%Y-%m-%dT%H:%M:%S"))
             log.info('Period [hrs]: '+str(self.cadence))
             log.info('Jitter [hrs]: '+str(self.jitter))
-            
-        cadence = {'start': self.ts_submit.strftime("%Y-%m-%dT%H:%M:%S"), 
-                   'end': self.ts_expire.strftime("%Y-%m-%dT%H:%M:%S"), 
-                    'period': float(self.cadence), 
+
+        cadence = {'start': self.ts_submit.strftime("%Y-%m-%dT%H:%M:%S"),
+                   'end': self.ts_expire.strftime("%Y-%m-%dT%H:%M:%S"),
+                    'period': float(self.cadence),
                     'jitter': float(self.jitter) }
-        
+
         inst_config_list = self.build_image_config_list(target, constraints)
-        
+
         request_group['requests'] = [{'configurations': inst_config_list,
                                        'cadence': cadence,
                                        'location': location}]
-        
+
         ur = self.get_cadence_requests(request_group,log=log)
-        
+
         if 'requests' in ur.keys():
-            
+
             for r in ur['requests']:
-                
+
                 if debug == True and log != None:
                         log.info(repr(r))
                 if type(r) == type(u'foo'):
@@ -191,7 +188,7 @@ class ObsRequest:
                         self.submit_response = message
                     self.req_id = '9999999999'
                     self.track_id = '99999999999'
-                
+
                 else:
                     if 'windows' in r.keys():
                         if len(r['windows']) == 0:
@@ -226,16 +223,16 @@ class ObsRequest:
                     self.submit_response = 'WARNING: ' + ur['detail']
                 if debug == True and log != None:
                         log.info('WARNING: problem obtaining observing windows for this target: '+ur['detail'])
-                
+
         if debug == True and log != None:
             log.info(' -> Completed build of observation request ' + self.group_id)
             log.info(' -> Submit response: '+str(self.submit_response))
-        
+
         return ur
 
     def build_image_config_list(self, target, constraints):
         """Function to compose the instrument configuration dictionary"""
-        
+
         def parse_filter(f):
             filters = { 'SDSS-g': 'gp', 'SDSS-r': 'rp', 'SDSS-i': 'ip',
                        'Bessell-B': 'B', 'Bessell-V': 'V', 'Bessell-R': 'R', 'Cousins-Ic': 'I',
@@ -245,11 +242,11 @@ class ObsRequest:
                 return filters[f]
             else:
                 raise ValueError('Unrecognized filter ('+f+') requested')
-                
+
         config_list = []
-        
+
         for i in range(0,len(self.exposure_times),1):
-            
+
             config = {'type': 'EXPOSE',
                       'instrument_type': self.instrument_class,
                       'target': target,
@@ -263,12 +260,12 @@ class ObsRequest:
                                                 'filter': parse_filter(self.filters[i])},
                                                 } ]
                       }
-            
+
             config_list.append(config)
-            
+
         return config_list
-    
-    
+
+
     def build_molecule_list(self,debug=False,log=None):
         def parse_filter(f):
             filters = { 'SDSS-g': 'gp', 'SDSS-r': 'rp', 'SDSS-i': 'ip',
@@ -279,18 +276,18 @@ class ObsRequest:
                 return filters[f]
             else:
                 raise ValueError('Unrecognized filter ('+f+') requested')
-        
+
         overheads = instrument_overheads.Overhead(self.tel, self.instrument)
         if debug == True and log != None:
-            log.info('Instrument overheads ' + overheads.summary() )        
-        
+            log.info('Instrument overheads ' + overheads.summary() )
+
         molecule_list = []
-        
+
         for i,exptime in enumerate(self.exposure_times):
             nexp = self.exposure_counts[i]
             f = self.filters[i]
             defocus = self.focus_offset[i]
-            
+
             molecule = {
                         'type': 'EXPOSE',
                         'instrument_name': self.instrument_class,
@@ -303,33 +300,33 @@ class ObsRequest:
                         'defocus': defocus,
                         'ag_mode': 'OPTIONAL',
                         }
-                        
+
             if debug == True and log != None:
                 log.info(' -> Molecule: ' + str(molecule))
-    
+
             molecule_list.append(molecule)
-                
-        return molecule_list  
-                
+
+        return molecule_list
+
     def get_cadence_requests(self,ur,log=None):
-        
+
         #end_point = "userrequests/cadence"
         end_point = "requestgroups/cadence"
         ur = self.talk_to_lco(ur,end_point,'POST')
-        
+
         if 'error_type' in ur.keys():
             self.submit_response = 'ERROR: '+ur['error_msg']
-        
+
         if log != None:
             if 'error_type' in ur.keys():
                 log.info('ERROR building observation request: '+ur['error_msg'])
             else:
                 log.info('Received response from LCO cadence API for request '+self.group_id)
-            
+
         return ur
-       
+
     def submit_request(self, ur, log=None):
-        
+
         if self.submit_status != None or self.submit_response != None:
             self.submit_response = self.submit_response+': No_obs_submitted'
             self.req_id = '9999999999'
@@ -338,7 +335,7 @@ class ObsRequest:
             if log != None:
                 log.info('Submission WARNING: ' + str(self.submit_status))
                 log.info('Submission WARNING: ' + str(self.submit_response))
-                
+
         elif self.simulate:
             self.submit_status = 'simulated'
             self.submit_response = 'Simulated'
@@ -346,7 +343,7 @@ class ObsRequest:
             self.track_id = '99999999999'
             if log != None:
                 log.info(' -> IN SIMULATION MODE: ' + self.submit_status)
-        
+
         else:
             #end_point = 'userrequests'
             end_point = 'requestgroups'
@@ -356,43 +353,43 @@ class ObsRequest:
         if log != None:
             log.info(' -> Completed obs submission, submit response:')
             log.info(str(self.submit_response))
-        
+
         return self.submit_status
-    
+
     def talk_to_lco(self,ur,end_point,method):
-        """Method to communicate with various APIs of the LCO network. 
-        ur should be a user request while end_point is the URL string which 
-        should be concatenated to the observe portal path to complete the URL.  
+        """Method to communicate with various APIs of the LCO network.
+        ur should be a user request while end_point is the URL string which
+        should be concatenated to the observe portal path to complete the URL.
         Accepted end_points are:
-            "userrequests" 
-            "userrequests/cadence"  
+            "userrequests"
+            "userrequests/cadence"
         Accepted methods are:
             POST GET
         """
-        
+
         jur = json.dumps(ur)
-        
+
         headers = {'Authorization': 'Token ' + self.token}
-        
+
         if end_point[0:1] == '/':
             end_point = end_point[1:]
         if end_point[-1:] != '/':
             end_point = end_point+'/'
         url = path.join('https://observe.lco.global/api',end_point)
-        
+
         if method == 'POST':
             response = requests.post(url, headers=headers, json=ur).json()
         elif method == 'GET':
             response = requests.get(url, headers=headers, json=ur).json()
-        
+
         return response
 
-        
+
     def parse_submit_response( self, response, log=None, debug=False ):
-        
+
         if debug == True and log != None:
             log.info('Request response = ' + str(submit_string) )
-        
+
         if 'id' in response.keys():
             self.track_id = response['id']
             self.submit_response = 'id = '+str(response['id'])
@@ -402,20 +399,20 @@ class ObsRequest:
             self.submit_status = 'error'
             self.track_id = '9999999999'
             self.req_id = '9999999999'
-       
+
         if debug == True and log != None:
             log.info('Submit status: ' + str(self.submit_status))
             log.info('Submit response: ' + str(self.submit_response))
-            
+
     def obs_record( self ):
-        """Method to output a record, in standard format, of the current 
+        """Method to output a record, in standard format, of the current
         observation request"""
-        
+
         if 'OK' in str(self.submit_status):
             report = str(self.submit_status)
         else:
             report = str(self.submit_status) + ': ' + str(self.submit_response)
-        
+
         output = ''
         for i, exptime in enumerate(self.exposure_times):
             output = output + \
@@ -442,37 +439,37 @@ class ObsRequest:
 
         status = True
         message = 'OK'
-        
+
         if log!=None:
             log.info('Validating obs group: '+str(self.group_id))
-        
+
         if self.submit_response != None:
             status = False
             message = self.submit_response
             if log!=None:
                 log.info(' -> Invalid: '+message)
             return status, message
-        
+
         if log!=None:
             log.info('Validated obs group: '+str(self.group_id)+' with status '+message)
         return status, message
-    
+
     def get_submit_status(self):
         """Method to return a boolean indicating whether the observation
         submission was successful or not"""
-        
+
         if 'error' in str(self.submit_response).lower() or \
             'warning' in str(self.submit_response).lower() or \
             'error' in str(self.submit_status).lower() or \
             'warning' in str(self.submit_status).lower() or \
             'invalid' in str(self.submit_status).lower():
-                
+
             return False
-        
+
         else:
-            
+
             return True
-            
+
 def validate_request(ur,log=None):
     """Function to validate the parameters of a userrequest.
     Returns a boolean and a string message
@@ -480,17 +477,17 @@ def validate_request(ur,log=None):
 
     status = True
     message = 'OK'
-    
+
     if log!=None:
         log.info('Validating user request')
-    
+
     if 'requests' not in ur.keys():
         status= False
         message= 'Error: no subrequests: '+repr(ur)
         if log!=None:
             log.info(' -> Invalid: '+message)
         return status, message
-    
+
     for r in ur['requests']:
 
         if type(r) == type(u'foo'):
@@ -515,9 +512,9 @@ def validate_request(ur,log=None):
                     return status, message
     if log!=None:
         log.info('Validated user request: '+str(ur['name'])+' with status '+message)
-        
+
     return status, message
-    
+
 def submit_obs_requests(obs_requests, log=None):
     """Function to compose target and observing requirements into the correct
     form and to submit the request to the LCO network
@@ -530,21 +527,21 @@ def submit_obs_requests(obs_requests, log=None):
 
     for obs in obs_requests:
         (status,message) = obs.validate(log=log)
-        
+
         if status == True:
             ur = obs.build_cadence_request(log=log,debug=True)
-                
+
             (status, message) = validate_request(ur,log=log)
-            
+
             if status:
 
                 obs.submit_status = obs.submit_request(ur, log=log)
-                
+
                 if log!=None:
                     log.info('Submitted observation with status '+str(obs.submit_status))
                     if 'error' in str(obs.submit_status).lower():
                         log.info(ur)
-            
+
             else:
                 if log!=None:
                     log.info('Invalid userrequest: '+message)
@@ -552,5 +549,5 @@ def submit_obs_requests(obs_requests, log=None):
                         obs.submit_status = obs.submit_status + ' ' + message
                     else:
                         obs.submit_status = message
-    
+
     return obs_requests

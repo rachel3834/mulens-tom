@@ -13,28 +13,26 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url
+from django.urls import path, re_path
 from django.contrib import admin
-from tom.views import home, targets, add_target, observations, request_obs
-from tom.views import manage_account, change_password, test, send_test_email
-from tom.views import project, remove_target
+from tom import views
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
-    url(r'^login/$', auth_views.login, {'template_name':'tom/login.html'}, name='login'),
-    url(r'^logout/$', auth_views.logout, {'next_page':'/'}, name='logout'),
-    url(r'^change_password/$', change_password, name='change_password'),
-    url(r'^manage_account/$', manage_account, name='manage_account'),
-    url(r'^admin/', admin.site.urls),
-    url(r'^$',home,name="home"),
-    url(r'^test/$',test,name="test"),
-    url(r'^project/$',project,name="project"),
-    url(r'^targets/$',targets,name="targets"),
-    url(r'^add_target/$',add_target,name="add_target"),
-    url(r'^remove_target/$',remove_target,name="remove_target"),
-    url(r'^observations/$',observations,name="observations"),
-    url(r'^request_obs/$',request_obs,{'obs_type':'multi-site'},name="request_obs"),
-    url(r'^request_obs/multisite/$',request_obs,{'obs_type':'multi-site'},name="request_multisite_obs"),
-    url(r'^request_obs/singlesite/$',request_obs,{'obs_type':'single-site'},name="request_singlesite_obs"),
-    url(r'^send_test_email/$',send_test_email,name="test_email"),
+    path('login/', views.login_view, name='login'),
+    path('logout/', views.logout_view, name='logout'),
+    path('change_password/', views.change_password, name='change_password'),
+    path('manage_account/', views.manage_account, name='manage_account'),
+    path('admin/', admin.site.urls),
+    path('',views.home,name="home"),
+    path('test/',views.test,name="test"),
+    path('project/',views.project,name="project"),
+    path('targets/',views.targets,name="targets"),
+    path('add_target/',views.add_target,name="add_target"),
+    path('remove_target/',views.remove_target,name="remove_target"),
+    path('observations/',views.observations,name="observations"),
+    path('request_obs/',views.request_obs,{'obs_type':'multi-site'},name="request_obs"),
+    path('request_obs/multisite/',views.request_obs,{'obs_type':'multi-site'},name="request_multisite_obs"),
+    path('request_obs/singlesite/',views.request_obs,{'obs_type':'single-site'},name="request_singlesite_obs"),
+    path('send_test_email/',views.send_test_email,name="test_email"),
 ]

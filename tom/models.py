@@ -6,16 +6,16 @@ from django.db import models
 class ObservingFacility(models.Model):
     class Meta:
         verbose_name_plural = "observing facilities"
-        
+
     name = models.CharField("Name",max_length=50)
     site = models.CharField("Site",max_length=10)
     enclosure = models.CharField("Enclosure",max_length=10,blank=True,null=True)
     telescope = models.CharField("Telescope",max_length=10)
     instrument = models.CharField("Instrument",max_length=10)
-    
+
     last_modified_date = models.DateTimeField(
             blank=True, null=True)
-    
+
     def __str__(self):
         return self.name
 
@@ -25,7 +25,7 @@ class ObservingFacility(models.Model):
 class FacilityAperture(models.Model):
     name = models.CharField("Name",max_length=50)
     code = models.CharField("Code",max_length=4)
-    
+
     def __str__(self):
         return self.name
 
@@ -36,11 +36,11 @@ class Project(models.Model):
     default_locations = models.ManyToManyField(ObservingFacility,blank=True)
     allowed_apertures = models.ManyToManyField(FacilityAperture,blank=True)
     picture = models.CharField(max_length=300,blank=True)
-    allowed_rapid = models.NullBooleanField(default=False,null=True)
-    
+    allowed_rapid = models.BooleanField(default=False,null=True)
+
     last_modified_date = models.DateTimeField(
             blank=True, null=True)
-    
+
     def __str__(self):
         return self.name
 
@@ -58,36 +58,36 @@ class ProjectUser(models.Model):
     projects = models.ManyToManyField(Project,blank=True)
     last_modified_date = models.DateTimeField(
             blank=True, null=True)
-    
+
     def __str__(self):
         return self.first_name+' '+self.family_name
 
-     
+
 class Target(models.Model):
     ra = models.CharField("RA", max_length=50)
     dec = models.CharField("Dec", max_length=50)
     last_modified_date = models.DateTimeField(
             blank=True, null=True)
-    
+
     def publish(self):
         self.last_modified_date = timezone.now()
         self.save()
-        
+
     def __str__(self):
         return str(self.id)
 
 class TargetName(models.Model):
-    target_id = models.ForeignKey(Target)
+    target_id = models.ForeignKey(Target, on_delete=models.CASCADE)
     name = models.CharField("Name",max_length=50)
     last_modified_date = models.DateTimeField(
             blank=True, null=True)
-    
+
     def __str__(self):
         return self.name+' '+str(self.target_id)
 
 class TargetList(models.Model):
     name = models.CharField("Name",max_length=50)
-    project_id = models.ForeignKey(Project)
+    project_id = models.ForeignKey(Project, on_delete=models.CASCADE)
     targets = models.ManyToManyField(Target,blank=True)
     last_modified_date = models.DateTimeField(
             blank=True, null=True)
@@ -112,23 +112,23 @@ class ExposureSet(models.Model):
     n_exp = models.IntegerField("Number of exposures")
     defocus = models.FloatField("Defocus",blank=True)
     binning = models.IntegerField("Binning",blank=True)
-    
+
     def summary(self):
         return str(self.n_exp)+'x'+str(self.exp_time)+'s in '+str(self.inst_filter)
 
     def __str__(self):
         return str(self.pk)+' '+str(self.inst_filter)+' '+str(self.exp_time)+' '+str(self.n_exp)
-    
+
 class PhotObs(models.Model):
     """Class describing the table of photometric observations
-    Parameters have units:    
+    Parameters have units:
     exp_times       float       seconds
     cadence         float       hours
     jitter          float       hours
     """
-    
-    target_id = models.ForeignKey(Target)
-    project_id = models.ForeignKey(Project)
+
+    target_id = models.ForeignKey(Target, on_delete=models.CASCADE)
+    project_id = models.ForeignKey(Project, on_delete=models.CASCADE)
     group_id = models.CharField("Group ID",max_length=50,blank=True)
     network = models.CharField("Network",max_length=50,blank=True)
     site = models.CharField("Site",max_length=50,blank=True)
@@ -143,7 +143,7 @@ class PhotObs(models.Model):
     airmass_limit = models.FloatField("Airmass limit",blank=True,default=1.5)
     lunar_distance_limit = models.FloatField("Lunar distance limit",blank=True,default=10.0)
     ipp = models.FloatField("IPP",blank=True,default=1.05)
-    rapid_mode = models.NullBooleanField(default=False,null=True)
+    rapid_mode = models.BooleanField(default=False,null=True)
     obs_types = (
                 ('single', 'Single'),
                 ('cadence', 'Cadence'),
@@ -152,8 +152,8 @@ class PhotObs(models.Model):
     modes = ( ('override','Rapid reponse'), ('queue','Queue') )
     obs_mode = models.CharField("Observation mode",max_length=30,
                                  choices=modes,default="queue",blank=True)
-    simulate = models.NullBooleanField(default=False,null=True)
-    stats = ( ('submitted', 'Submitted'), 
+    simulate = models.BooleanField(default=False,null=True)
+    stats = ( ('submitted', 'Submitted'),
               ('active', 'Active'),
               ('expired', 'Expired'),
               ('error', 'Error' ),
@@ -167,6 +167,6 @@ class PhotObs(models.Model):
 
     def location(self):
         return str(self.site)+'.'+str(self.instrument)
-            
+
     def __str__(self):
         return self.group_id
